@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/employees', EmployeeController::class);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
         Route::delete('/users/delete/{id}', [AuthController::class, 'destroy']);
-
+        //إضافة راوت جلب مستخدم وجلب جمبع المستخدمين
         //   lawyers managment
         Route::apiResource('/lawyers', LawyerController::class);
         Route::post('/lawyers/create/{id}', [LawyerController::class, 'store']);

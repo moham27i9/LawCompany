@@ -6,6 +6,9 @@ use App\Services\AuthService;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\LoginUserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
+
 
 class AuthController extends Controller
 {
@@ -44,6 +47,25 @@ class AuthController extends Controller
        
        
     }
+
+    public function index()
+    {
+        return $this->authService->list();
+    }
+    public function show($id)
+    {
+        return $this->authService->show($id);
+    }
     
+    public function testMail()
+    {
+        Mail::to('test@lawfirm.com')->send(new TestMail());
+
+        return 'تم إرسال البريد بنجاح!';
+    }
+  
+
+
+
 
 }

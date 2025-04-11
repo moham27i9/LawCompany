@@ -11,5 +11,13 @@ class AuthRepository
         return User::create($data);
     }
 
-   
+    public function getAll()
+    {
+        return User::all();
+    }
+
+    public function find($id)
+    {
+        return User::findOrFail($id);
+    }
 }

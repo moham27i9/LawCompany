@@ -64,4 +64,20 @@ class AuthService
 
     }
 
+
+    
+    public function list()
+    {
+        $users = $this->authRepo->getAll();
+        return $this->successResponse($users, 'success');  
+    }
+
+    
+    public function show($id)
+    {
+        $user = $this->authRepo->find($id);
+        return $this->successResponse($user, 'success');  
+    }
+
+    
 }

@@ -30,7 +30,7 @@ class AuthService
         $token = $user->createToken('auth_token')->plainTextToken;
 
        
-        return $this->successResponse( $user, 'User registered successfully' );  
+        return $this->successResponse( ['token' => $token], 'User registered successfully' );  
         return $this->errorResponse('User registered failed', 500);
     }
 

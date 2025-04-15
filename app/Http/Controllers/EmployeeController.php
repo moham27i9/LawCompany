@@ -19,12 +19,13 @@ class EmployeeController extends Controller
 
     public function index()
     {
+        // comment for test
         return $this->employeeService->list();
     }
 
     public function store(CreateEmployeeRequest $request,$id)
     {
-       
+
         return $this->employeeService->create($id,$request->validated());
     }
 
@@ -35,7 +36,7 @@ class EmployeeController extends Controller
 
     public function update(UpdateEmployeeRequest $request, $id)
     {
-       
+
         return $this->employeeService->update($id, $request->validated());
     }
 

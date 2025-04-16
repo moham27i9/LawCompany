@@ -7,6 +7,7 @@ use App\Traits\ApiResponseTrait;
 use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ChangeRoleNotification;
 
 class AuthService
 {
@@ -60,7 +61,7 @@ class AuthService
             return $this->successResponse(null, 'تم حذف المستخدم وكل البيانات المرتبطة به',200);
         }
          else
-         return $this->errorResponse(null, 'لا يمكن حذف المستخدم صاحب دور المدير',422);
+         return $this->errorResponse('لا يمكن حذف المستخدم صاحب دور المدير',422,null);
 
     }
 
@@ -79,5 +80,40 @@ class AuthService
         return $this->successResponse($user, 'success');  
     }
 
+    public function changeUserRole($userId, array $data)
+    {
+        $user = User::with(['employee', 'lawyer'])->findOrFail($userId);
+        $newRoleId = $data['role_id'];
+        $currentRoleId = $user->role_id;
     
+        if ($newRoleId == $currentRoleId) return $user;
+    
+        if ($user->role_id == 1) {
+            return $this->errorResponse('can\'t change this role!',422,null);
+        }
+        if ($user->employee && $newRoleId == 5) {
+            // حذف من جدول الموظفين قبل تغيير الدور
+            $user->employee->delete();
+        }
+        
+        if ($user->lawyer && in_array($newRoleId, [3, 4])) {
+            // حذف من جدول المحامين قبل التغيير
+            $user->lawyer->delete();
+            $user->notify(new ChangeRoleNotification('موظف'));
+        }
+        $user->role_id = $newRoleId;
+        $user->save();
+        if($newRoleId == 5)
+        $user->notify(new ChangeRoleNotification('محامي'));
+        if($newRoleId == 3)
+        $user->notify(new ChangeRoleNotification('HR'));
+        if($newRoleId == 4)
+        $user->notify(new ChangeRoleNotification('محاسب'));
+
+    
+        return $this->successResponse(null, 'change role successfully ',200);
+    }
+    
+    
+
 }

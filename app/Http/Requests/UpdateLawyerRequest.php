@@ -26,7 +26,6 @@ class UpdateLawyerRequest extends FormRequest
         'experience_years' => 'sometimes|integer',
         'type' => 'sometimes|string',
         'specialization' => 'sometimes|string',
-        'salary' => 'sometimes|numeric',
         'certificate' => 'sometimes|string',
         ];
     }

@@ -43,6 +43,7 @@ public function getById($id)
     return $this->lawyerRepository->getById($id);
 }
 
+
 public function update($id, $data)
 {
     return $this->lawyerRepository->update($id, $data);

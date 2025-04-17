@@ -30,11 +30,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/forgot-password', ForgotPasswordController::class);
     Route::post('/reset-password', ResetPasswordController::class);
     Route::get('/notifications', [NotificationController::class, 'getNotifications']);
+    Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
+    Route::get('/lawyers', [LawyerController::class, 'index']);
     
     Route::middleware(['applicant_only'])->group(function () {
         Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
 
-        //get notifications
+        //
     });
 
     //  Admin Only Routes
@@ -46,8 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/users', AuthController::class);
         Route::put('/users/change-role/{id}', [AuthController::class, 'changeRole']);
        
-        //   lawyers managment
-        Route::apiResource('/lawyers', LawyerController::class);
+        // lawyers managment
     });
     
     Route::middleware(['hr_only'])->group(function () {
@@ -56,6 +57,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
     });
     Route::middleware(['justLawyers'])->group(function () {
+        // Route::apiResource('/lawyers', LawyerController::class);
+
+        Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
+
+        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
+
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
     });
     

@@ -22,7 +22,7 @@ class UpdateUserRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-          'role_id' => 'required|exists:roles,id'
+          'role_name' => 'required|string'
         ];
     }
 }

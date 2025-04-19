@@ -68,12 +68,12 @@ class EmployeeService
 
     public function delete($id)
     {
-        $employee = $this->employeeRepository->getById($id);
+        $employee = $this->employeeRepository->find($id);
         $user = $employee->user;
         $user->role_id = 2;
         $user->save();
         $employee = $this->employeeRepository->delete($id);
-        return $this->successResponse($employee, 'Deleted successfully');  
+        return $this->successResponse($employee, 'Deleted successfully',200);  
         return $this->errorResponse('Deleted failed', 500);
     }
 }

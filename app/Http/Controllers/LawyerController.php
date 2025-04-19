@@ -18,9 +18,9 @@ class LawyerController extends Controller
         $this->lawyerService = $lawyerService;
     }
 
-    public function store(CreateLawyerRequest $request,$id)
+    public function store(CreateLawyerRequest $request)
     {
-        $lawyer = $this->lawyerService->create($request->validated(),$id);
+        $lawyer = $this->lawyerService->create($request->validated());
         if(!$lawyer )
         return $this->errorResponse('this user is actually registered as lawyer!', 422);
         return $this->successResponse($lawyer, 'Lawyer created successfully');
@@ -40,10 +40,10 @@ public function show($id)
     return $this->successResponse($lawyer, 'Lawyer retrieved');
 }
 
-public function update(UpdateLawyerRequest $request, $id)
+public function update(UpdateLawyerRequest $request)
 {
-    $lawyer = $this->lawyerService->update($id, $request->validated());
-    return $this->successResponse($lawyer, 'Lawyer updated');
+    $lawyer = $this->lawyerService->update(auth()->user()->lawyer->id, $request->validated());
+    return $this->successResponse($lawyer, 'Profile updated successfully');
 }
 
 public function destroy($id)
@@ -51,6 +51,15 @@ public function destroy($id)
     $this->lawyerService->delete($id);
     return $this->successResponse(null, 'Lawyer deleted');
 }
+
+public function profile()
+{
+    $lawyer = $this->lawyerService->getById(auth()->user()->lawyer->id);
+    return $this->successResponse($lawyer, 'Your profile');
+}
+
+
+
 
 }
 

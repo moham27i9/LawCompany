@@ -20,6 +20,7 @@ class EmployeeController extends Controller
     public function index()
     {
         // BCOmment2
+        // comment for test
         return $this->employeeService->list();
     }
 

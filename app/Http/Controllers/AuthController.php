@@ -8,6 +8,7 @@ use App\Http\Requests\LoginUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
+use App\Http\Requests\UpdateUserRoleRequest;
 
 
 class AuthController extends Controller
@@ -65,7 +66,13 @@ class AuthController extends Controller
     }
   
 
+  
 
+    public function changeRole(UpdateUserRoleRequest $request, $id)
+    {
+        return $this->authService->changeUserRole($id, $request->validated());
+    }
+    
 
 
 }

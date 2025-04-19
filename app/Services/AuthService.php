@@ -7,6 +7,7 @@ use App\Traits\ApiResponseTrait;
 use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ChangeRoleNotification;
 
 class AuthService
 {
@@ -60,7 +61,7 @@ class AuthService
             return $this->successResponse(null, 'تم حذف المستخدم وكل البيانات المرتبطة به',200);
         }
          else
-         return $this->errorResponse(null, 'لا يمكن حذف المستخدم صاحب دور المدير',422);
+         return $this->errorResponse('لا يمكن حذف المستخدم صاحب دور المدير',422,null);
 
     }
 
@@ -79,5 +80,64 @@ class AuthService
         return $this->successResponse($user, 'success');  
     }
 
+    public function changeUserRole($userId, array $data)
+{
+    $user = User::with(['employee', 'lawyer'])->findOrFail($userId);
+    $currentRoleId = $user->role_id;
+
+    $newRoleName = strtolower($data['role_name']); // نستقبل الاسم
+
+    // نحاول إيجاد الدور من قاعدة البيانات
+    $newRole = Role::whereRaw('LOWER(name) = ?', [$newRoleName])->first();
+
+    if (!$newRole) {
+        return $this->errorResponse('الدور غير موجود', 404, null);
+    }
+
+    $newRoleId = $newRole->id;
+
+    if ($newRoleId == $currentRoleId) {
+        return $this->successResponse($user, 'الدور الحالي هو نفسه', 200);
+    }
+
+    if ($currentRoleId == 1) {
+        return $this->errorResponse('لا يمكن تغيير دور الأدمن!', 422, null);
+    }
+
+    // موظف → محامي
+    if ($user->employee && $newRoleName == 'lawyer') {
+        $user->employee->delete();
+    }
+
+    if ($user->employee && $newRoleName == 'intern') {
+        $user->employee->delete();
+    }
+
+    // محامي → موظف
+    if ($user->lawyer && in_array($newRoleName, ['hr', 'accountant'])) {
+        $user->lawyer->delete();
+        $user->notify(new ChangeRoleNotification('موظف'));
+    }
+
+    // تحديث الدور
+    $user->role_id = $newRoleId;
+    $user->save();
+
+    // إرسال إشعار بالدور الجديد
+    $roleNameForNotification = match ($newRoleName) {
+        'lawyer'     => 'محامي',
+        'hr'         => 'HR',
+        'accountant' => 'محاسب',
+        'user'       => 'مستخدم',
+        default      => 'تم تغيير الدور'
+    };
+
+    $user->notify(new ChangeRoleNotification($roleNameForNotification));
+
+    return $this->successResponse(null, 'تم تغيير الدور بنجاح', 200);
+}
+
     
+    
+
 }

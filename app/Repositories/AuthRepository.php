@@ -13,11 +13,20 @@ class AuthRepository
 
     public function getAll()
     {
-        return User::all();
+        return User::with(['role:id,name'])->get();
     }
 
     public function find($id)
     {
         return User::findOrFail($id);
     }
+
+    public function updateUserRole($userId, $roleId)
+        {
+            $user = User::findOrFail($userId);
+            $user->role_id = $roleId;
+            $user->save();
+            return $user;
+        }
+
 }

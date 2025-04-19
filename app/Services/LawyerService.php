@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\LawyerRepository;
 use App\Models\User;
+use App\Events\NewNotificationEvent;
+
 use Illuminate\Support\Facades\DB;
 
 class LawyerService
@@ -15,25 +17,17 @@ class LawyerService
         $this->lawyerRepository = $lawyerRepository;
     }
 
-    public function create(array $data,$id)
+    public function create(array $data)
     {
-        return DB::transaction(function () use ($data,$id) {
+        return DB::transaction(function () use ($data) {
             // تحديث role_id للمستخدم إلى 5 (محامي)
-            $user = User::findOrFail($id);
+            $user =auth()->user();
         
             if ($user->lawyer) {
                return null;
             }
-    
-            if ($user->employee) {
-                $user->employee->delete();
-            }
-
-            $user->role_id = 5; // role: lawyer
-            $user->save();
-
             // إنشاء المحامي
-            return $this->lawyerRepository->create($data,$id);
+            return $this->lawyerRepository->create($data);
         });
     }
 
@@ -48,6 +42,7 @@ public function getById($id)
 {
     return $this->lawyerRepository->getById($id);
 }
+
 
 public function update($id, $data)
 {

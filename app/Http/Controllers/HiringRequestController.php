@@ -17,6 +17,17 @@ class HiringRequestController extends Controller
         $this->service = $service;
     }
 
+
+    public function index()
+    {
+        return $this->service->list();
+    }
+
+    public function show($id)
+    {
+        return $this->service->show($id);
+    }
+
     public function store(StoreHiringRequest $request)
     {
         $hiring = $this->service->store($request->validated());

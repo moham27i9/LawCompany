@@ -8,7 +8,7 @@ use App\Repositories\EmployeeRepository;
 
 class EmployeeService
 {
-         use ApiResponseTrait; 
+     use ApiResponseTrait; 
     protected $employeeRepository;
 
     public function __construct(EmployeeRepository $employeeRepository)

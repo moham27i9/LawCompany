@@ -21,13 +21,25 @@ class ProfileController extends Controller
     public function store(CreateProfileRequest $request)
     {
         $profile = $this->profileService->create($request->validated());
-        return $this->successResponse($profile, 'Profile created successfully');
+        if($profile)
+        return $this->successResponse($profile,'Profile created successfully');
+        return $this->errorResponse('can\'t create profile!', 422, null);
     }
 
-        public function show()
+        public function show($id)
     {
-        $profile = $this->profileService->getByCurrentUser();
+        $profile = $this->profileService->getUserProfile($id);
+        if($profile)
         return $this->successResponse($profile, 'profile retrieved successfully');
+        return $this->errorResponse('this user havn\'t profile yet!', 422, null);
+    }
+
+        public function showMyProfile()
+    {
+        $profile = $this->profileService->showMyProfile();
+        if($profile)
+        return $this->successResponse($profile, 'your profile retrieved successfully');
+        return $this->errorResponse('you havn\'t profile yet!', 422, null);
     }
 
     public function update(UpdateProfileRequest $request)

@@ -15,12 +15,28 @@ class ProfileService
 
     public function create(array $data)
     {
+        if(!auth()->user()->profile)
         return $this->profileRepository->create($data);
+        return null;
     }
 
-        public function getByCurrentUser()
+    public function showMyProfile()
     {
-        return $this->profileRepository->findByUserId(auth()->id());
+        $user_id = auth()->user()->id;
+   
+        $profile = $this->profileRepository->findByUserId($user_id);
+          if($profile)
+        return $profile;
+        return null;
+    }
+   
+
+        public function getUserProfile($id)
+    {
+        $profile = $this->profileRepository->findByUserId($id);
+        if($profile)
+        return $profile;
+        return null;
     }
 
     public function updateCurrentUser(array $data)

@@ -22,8 +22,9 @@ class ProfileRepository
 
         public function findByUserId($userId)
     {
-        return Profile::where('user_id', $userId)->firstOrFail();
+        return Profile::with('user')->where('user_id', $userId)->first();
     }
+
 
     public function updateByUserId($userId, array $data)
     {

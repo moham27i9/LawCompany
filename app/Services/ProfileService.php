@@ -15,8 +15,18 @@ class ProfileService
 
     public function create(array $data)
     {
-        if(!auth()->user()->profile)
-        return $this->profileRepository->create($data);
+        if(!auth()->user()->profile){
+
+            if (request()->hasFile('image')) {
+                $image = request()->file('image');
+                $imageName = 'profile_images/user_' . auth()->id() . '.' . $image->extension();
+                $image->storeAs('public/profile_images', $imageName);
+                
+                $data['image'] = 'storage/profile_images/' . $imageName;
+            }
+            
+            return $this->profileRepository->create($data);
+        }
         return null;
     }
 
@@ -41,6 +51,14 @@ class ProfileService
 
     public function updateCurrentUser(array $data)
     {
+        if (request()->hasFile('image')) {
+            $image = request()->file('image');
+            $imageName = 'profile_images/user_' . auth()->id() . '.' . $image->extension();
+            $image->storeAs('public/profile_images', $imageName);
+        
+            $data['image'] = 'storage/profile_images/' . $imageName;
+        }
+      
         return $this->profileRepository->updateByUserId(auth()->id(), $data);
     }
 

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('phone');
             $table->string('scientificLevel')->nullable();
             $table->integer('age');
+            $table->string('image')->nullable(); // path مثل profile_images/user_1.png
+
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

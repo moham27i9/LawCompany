@@ -33,9 +33,12 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::post('/forgot-password', ForgotPasswordController::class);
     Route::post('/reset-password', ResetPasswordController::class);
-    Route::get('/notifications', [NotificationController::class, 'getNotifications']);
     Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
     Route::get('/lawyers', [LawyerController::class, 'index']);
+
+    Route::get('/hiring-requests/show/{id}', [HiringRequestController::class, 'show']);
+    Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
+
     
 
     
@@ -78,6 +81,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/employees', EmployeeController::class);
         Route::apiResource('/users', AuthController::class);
         Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
+    });
+   
+    
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('/unread', [NotificationController::class, 'unread']);
+        Route::post('/mark-all', [NotificationController::class, 'markAll']);
+        Route::post('/mark-one/{id}', [NotificationController::class, 'markOne']);
+        Route::delete('/{id}', [NotificationController::class, 'destroy']);
     });
     
 });

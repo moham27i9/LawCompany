@@ -25,7 +25,9 @@ class CreateProfileRequest extends FormRequest
             'phone' => 'required|string|max:15',
             'age' => 'required|integer|min:18|max:100',
             'address' => 'required|string',
-            'scientificLevel' => 'required|string'
+            'scientificLevel' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
         ];
     }
 }

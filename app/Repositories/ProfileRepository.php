@@ -15,6 +15,7 @@ class ProfileRepository
            'phone'=> $data['phone'],
            'address'=> $data['address'],
            'age'=> $data['age'],
+           'image'=> $data['image'],
            'scientificLevel'=> $data['scientificLevel'],
            'user_id'=> $user_id,
         ]);
@@ -30,6 +31,7 @@ class ProfileRepository
     {
         $profile = Profile::where('user_id', $userId)->firstOrFail();
         $profile->update($data);
+        $profile->save();
         return $profile;
     }
 

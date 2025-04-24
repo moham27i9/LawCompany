@@ -18,12 +18,12 @@ class ProfileRepository
            'image'=> $data['image'],
            'scientificLevel'=> $data['scientificLevel'],
            'user_id'=> $user_id,
-        ]);
+        ]); 
     }
 
         public function findByUserId($userId)
     {
-        return Profile::with('user')->where('user_id', $userId)->first();
+        return Profile::where('user_id', $userId)->first();
     }
 
 

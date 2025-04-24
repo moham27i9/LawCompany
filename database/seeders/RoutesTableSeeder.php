@@ -49,6 +49,10 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'show profile as lawyer', 'path' => '/api/lawyer/profile', 'method' => 'GET'],
             ['name' => 'update lawyer profile ', 'path' => '/api/lawyer/profile', 'method' => 'PUT'],
             ['name' => 'add lawyer profile', 'path' => '/api/lawyers/create', 'method' => 'POST'],
+            ['name' => 'show all permissions', 'path' => '/api/permissions', 'method' => 'GET'],//29
+            ['name' => 'show all hiring requests', 'path' => '/api/hiring-requests', 'method' => 'GET'],
+            ['name' => 'show hiring request', 'path' => '/api/hiring-requests/show/{id}', 'method' => 'GET'],
+            ['name' => 'add hiring request', 'path' => '/api/hiring-requests', 'method' => 'POST'],
         ];
 
         foreach ($routes as $route) {

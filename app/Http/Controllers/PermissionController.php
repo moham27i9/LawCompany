@@ -20,7 +20,8 @@ class PermissionController extends Controller
 
     public function index()
     {
-        return $this->service->getAll();
+        $permission = $this->service->getAll();
+        return $this->successResponse($permission , 'Permissions retrieved successfully ');
     }
 
     public function store(CreatePermissionRequest $request,$id)

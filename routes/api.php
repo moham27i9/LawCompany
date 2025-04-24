@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profiles/create/', [ProfileController::class, 'store']);
     Route::get('/profile/{id}', [ProfileController::class, 'show']);
     Route::get('/myprofile', [ProfileController::class, 'showMyProfile']);
-    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('/profile/update', [ProfileController::class, 'update']);
     Route::delete('/profile', [ProfileController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
     
@@ -47,12 +47,29 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     //  Admin Only Routes
-    Route::middleware('admin')->group(function () {
+    // Route::middleware('admin')->group(function () {
 
-        //   employees managment 
+        
+    // });
+    
+    // Route::middleware(['hr_only'])->group(function () {
+        
+    //     // Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
+    // });
+    // Route::middleware(['justLawyers'])->group(function () {
+    //     // Route::apiResource('/lawyers', LawyerController::class);
+            
+    // });
+    
+    Route::middleware(['check.permission'])->group(function () {
+        Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
+        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
+        Route::post('/lawyers/create', [LawyerController::class, 'store']);
+        Route::apiResource('/employees', EmployeeController::class);
+        Route::apiResource('/users', AuthController::class);
+        Route::post('/hiring-requests', [HiringRequestController::class, 'store']); 
         Route::delete('/users/delete/{id}', [AuthController::class, 'destroy']);
         Route::put('/users/change-role/{id}', [AuthController::class, 'changeRole']);
-        
         Route::apiResource('routes', RouteController::class);
         Route::get('permissions', [PermissionController::class,'index']);
         Route::post('permissions/{id}', [PermissionController::class,'store']);
@@ -60,29 +77,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
-        
     });
     
-        Route::middleware(['hr_only'])->group(function () {
-            
-            // Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
-        });
-        Route::middleware(['justLawyers'])->group(function () {
-        // Route::apiResource('/lawyers', LawyerController::class);
-        
-        Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
-        
-        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
-        
-    });
-    
-    Route::middleware(['check.permission'])->group(function () {
-        Route::post('/lawyers/create', [LawyerController::class, 'store']);
-        Route::apiResource('/employees', EmployeeController::class);
-        Route::apiResource('/users', AuthController::class);
-        Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
-    });
-   
     
     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);

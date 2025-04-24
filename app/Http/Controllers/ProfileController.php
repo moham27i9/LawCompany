@@ -47,6 +47,7 @@ class ProfileController extends Controller
 
         $profile = $this->profileService->updateCurrentUser($request->validated());
         return $this->successResponse($profile, 'Profile updated successfully');
+        return $this->errorResponse('no updates yet!', 422, null);
     }
 
     public function destroy()

@@ -57,6 +57,11 @@ class AuthController extends Controller
     {
         return $this->authService->show($id);
     }
+    public function getRole()
+    {
+        $user = auth()->user();
+        return $this->authService->showRole($user->id);
+    }
     
     public function testMail()
     {

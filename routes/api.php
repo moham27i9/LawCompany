@@ -21,7 +21,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
-
+    
     //  Profile & Logout
     Route::post('/profiles/create/', [ProfileController::class, 'store']);
     Route::get('/profile/{id}', [ProfileController::class, 'show']);
@@ -30,16 +30,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
     
+    Route::get('/getRole', [AuthController::class, 'getRole']);
     
     Route::post('/forgot-password', ForgotPasswordController::class);
     Route::post('/reset-password', ResetPasswordController::class);
     Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
     Route::get('/lawyers', [LawyerController::class, 'index']);
-
+    
     Route::get('/hiring-requests/show/{id}', [HiringRequestController::class, 'show']);
     Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
     Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
-
+    
     
 
     

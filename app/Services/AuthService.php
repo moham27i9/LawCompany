@@ -79,7 +79,7 @@ class AuthService
         $user = $this->authRepo->find($id);
         return $this->successResponse($user, 'success');  
     }
-
+    
     public function changeUserRole($userId, array $data)
 {
     $user = User::with(['employee', 'lawyer'])->findOrFail($userId);
@@ -95,7 +95,7 @@ class AuthService
     }
 
     $newRoleId = $newRole->id;
-
+    
     if ($newRoleId == $currentRoleId) {
         return $this->successResponse($user, 'الدور الحالي هو نفسه', 200);
     }
@@ -103,7 +103,7 @@ class AuthService
     if ($currentRoleId == 1) {
         return $this->errorResponse('لا يمكن تغيير دور الأدمن!', 422, null);
     }
-
+    
     // موظف → محامي
     if ($user->employee && $newRoleName == 'lawyer') {
         $user->employee->delete();
@@ -122,7 +122,7 @@ class AuthService
     // تحديث الدور
     $user->role_id = $newRoleId;
     $user->save();
-
+    
     // إرسال إشعار بالدور الجديد
     $roleNameForNotification = match ($newRoleName) {
         'lawyer'     => 'محامي',
@@ -138,6 +138,12 @@ class AuthService
 }
 
     
-    
+
+
+public function showRole($id)
+{
+    $role = $this->authRepo->findrole($id);
+    return $this->successResponse($role, 'success');  
+}
 
 }

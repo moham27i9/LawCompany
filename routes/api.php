@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/hiring-requests/show/{id}', [HiringRequestController::class, 'show']);
     Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
+    Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
 
     
 
@@ -62,7 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // });
     
     Route::middleware(['check.permission'])->group(function () {
-        Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
         Route::put('/lawyer/profile', [LawyerController::class, 'update']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
         Route::apiResource('/employees', EmployeeController::class);

@@ -91,7 +91,10 @@ class PermissionTableSeeder extends Seeder
             [ 'permission_id' => 32],];
        
         $lawyer_permissions =[
-            [ 'permission_id' => 28],];
+            [ 'permission_id' => 28],
+            [ 'permission_id' => 27],
+        
+        ];
 
         foreach ($admin_permissions as $admin_permission) {
           

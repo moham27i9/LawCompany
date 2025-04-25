@@ -45,7 +45,9 @@ class ProfileService
     }
 
     return [
-        'address' => $profile['address'],
+        'name'=> $user->name,
+        'email'=> $user->email,
+        'address' => $profile->address,
         'phone' => $profile->phone,
         'scientificLevel' => $profile->scientificLevel,
         'age' => $profile->age,
@@ -69,7 +71,9 @@ class ProfileService
     }
 
     return [
-        'address' => $profile['address'],
+        'name'=> $user->name,
+        'email'=> $user->email,
+        'address' => $profile->address,
         'phone' => $profile->phone,
         'scientificLevel' => $profile->scientificLevel,
         'age' => $profile->age,

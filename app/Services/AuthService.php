@@ -30,17 +30,17 @@ class AuthService
         ]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
-       
-        return $this->successResponse( ['token' => $token], 'User registered successfully' );  
+
+        return $this->successResponse( ['token' => $token], 'User registered successfully' );
         return $this->errorResponse('User registered failed', 500);
     }
 
     public function login(array $credentials)
     {
         if (!Auth::attempt($credentials)) {
-          
+
             return $this->errorResponse('Invalid credentials', 401);
-           
+
         }
 
         $user = Auth::user();
@@ -57,7 +57,7 @@ class AuthService
         $user = User::findOrFail($id);
         if($id != 1 || $user->role_id !=1){
 
-            $user->delete(); 
+            $user->delete();
             return $this->successResponse(null, 'تم حذف المستخدم وكل البيانات المرتبطة به',200);
         }
          else
@@ -66,18 +66,18 @@ class AuthService
     }
 
 
-    
+
     public function list()
     {
         $users = $this->authRepo->getAll();
-        return $this->successResponse($users, 'success');  
+        return $this->successResponse($users, 'success');
     }
 
-    
+
     public function show($id)
     {
         $user = $this->authRepo->find($id);
-        return $this->successResponse($user, 'success');  
+        return $this->successResponse($user, 'success');
     }
 
     public function changeUserRole($userId, array $data)
@@ -96,14 +96,16 @@ class AuthService
 
     $newRoleId = $newRole->id;
 
-    if ($newRoleId == $currentRoleId) {
-        return $this->successResponse($user, 'الدور الحالي هو نفسه', 200);
-    }
+
 
     if ($currentRoleId == 1) {
         return $this->errorResponse('لا يمكن تغيير دور الأدمن!', 422, null);
     }
 
+    if ($newRoleId == $currentRoleId) {
+        return $this->successResponse($user, 'الدور الحالي هو نفسه', 200);
+    }
+    
     // موظف → محامي
     if ($user->employee && $newRoleName == 'lawyer') {
         $user->employee->delete();
@@ -137,7 +139,7 @@ class AuthService
     return $this->successResponse(null, 'تم تغيير الدور بنجاح', 200);
 }
 
-    
-    
+
+
 
 }

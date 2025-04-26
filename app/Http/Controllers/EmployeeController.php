@@ -19,7 +19,6 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        // BCOmment2
         return $this->employeeService->list();
     }
 

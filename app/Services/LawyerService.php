@@ -22,7 +22,7 @@ class LawyerService
         return DB::transaction(function () use ($data) {
             // تحديث role_id للمستخدم إلى 5 (محامي)
             $user =auth()->user();
-        
+
             if ($user->lawyer) {
                return null;
             }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Repositories\ProfileRepository;
 
 class ProfileService
@@ -15,17 +16,93 @@ class ProfileService
 
     public function create(array $data)
     {
-        return $this->profileRepository->create($data);
+        if(!auth()->user()->profile){
+
+            if (isset($data['image'])) {
+                $image = $data['image'];
+                $imageName = 'user_' . auth()->user()->id . '.' . $image->extension();
+                
+                // تخزين داخل disk = public
+                $image->storeAs('profile_images', $imageName, 'public');
+            
+                // حفظ المسار في قاعدة البيانات
+                $data['image'] = 'storage/profile_images/' . $imageName;
+            }
+            
+            
+            return $this->profileRepository->create($data);
+        }
+        return null;
     }
 
-        public function getByCurrentUser()
-    {
-        return $this->profileRepository->findByUserId(auth()->id());
+  public function showMyProfile()
+{
+    $user = auth()->user();
+    $profile = $this->profileRepository->findByUserId($user->id);
+
+    if (!$profile) {
+        return null;
     }
+
+    return [
+        'name'=> $user->name,
+        'email'=> $user->email,
+        'address' => $profile->address,
+        'phone' => $profile->phone,
+        'scientificLevel' => $profile->scientificLevel,
+        'age' => $profile->age,
+        'image' => $profile->image ? asset($profile->image) : null,
+        'user_id' => $profile->user_id,
+        'role' => [
+            'id' => $user->role->id,
+            'name' => $user->role->name
+        ],
+    ];
+}
+
+   
+
+    public function getUserProfile($id)
+{
+    $profile = $this->profileRepository->findByUserId($id);
+    $user=User::find($id);
+    if (!$profile) {
+        return null;
+    }
+
+    return [
+        'name'=> $user->name,
+        'email'=> $user->email,
+        'address' => $profile->address,
+        'phone' => $profile->phone,
+        'scientificLevel' => $profile->scientificLevel,
+        'age' => $profile->age,
+        'image' => $profile->image ? asset($profile->image) : null,
+        'user_id' => $profile->user_id,
+        'role' => [
+            'id' => $user->role->id,
+            'name' => $user->role->name
+        ],
+    ];
+}
+
 
     public function updateCurrentUser(array $data)
     {
-        return $this->profileRepository->updateByUserId(auth()->id(), $data);
+        $id = auth()->user()->id;
+        if (isset($data['image'])) {
+            $image = $data['image'];
+            $imageName = 'user_' . $id . '.' . $image->extension();
+            
+            // تخزين داخل disk = public
+            $image->storeAs('profile_images', $imageName, 'public');
+        
+            // حفظ المسار في قاعدة البيانات
+            $data['image'] = 'storage/profile_images/' . $imageName;
+        }
+        
+        
+        return $this->profileRepository->updateByUserId(auth()->user()->id, $data);
     }
 
     public function deleteCurrentUser()

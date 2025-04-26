@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
          $middleware->group('justLawyers', [ App\Http\Middleware\JustLawyers::class]);
          $middleware->group('justClient', [ App\Http\Middleware\JustClient::class]);
+         $middleware->group('check.permission', [ App\Http\Middleware\CheckPermission::class]);
 
         
         

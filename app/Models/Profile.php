@@ -11,6 +11,7 @@ class Profile extends Model
         'age',
         'phone',
         'address',
+        'image',
         'user_id',
         'scientificLevel',
     ];

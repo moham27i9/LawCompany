@@ -21,6 +21,13 @@ class AuthRepository
         return User::findOrFail($id);
     }
 
+
+    public function findrole($id)
+    {
+        $user =User::findOrFail($id);
+        return $user->role->name;
+    }
+
     public function updateUserRole($userId, $roleId)
         {
             $user = User::findOrFail($userId);

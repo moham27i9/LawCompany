@@ -26,6 +26,8 @@ class UpdateProfileRequest extends FormRequest
             'age' => 'sometimes|integer|min:18|max:100',
             'address' => 'sometimes|string',
             'scientificLevel' => 'sometimes|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
         ];
     }
 }

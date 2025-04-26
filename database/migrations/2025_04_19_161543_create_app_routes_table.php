@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('app_routes', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->default('user');
-            $table->text('description')->nullable();
+            $table->string('name');         // اسم وصفي للراوت
+            $table->string('path');         // مثال: /cases
+            $table->string('method');       // GET / POST / PUT / DELETE
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('app_routes');
     }
 };

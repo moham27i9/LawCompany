@@ -38,10 +38,33 @@ public function getAll()
     return $this->lawyerRepository->getAll();
 }
 
+
 public function getById($id)
 {
-    return $this->lawyerRepository->getById($id);
+    $lawyer = $this->lawyerRepository->getById($id);
+
+    if ($lawyer) {
+        return [
+            'name' => $lawyer->user->name,
+            'email' => $lawyer->user->email,
+
+            'address' => $lawyer->user->profile->address,
+            'phone' => $lawyer->user->profile->phone,
+            'age' => $lawyer->user->profile->age,
+            'image' => $lawyer->user->profile->image ? asset($lawyer->user->profile->image) : null,
+
+            'license_number' => $lawyer->license_number,
+            'experience_years' => $lawyer->experience_years,
+            'type' => $lawyer->type,
+            'specialization' => $lawyer->specialization,
+            'certificate' => $lawyer->certificate,
+        ];
+    }
+
+    return null;
 }
+
+
 
 
 public function update($id, $data)

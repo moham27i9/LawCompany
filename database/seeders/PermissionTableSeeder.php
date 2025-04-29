@@ -55,9 +55,15 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'update_lawyer_profile ', 'app_route_id' => 27],
             ['name' => 'add_lawyer_profile', 'app_route_id' => 28],
             ['name' => 'show_all_permissions', 'app_route_id' => 29],
-            ['name' => 'show all hiring requests', 'app_route_id' => 30],
-            ['name' => 'show hiring request', 'app_route_id' => 31],
-            ['name' => 'add hiring request', 'app_route_id' => 32],
+            ['name' => 'show_all_hiring_requests', 'app_route_id' => 30],
+            ['name' => 'show_hiring_request', 'app_route_id' => 31],
+            ['name' => 'add_hiring_request', 'app_route_id' => 32],
+            //issues
+            ['name' => 'show_all_issues', 'app_route_id' => 33],
+            ['name' => 'show_issue', 'app_route_id' => 34],
+            ['name' => 'add_issue', 'app_route_id' => 35],
+            ['name' => 'update_issue', 'app_route_id' => 36],
+            ['name' => 'delete_issue', 'app_route_id' => 37],
         ];
 
         foreach ($permissions as $permission) {
@@ -86,13 +92,29 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 24],
             ['permission_id' => 25],
             ['permission_id' => 29],
+            ['permission_id' => 33],
+            ['permission_id' => 34],
+            ['permission_id' => 35],
+            ['permission_id' => 36],
+            ['permission_id' => 37],
         ];
         $hr_permissions =[
             [ 'permission_id' => 32],];
        
         $lawyer_permissions =[
-            [ 'permission_id' => 28],
+            [ 'permission_id' => 26],
             [ 'permission_id' => 27],
+            [ 'permission_id' => 28],
+            ['permission_id' => 33],
+            ['permission_id' => 34],
+        
+        ];
+        $intern_permissions =[
+            [ 'permission_id' => 26],
+            [ 'permission_id' => 27],
+            [ 'permission_id' => 28],
+            ['permission_id' => 33],
+            ['permission_id' => 34],
         
         ];
 
@@ -115,6 +137,13 @@ class PermissionTableSeeder extends Seeder
             DB::table('role_permissions')->insert([
                 'role_id'=> 5,
                 'permission_id'=> $lawyer_permission['permission_id'] ,
+                ]);
+        }
+        foreach ($intern_permissions as $intern_permission) {
+          
+            DB::table('role_permissions')->insert([
+                'role_id'=> 6,
+                'permission_id'=> $intern_permission['permission_id'] ,
                 ]);
         }
 

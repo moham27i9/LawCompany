@@ -13,6 +13,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\IssueController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -78,7 +79,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+         //admin & lawyer & intern
+        Route::get('/issues', [IssueController::class, 'index']);
+        Route::get('/issues/{id}', [IssueController::class, 'show']);
+        //admin
+        Route::post('/issues/{user_id}', [IssueController::class, 'store']);
+        Route::put('/issues/{id}', [IssueController::class, 'update']);
+        Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
     });
+    
     
     
     Route::prefix('notifications')->group(function () {

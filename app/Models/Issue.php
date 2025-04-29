@@ -9,16 +9,23 @@ class Issue extends Model
 
     protected $fillable = [
         'title',
-        'issueNumber',
+        'issue_number',
         'category',
-        'total_cost',
-        'due',
+        'opponent_name',
+        'court_name',
         'description',
         'user_id',
+        'number_of_payments',
+        'total_cost',
+        'amount_paid',
         'status',
         'priority',
-        'num_of_payments',
+        'start_date',
+        'end_date',
+   
     ];
+    
+
     public function invoices()
 {
     return $this->hasMany(Invoice::class);

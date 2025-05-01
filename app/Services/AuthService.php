@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services;
+
+use App\Models\RefreshToken;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
@@ -8,6 +10,8 @@ use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ChangeRoleNotification;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -45,8 +49,15 @@ class AuthService
 
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
+        $refreshToken = Str::random(64);
+        RefreshToken::create([
+            'user_id' => $user->id,
+            'token' => hash('sha256', $refreshToken),
+            'expires_at' => Carbon::now()->addDays(30),
+        ]);
         return $this->successResponse(
-            ['token' => $token],
+            ['token' => $token,
+             'refresh_token' => $refreshToken],
             'Login successful',
             200
         );
@@ -145,5 +156,7 @@ public function showRole($id)
     $role = $this->authRepo->findrole($id);
     return $this->successResponse($role, 'success');  
 }
+
+
 
 }

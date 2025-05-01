@@ -14,11 +14,13 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\IssueController;
+use App\Http\Controllers\IssueRequestController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -41,30 +43,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/hiring-requests/show/{id}', [HiringRequestController::class, 'show']);
     Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
     Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
-    
-    
 
-    
-    Route::middleware(['applicant_only'])->group(function () {
-        Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
-    });
-
-    //  Admin Only Routes
-    // Route::middleware('admin')->group(function () {
-
-        
-    // });
-    
-    // Route::middleware(['hr_only'])->group(function () {
-        
-    //     // Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
-    // });
-    // Route::middleware(['justLawyers'])->group(function () {
-    //     // Route::apiResource('/lawyers', LawyerController::class);
-            
-    // });
+    Route::apiResource('issue-requests', IssueRequestController::class)->only(['store','update','destroy']);
+    Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
+   
     
     Route::middleware(['check.permission'])->group(function () {
+        Route::apiResource('issue-requests', IssueRequestController::class)->only(['index','show']);
+        Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::put('/lawyer/profile', [LawyerController::class, 'update']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
         Route::apiResource('/employees', EmployeeController::class);

@@ -17,6 +17,7 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
 use Illuminate\Support\Facades\Route;
 
+
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

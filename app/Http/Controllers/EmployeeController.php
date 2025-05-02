@@ -19,11 +19,6 @@ class EmployeeController extends Controller
 
     public function index()
     {
-<<<<<<< HEAD
-        // BCOmment2
-        // comment for test
-=======
->>>>>>> B_Rayyan
         return $this->employeeService->list();
     }
 

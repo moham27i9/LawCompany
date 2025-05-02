@@ -90,7 +90,6 @@ class AuthService
         $user = $this->authRepo->find($id);
         return $this->successResponse($user, 'success');
     }
-
     public function changeUserRole($userId, array $data)
 {
     $user = User::with(['employee', 'lawyer'])->findOrFail($userId);
@@ -106,11 +105,9 @@ class AuthService
     }
 
     $newRoleId = $newRole->id;
-
     if ($newRoleId == $currentRoleId) {
         return $this->successResponse($user, 'الدور الحالي هو نفسه', 200);
     }
-
     // موظف → محامي
     if ($user->employee && $newRoleName == 'lawyer') {
         $user->employee->delete();

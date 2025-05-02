@@ -48,11 +48,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
     });
 
+    Route::post('/lawyer/profile', [LawyerController::class, 'update']);
 
     Route::middleware(['check.permission'])->group(function () {
         Route::apiResource('issue-requests', IssueRequestController::class)->only(['index','show']);
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
-        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
         //   employees managment
         Route::apiResource('/employees', EmployeeController::class);

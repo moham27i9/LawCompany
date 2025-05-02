@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('type');
             $table->string('outcome');
-            $table->string('court');
             $table->boolean('is_attend');
             $table->foreignId('issue_id')->constrained('issues')->onDelete('cascade');
             $table->foreignId('lawyer_id')->constrained('lawyers')->onDelete('cascade');

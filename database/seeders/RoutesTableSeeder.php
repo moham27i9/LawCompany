@@ -46,13 +46,23 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'show permissions for role', 'path' => '/api/roles/{roleId}/permissions', 'method' => 'GET'],
 
             // Lawyer-specific
-            ['name' => 'show profile as lawyer', 'path' => '/api/lawyer/profile', 'method' => 'GET'],
-            ['name' => 'update lawyer profile ', 'path' => '/api/lawyer/profile', 'method' => 'PUT'],
-            ['name' => 'add lawyer profile', 'path' => '/api/lawyers/create', 'method' => 'POST'],
+            ['name' => 'show profile as lawyer', 'path' => '/api/lawyer/profile', 'method' => 'GET'],//26
+            ['name' => 'update lawyer profile ', 'path' => '/api/lawyer/profile', 'method' => 'PUT'],//27
+            ['name' => 'add lawyer profile', 'path' => '/api/lawyers/create', 'method' => 'POST'],//28
             ['name' => 'show all permissions', 'path' => '/api/permissions', 'method' => 'GET'],//29
             ['name' => 'show all hiring requests', 'path' => '/api/hiring-requests', 'method' => 'GET'],
             ['name' => 'show hiring request', 'path' => '/api/hiring-requests/show/{id}', 'method' => 'GET'],
-            ['name' => 'add hiring request', 'path' => '/api/hiring-requests', 'method' => 'POST'],
+            ['name' => 'add hiring request', 'path' => '/api/hiring-requests', 'method' => 'POST'],//32
+            //issues
+            ['name' => 'show all issues', 'path' => '/api/issues', 'method' => 'GET'],//33
+            ['name' => 'show issue', 'path' => '/api/issues/{id}', 'method' => 'GET'],//34
+            ['name' => 'add issue', 'path' => '/api/issues/{user_id}', 'method' => 'POST'],//35
+            ['name' => 'update issue', 'path' => '/api/issues/{id}', 'method' => 'PUT'],//36
+            ['name' => 'delete issue', 'path' => '/api/issues/{id}', 'method' => 'DELETE'],//37
+            ['name' => 'show all issue requests', 'path' => '/api/issue-requests', 'method' => 'GET'],//38
+            ['name' => 'show issue request', 'path' => '/api/issue-requests/{id}', 'method' => 'GET'],//39
+            ['name' => 'update issue request', 'path' => '/api/admin/issue-requests/{id}', 'method' => 'PUT'],//40
+           
         ];
 
         foreach ($routes as $route) {

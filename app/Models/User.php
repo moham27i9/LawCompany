@@ -130,7 +130,10 @@ public function lawyer()
 {
     return $this->hasOne(Lawyer::class);
 }
-
+public function caseRequests()
+{
+    return $this->hasMany(IssueRequest::class);
+}
 
     protected function casts(): array
     {

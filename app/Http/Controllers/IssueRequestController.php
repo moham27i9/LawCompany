@@ -37,7 +37,9 @@ class IssueRequestController extends Controller
 
     public function show($id)
     {
-        return $this->successResponse($this->service->get($id), 'Issue request details');
+        $issue = $this->service->get($id);
+        $this->authorize('view', $issue);
+        return $this->successResponse($issue, 'Issue request details');
     }
 
     public function update(UpdateIssueRequestRequest $request, $id)

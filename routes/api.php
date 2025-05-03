@@ -17,14 +17,17 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
 use Illuminate\Support\Facades\Route;
 
+
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/forgot-password', ForgotPasswordController::class);
+Route::post('/reset-password', ResetPasswordController::class);
 Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
-    
+
     //  Profile & Logout
     Route::post('/profiles/create/', [ProfileController::class, 'store']);
     Route::get('/profile/{id}', [ProfileController::class, 'show']);
@@ -32,14 +35,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update']);
     Route::delete('/profile', [ProfileController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    
+
     Route::get('/getRole', [AuthController::class, 'getRole']);
-    
-    Route::post('/forgot-password', ForgotPasswordController::class);
-    Route::post('/reset-password', ResetPasswordController::class);
+
     Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
     Route::get('/lawyers', [LawyerController::class, 'index']);
-    
+
     Route::get('/hiring-requests/show/{id}', [HiringRequestController::class, 'show']);
     Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
     Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
@@ -51,11 +52,11 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
-        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
+        //   employees managment
         Route::apiResource('/employees', EmployeeController::class);
         Route::apiResource('/users', AuthController::class);
-        Route::post('/hiring-requests', [HiringRequestController::class, 'store']); 
+        Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
         Route::delete('/users/delete/{id}', [AuthController::class, 'destroy']);
         Route::put('/users/change-role/{id}', [AuthController::class, 'changeRole']);
         Route::apiResource('routes', RouteController::class);
@@ -73,16 +74,37 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/issues/{id}', [IssueController::class, 'update']);
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
     });
-    
-    
-    
+
+
+
+
+
     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
         Route::get('/unread', [NotificationController::class, 'unread']);
         Route::post('/mark-all', [NotificationController::class, 'markAll']);
         Route::post('/mark-one/{id}', [NotificationController::class, 'markOne']);
         Route::delete('/{id}', [NotificationController::class, 'destroy']);
+
+        // lawyers managment
     });
-    
+
+    Route::middleware(['hr_only'])->group(function () {
+
+        Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+        Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
+    });
+    Route::middleware(['justLawyers'])->group(function () {
+        // Route::apiResource('/lawyers', LawyerController::class);
+
+        Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
+
+        Route::delete('/lawyer/profile', [LawyerController::class, 'destroy']);
+
+        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
+
+        Route::post('/lawyers/create', [LawyerController::class, 'store']);
+    });
+
 });
 

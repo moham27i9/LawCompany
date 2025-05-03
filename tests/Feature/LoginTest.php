@@ -14,12 +14,12 @@ class LoginTest extends TestCase
 
     public function test_user_can_login_with_valid_credentials()
     {
-        // استخدم السييدر
+
         $this->seed(RoleSeeder::class);
 
         $roleId = Role::where('name', 'user')->value('id');
 
-        // إنشاء مستخدم باستخدام ID حقيقي من جدول الأدوار
+       
         $user = User::create([
             'name' => 'Rayyan Tester',
             'email' => 'rayyan@example.com',

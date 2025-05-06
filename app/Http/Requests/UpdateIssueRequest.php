@@ -13,7 +13,7 @@ class UpdateIssueRequest extends FormRequest
     {
         return  true;
     }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,13 +22,20 @@ class UpdateIssueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|required|string|max:255',
-            'category' => 'sometimes|required|string',
-            'court_name' => 'sometimes|required|string',
-            'status' => 'sometimes|required|in:open,in_progress,closed,archived',
-            'priority' => 'sometimes|required|in:normal,medium,high,critical',
-            'start_date' => 'sometimes|nullable|date',
-            'end_date' => 'sometimes|nullable|date',
+            'total_cost' => 'sometimes|decimal:2',
+            'number_of_payments' => 'sometimes|integer',
+            'title' => 'sometimes|string|max:255',
+            'issue_number' => 'sometimes|string',
+            'category' => 'sometimes|string',
+           'amount_paid' => 'sometimes|numeric',
+            'court_name' => 'sometimes|string',
+            'opponent_name' => 'sometimes|string',
+            'status' => 'sometimes|in:open,in_progress,closed,archived',
+            'priority' => 'sometimes|in:normal,medium,high,critical',
+            'end_date' => 'sometimes|date',
+            'description' => 'sometimes|string',
+            'lawyer_ids'   => ['sometimes', 'array', 'size:4'],
+            'lawyer_ids.*' => ['integer', 'exists:users,id'],
         ];
     }
 }

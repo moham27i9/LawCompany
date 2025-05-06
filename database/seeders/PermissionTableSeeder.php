@@ -49,7 +49,7 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'delete_permission', 'app_route_id' =>23],
             ['name' => 'assign_permission_to_role', 'app_route_id' => 24],
             ['name' => 'show_permissions_for_role', 'app_route_id' => 25],
-            
+
             // Lawyer-specific
             ['name' => 'show_profile_as_lawyer', 'app_route_id' => 26],
             ['name' => 'update_lawyer_profile ', 'app_route_id' => 27],
@@ -67,7 +67,12 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'show_all_issue_requests', 'app_route_id' => 38],
             ['name' => 'show_issue_request', 'app_route_id' => 39],
             ['name' => 'update_issue_request', 'app_route_id' => 40],
-        
+            //sessions
+            ['name' => 'show_all_sessions', 'app_route_id' => 41],
+            ['name' => 'add_session', 'app_route_id' => 42],
+            ['name' => 'show_session', 'app_route_id' => 43],
+            ['name' => 'update_session', 'app_route_id' => 44],
+            ['name' => 'delete_sessions', 'app_route_id' => 45],
         ];
 
         foreach ($permissions as $permission) {
@@ -104,18 +109,23 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 38],
             ['permission_id' => 39],
             ['permission_id' => 40],
-         
+            ['permission_id' => 41],
+            ['permission_id' => 42],
+            ['permission_id' => 43],
+            ['permission_id' => 44],
+            ['permission_id' => 45],
+
         ];
         $hr_permissions =[
             [ 'permission_id' => 32],];
-       
+
         $lawyer_permissions =[
             [ 'permission_id' => 26],
             [ 'permission_id' => 27],
             [ 'permission_id' => 28],
             ['permission_id' => 33],
             ['permission_id' => 34],
-        
+
         ];
         $intern_permissions =[
             [ 'permission_id' => 26],
@@ -123,32 +133,32 @@ class PermissionTableSeeder extends Seeder
             [ 'permission_id' => 28],
             ['permission_id' => 33],
             ['permission_id' => 34],
-        
+
         ];
 
         foreach ($admin_permissions as $admin_permission) {
-          
+
             DB::table('role_permissions')->insert([
                 'role_id'=> 1,
                 'permission_id'=> $admin_permission['permission_id'] ,
                 ]);
         }
         foreach ($hr_permissions as $hr_permission) {
-          
+
             DB::table('role_permissions')->insert([
                 'role_id'=> 3,
                 'permission_id'=> $hr_permission['permission_id'] ,
                 ]);
         }
         foreach ($lawyer_permissions as $lawyer_permission) {
-          
+
             DB::table('role_permissions')->insert([
                 'role_id'=> 5,
                 'permission_id'=> $lawyer_permission['permission_id'] ,
                 ]);
         }
         foreach ($intern_permissions as $intern_permission) {
-          
+
             DB::table('role_permissions')->insert([
                 'role_id'=> 6,
                 'permission_id'=> $intern_permission['permission_id'] ,

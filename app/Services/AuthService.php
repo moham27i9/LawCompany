@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services;
+
+use App\Models\RefreshToken;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
@@ -8,6 +10,8 @@ use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ChangeRoleNotification;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -45,8 +49,15 @@ class AuthService
 
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
+        $refreshToken = Str::random(64);
+        RefreshToken::create([
+            'user_id' => $user->id,
+            'token' => hash('sha256', $refreshToken),
+            'expires_at' => Carbon::now()->addDays(30),
+        ]);
         return $this->successResponse(
-            ['token' => $token],
+            ['token' => $token,
+             'refresh_token' => $refreshToken],
             'Login successful',
             200
         );
@@ -79,7 +90,6 @@ class AuthService
         $user = $this->authRepo->find($id);
         return $this->successResponse($user, 'success');
     }
-
     public function changeUserRole($userId, array $data)
 {
     $user = User::with(['employee', 'lawyer'])->findOrFail($userId);
@@ -95,15 +105,9 @@ class AuthService
     }
 
     $newRoleId = $newRole->id;
-
-    if ($currentRoleId == 1) {
-        return $this->errorResponse('لا يمكن تغيير دور الأدمن!', 422, null);
-    }
-
     if ($newRoleId == $currentRoleId) {
         return $this->successResponse($user, 'الدور الحالي هو نفسه', 200);
     }
-
     // موظف → محامي
     if ($user->employee && $newRoleName == 'lawyer') {
         $user->employee->delete();

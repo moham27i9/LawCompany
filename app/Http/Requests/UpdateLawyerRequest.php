@@ -21,12 +21,17 @@ class UpdateLawyerRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [   
+        return [
             'license_number' => 'sometimes|string',
         'experience_years' => 'sometimes|integer',
         'type' => 'sometimes|string',
         'specialization' => 'sometimes|string',
         'certificate' => 'sometimes|string',
+             'phone' => 'sometimes|string|max:15',
+            'age' => 'sometimes|integer|min:18|max:100',
+            'address' => 'sometimes|string',
+            'scientificLevel' => 'sometimes|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 }

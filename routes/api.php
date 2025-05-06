@@ -13,6 +13,8 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\IssueController;
+use App\Http\Controllers\IssueRequestController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,6 +23,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', ForgotPasswordController::class);
 Route::post('/reset-password', ResetPasswordController::class);
+Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -35,8 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/getRole', [AuthController::class, 'getRole']);
 
-    Route::post('/forgot-password', ForgotPasswordController::class);
-    Route::post('/reset-password', ResetPasswordController::class);
     Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
     Route::get('/lawyers', [LawyerController::class, 'index']);
 
@@ -44,22 +45,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
     Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
 
-
-
-
-
-
-    Route::get('/notifications', [NotificationController::class, 'getNotifications']);
-    Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
-    Route::get('/lawyers', [LawyerController::class, 'index']);
-
-    Route::middleware(['applicant_only'])->group(function () {
-        Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
-    });
+    Route::apiResource('issue-requests', IssueRequestController::class)->only(['store','update','destroy']);
+    Route::apiResource('issue-requests', IssueRequestController::class)->only(['index','show']);
+    Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
 
 
     Route::middleware(['check.permission'])->group(function () {
-        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
+        Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
         //   employees managment
         Route::apiResource('/employees', EmployeeController::class);
@@ -74,7 +66,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+         //admin & lawyer & intern
+        Route::get('/issues', [IssueController::class, 'index']);
+        Route::get('/issues/{id}', [IssueController::class, 'show']);
+        //admin
+        Route::post('/issues/{user_id}', [IssueController::class, 'store']);
+        Route::put('/issues/{id}', [IssueController::class, 'update']);
+        Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
     });
+
+
+
 
 
     Route::prefix('notifications')->group(function () {

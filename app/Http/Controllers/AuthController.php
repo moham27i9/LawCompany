@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
 use App\Http\Requests\UpdateUserRoleRequest;
-
+use App\Models\RefreshToken;
 
 class AuthController extends Controller
 {
@@ -71,13 +71,34 @@ class AuthController extends Controller
     }
   
 
-  
-
     public function changeRole(UpdateUserRoleRequest $request, $id)
     {
         return $this->authService->changeUserRole($id, $request->validated());
     }
     
+    public function refreshToken(Request $request)
+{
+    $request->validate([
+        'refresh_token' => 'required'
+    ]);
+
+    $hashed = hash('sha256', $request->refresh_token);
+
+    $record = RefreshToken::where('token', $hashed)
+        ->where('expires_at', '>', now())
+        ->first();
+
+    if (!$record) {
+        return $this->errorResponse('Invalid or expired refresh token', 401);
+    }
+
+    // إنشاء Access Token جديد
+    $accessToken = $record->user->createToken('api-token')->plainTextToken;
+
+    return $this->successResponse([
+        'access_token' => $accessToken
+    ], 'Access token refreshed');
+}
 
 
 }

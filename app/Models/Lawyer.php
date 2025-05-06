@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $license_number
@@ -47,6 +47,12 @@ class Lawyer extends Model
         'type',
         'user_id',
         'specialization',
+        'age',
+        'phone',
+        'address',
+        'image',
+        'user_id',
+        'scientificLevel',
     ];
     public function leaves()
     {

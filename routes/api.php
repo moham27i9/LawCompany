@@ -57,20 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
     });
 
-    //  Admin Only Routes
-    // Route::middleware('admin')->group(function () {
-
-
-    // });
-
-    // Route::middleware(['hr_only'])->group(function () {
-
-    //     // Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
-    // });
-    // Route::middleware(['justLawyers'])->group(function () {
-    //     // Route::apiResource('/lawyers', LawyerController::class);
-
-    // });
 
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/lawyer/profile', [LawyerController::class, 'update']);

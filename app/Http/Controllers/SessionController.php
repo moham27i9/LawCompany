@@ -1,0 +1,57 @@
+<?php
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreSessionRequest;
+use App\Http\Requests\UpdateSessionRequest;
+use App\Services\SessionService;
+use App\Traits\ApiResponseTrait;
+
+class SessionController extends Controller
+{
+    use ApiResponseTrait;
+
+    protected $sessionService;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->sessionService = $sessionService;
+    }
+
+    public function index()
+    {
+        $sessions = $this->sessionService->all();
+        return $this->successResponse($sessions, 'Sessions retrieved successfully');
+    }
+
+    public function show($id)
+    {
+        $session = $this->sessionService->getById($id);
+        if ($session)
+            return $this->successResponse($session, 'Session retrieved successfully');
+        return $this->errorResponse('Session not found', 404);
+    }
+
+    public function store(StoreSessionRequest $request)
+    {
+        $session = $this->sessionService->create($request->validated());
+        if ($session)
+            return $this->successResponse($session, 'Session created successfully', 201);
+        return $this->errorResponse('Failed to create session', 422);
+    }
+
+    public function update(UpdateSessionRequest $request, $id)
+    {
+        $session = $this->sessionService->update($id, $request->validated());
+        if ($session)
+            return $this->successResponse($session, 'Session updated successfully');
+        return $this->errorResponse('Failed to update session', 422);
+    }
+
+    public function destroy($id)
+    {
+        $deleted = $this->sessionService->delete($id);
+        if ($deleted)
+            return $this->successResponse(null, 'Session deleted successfully');
+        return $this->errorResponse('Failed to delete session', 422);
+    }
+}

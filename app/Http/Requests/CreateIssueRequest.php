@@ -19,6 +19,7 @@ class CreateIssueRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
         return [
@@ -27,12 +28,17 @@ class CreateIssueRequest extends FormRequest
             'title' => 'required|string|max:255',
             'issue_number' => 'required|string|unique:issues,issue_number',
             'category' => 'required|string',
+           'amount_paid' => 'nullable|numeric',
             'court_name' => 'required|string',
             'opponent_name' => 'required|string',
             'status' => 'required|in:open,in_progress,closed,archived',
             'priority' => 'required|in:normal,medium,high,critical',
-            'start_date' => 'nullable|date',
+            'start_date' => 'required|date',
             'end_date' => 'nullable|date',
+            'description' => 'nullable|string',
+            'lawyer_ids'   => ['required', 'array', 'size:4'],
+            'lawyer_ids.*' => ['integer', 'exists:users,id'],
+
         ];
     }
 }

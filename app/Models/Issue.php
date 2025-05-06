@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $title
@@ -61,9 +61,14 @@ class Issue extends Model
         'priority',
         'start_date',
         'end_date',
-   
+        'lawyer_ids', // ✅ أضف هذا
     ];
-    
+
+    protected $casts = [
+        'lawyer_ids' => 'array', // ✅ لضمان التعامل كمصفوفة تلقائياً
+    ];
+
+
 
     public function invoices()
 {

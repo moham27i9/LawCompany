@@ -44,7 +44,7 @@ public function update($id, array $data)
     ]);
 
     $profile = $lawyer->user->profile;
-
+    $lawyerProfile=[];
     if ($profile) {
         $profileData = [
             'age'             => $data['age']             ?? $profile->age,

@@ -62,7 +62,14 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'show all issue requests', 'path' => '/api/issue-requests', 'method' => 'GET'],//38
             ['name' => 'show issue request', 'path' => '/api/issue-requests/{issue_request}', 'method' => 'GET'],//39
             ['name' => 'update issue request', 'path' => '/api/admin/issue-requests/{id}', 'method' => 'PUT'],//40
-           
+            //sessions
+            ['name' => 'show all sessions', 'path' => '/api/sessions', 'method' => 'GET'],//41
+            ['name' => 'add session', 'path' => '/api/sessions', 'method' => 'POST'],//42
+            ['name' => 'show session', 'path' => '/api/sessions/{id}', 'method' => 'GET'],//43
+            ['name' => 'update session', 'path' => '/api/sessions/{id}', 'method' => 'PUT'],//44
+            ['name' => 'delete sessions', 'path' => '/api/sessions/{id}', 'method' => 'DELETE'],//45
+
+
         ];
 
         foreach ($routes as $route) {

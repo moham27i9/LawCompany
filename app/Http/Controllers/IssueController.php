@@ -38,7 +38,7 @@ class IssueController extends Controller
 
     public function update(UpdateIssueRequest $request, $id)
     {
-        $issue = $this->issueService->update($id, $request->validated());
+        $issue = $this->issueService->update($id ,$request->validated());
         return $this->successResponse($issue, 'Issue updated');
     }
 

@@ -13,7 +13,7 @@ class UpdateIssueRequest extends FormRequest
     {
         return  true;
     }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -30,5 +30,6 @@ class UpdateIssueRequest extends FormRequest
             'start_date' => 'sometimes|nullable|date',
             'end_date' => 'sometimes|nullable|date',
         ];
+        
     }
 }

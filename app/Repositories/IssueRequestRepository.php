@@ -13,6 +13,7 @@ class IssueRequestRepository
 
     public function getById($id)
     {
+        
         return IssueRequest::with('user')->findOrFail($id);
     }
 

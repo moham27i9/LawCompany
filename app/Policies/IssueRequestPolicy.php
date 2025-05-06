@@ -21,7 +21,8 @@ class IssueRequestPolicy
      */
     public function view(User $user, IssueRequest $issueRequest): bool
     {
-        return false;
+       
+        return $user->id === $issueRequest->user_id || $user->role_id ===1;
     }
 
     /**

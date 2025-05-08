@@ -74,10 +74,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/issues/{user_id}', [IssueController::class, 'store']);
         Route::put('/issues/{id}', [IssueController::class, 'update']);
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
-        
+
        // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);
-        Route::post('/sessions', [SessionController::class, 'store']);
+        Route::post('/sessions/{issue_id}', [SessionController::class, 'store']);
         Route::get('/sessions/{id}', [SessionController::class, 'show']);
         Route::put('/sessions/{id}', [SessionController::class, 'update']);
         Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);

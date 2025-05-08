@@ -23,8 +23,9 @@ class SessionService
         return $this->sessionRepository->getById($id);
     }
 
-    public function create($data)
+    public function create(array $data, $issueId)
     {
+        $data['issue_id'] = $issueId;
         return $this->sessionRepository->create($data);
     }
 

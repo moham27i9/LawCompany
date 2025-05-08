@@ -18,7 +18,14 @@ class SessionRepository
 
     public function create(array $data)
     {
-        return Session::create($data);
+        return Session::create([
+            'outcome' => $data['outcome'],
+            'court' => $data['court'],
+            'type' => $data['type'],
+            'is_attend' => $data['is_attend'],
+            'issue_id' => $data['issue_id'],
+            'lawyer_id' => $data['lawyer_id'],
+        ]);
     }
 
     public function update($id, array $data)

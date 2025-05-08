@@ -33,10 +33,34 @@ class LawyerService
 
     // app/Services/LawyerService.php
 
-public function getAll()
-{
-    return $this->lawyerRepository->getAll();
-}
+    public function getAll()
+    {
+        $lawyers = $this->lawyerRepository->getAll();
+        if ($lawyers->isEmpty()) {
+            return [];
+        }
+
+        $lawyersData = [];
+        foreach ($lawyers as $lawyer) {
+            $lawyersData[] = [
+                'id' => $lawyer->id,
+                'name' => $lawyer->user->name,
+                'email' => $lawyer->user->email,
+
+                'address' => $lawyer->user->profile->address,
+                'phone' => $lawyer->user->profile->phone,
+                'age' => $lawyer->user->profile->age,
+                'image' => $lawyer->user->profile->image ? asset($lawyer->user->profile->image) : null,
+
+                'license_number' => $lawyer->license_number,
+                'experience_years' => $lawyer->experience_years,
+                'type' => $lawyer->type,
+                'specialization' => $lawyer->specialization,
+                'certificate' => $lawyer->certificate,
+            ];
+        }
+        return $lawyersData;
+    }
 
 
 public function getById($id)
@@ -45,6 +69,7 @@ public function getById($id)
 
     if ($lawyer) {
         return [
+            'id'=>$lawyer->id,
             'name' => $lawyer->user->name,
             'email' => $lawyer->user->email,
 

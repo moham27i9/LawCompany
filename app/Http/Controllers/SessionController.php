@@ -31,12 +31,10 @@ class SessionController extends Controller
         return $this->errorResponse('Session not found', 404);
     }
 
-    public function store(StoreSessionRequest $request)
+    public function store(StoreSessionRequest $request, $issue_id)
     {
-        $session = $this->sessionService->create($request->validated());
-        if ($session)
-            return $this->successResponse($session, 'Session created successfully', 201);
-        return $this->errorResponse('Failed to create session', 422);
+        $session = $this->sessionService->create($request->validated(), $issue_id);
+        return $this->successResponse($session, 'Session created successfully');
     }
 
     public function update(UpdateSessionRequest $request, $id)

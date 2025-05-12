@@ -23,4 +23,8 @@ class RolePermissionRepository
     {
         return Role::with('permissions')->findOrFail($roleId);
     }
+    public function create(array $data)
+    {
+        return Role::create($data);
+    }
 }

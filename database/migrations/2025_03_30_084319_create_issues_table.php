@@ -27,7 +27,7 @@ return new class extends Migration
             $table->enum('priority', ['normal', 'medium', 'high', 'critical'])->default('normal');
             $table->timestamp('start_date')->nullable();    // تاريخ بدء القضية
             $table->timestamp('end_date')->nullable();      // تاريخ إنهاء القضية (عند الإغلاق)
-            $table->json('lawyer_ids'); // معرفات المحامين المسؤولين
+            // $table->json('lawyer_ids'); // معرفات المحامين المسؤولين
             $table->timestamps();
         });
 

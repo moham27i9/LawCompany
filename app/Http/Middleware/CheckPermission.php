@@ -19,7 +19,7 @@ class CheckPermission
         $route = AppRoute::where('path',$routePath)
         ->where('method', strtoupper($method))
         ->first();
-        dd($route);
+   
         if (!$route) {
             return response()->json(['message' => 'غير مسموح'], 403);
         }

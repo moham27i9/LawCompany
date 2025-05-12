@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateIssueRequest;
+use App\Http\Requests\UpdateIssuePriorityRequest;
 use App\Http\Requests\UpdateIssueRequest;
 use App\Services\IssueService;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
 
 class IssueController extends Controller
 {
@@ -20,6 +22,7 @@ class IssueController extends Controller
 
     public function store(CreateIssueRequest $request , $user_id)
     {
+       
         $issue = $this->issueService->create($request->validated() , $user_id);
         return $this->successResponse($issue, 'Issue created successfully');
     }
@@ -48,4 +51,18 @@ class IssueController extends Controller
         return $this->successResponse(null, 'Issue deleted');
     }
 
+    public function updatePriority(UpdateIssuePriorityRequest $request, $id)
+    {
+       
+      
+        $issue = $this->issueService->changePriority($id,$request->validated());
+        return $this->successResponse($issue, 'تم تغيير أولوية القضية');
+    }
+
+    public function assignIssue($issueId,$lawyerId)
+    {
+        //   dd($lawyerId   );
+        $this->issueService->assignIssue($issueId, $lawyerId);
+        return $this->successResponse(null,'issue assigned for lawyer');
+    }
 }

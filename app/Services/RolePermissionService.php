@@ -22,4 +22,9 @@ class RolePermissionService
     {
         return $this->repo->getPermissions($roleId);
     }
+
+    public function create(array $data)
+    {
+        return $this->repo->create($data); 
+    }
 }

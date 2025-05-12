@@ -36,8 +36,8 @@ class CreateIssueRequest extends FormRequest
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'description' => 'nullable|string',
-            'lawyer_ids'   => ['required', 'array', 'size:4'],
-            'lawyer_ids.*' => ['integer', 'exists:users,id'],
+            // 'lawyer_ids'   => ['required', 'array', 'size:4'],
+            // 'lawyer_ids.*' => ['integer', 'exists:users,id'],
 
         ];
     }

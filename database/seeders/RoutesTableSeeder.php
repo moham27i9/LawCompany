@@ -68,6 +68,9 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'show session', 'path' => '/api/sessions/{id}', 'method' => 'GET'],//43
             ['name' => 'update session', 'path' => '/api/sessions/{id}', 'method' => 'PUT'],//44
             ['name' => 'delete sessions', 'path' => '/api/sessions/{id}', 'method' => 'DELETE'],//45
+            ['name' => 'add new role', 'path' => '/api/roles/create', 'method' => 'POST'],//46
+            ['name' => 'update issue priority', 'path' => '/api/issues/{id}/priority', 'method' => 'POST'],//47
+            ['name' => 'assign issue', 'path' => '/api/issues/{issue_id}/lawyers/{lawyer_id}', 'method' => 'POST'],//48
 
 
         ];

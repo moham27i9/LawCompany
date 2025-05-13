@@ -22,7 +22,7 @@ class IssueRepository
             'number_of_payments'=> $data['number_of_payments'] ,
             'court_name'=> $data['court_name'] ,
             'opponent_name'=> $data['opponent_name'] ,
-            'lawyer_ids' => $data['lawyer_ids'] ?? [], // ✅ هنا
+          //  'lawyer_ids' => $data['lawyer_ids'] ?? [], // ✅ هنا
             'user_id'=> $user_id,
         ]);
     }
@@ -77,6 +77,23 @@ class IssueRepository
         $issue = Issue::findOrFail($id);
         $issue->delete();
         return true;
+    }
+
+    public function updatePriority($issueId, $newPriority)
+    {
+          
+        $issue = Issue::findOrFail($issueId);
+        $issue->priority = $newPriority;
+        $issue->save();
+        return $issue;
+    }
+
+    public function syncIssue($issueId,$lawyerId)
+    {
+   
+        $issue = Issue::findOrFail($issueId);
+         return $issue->lawyers()->attach($lawyerId);
+   
     }
 
 

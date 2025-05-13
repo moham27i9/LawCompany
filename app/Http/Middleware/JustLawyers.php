@@ -11,10 +11,8 @@ class JustLawyers
     {
         $user = auth()->user();
 
-        if (!$user || $user->role_id != 5) {
-            return response()->json([
-                'message' => 'Unauthorized. Only lawyers can access this route.'
-            ], 403);
+        if ($user->role->name !== 'lawyer' || !$user->lawyer) {
+            return response()->json(['message' => 'لم يتم تفعيلك كمحامي بعد.يجب عليك إكمال ملفك الشخصي'], 403);
         }
 
         return $next($request);

@@ -61,12 +61,12 @@ class Issue extends Model
         'priority',
         'start_date',
         'end_date',
-        'lawyer_ids', // ✅ أضف هذا
+        // 'lawyer_ids', 
     ];
 
-    protected $casts = [
-        'lawyer_ids' => 'array', // ✅ لضمان التعامل كمصفوفة تلقائياً
-    ];
+    // protected $casts = [
+    //     'lawyer_ids' => 'array', 
+    // ];
 
 
 
@@ -87,4 +87,10 @@ public function attend_demand()
 {
     return $this->hasMany(AttendDemand::class);
 }
+
+public function lawyers()
+{
+    return $this->belongsToMany(Lawyer::class, 'issue_lawyer');
+}
+
 }

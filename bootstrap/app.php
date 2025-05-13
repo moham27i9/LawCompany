@@ -26,7 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->group('hr_only', [
             App\Http\Middleware\CheckRole::class . ':HR',
         ]);
-         $middleware->group('justLawyers', [ App\Http\Middleware\JustLawyers::class]);
+         $middleware->group('verified.lawyer', [ App\Http\Middleware\JustLawyers::class]);
+         $middleware->group('verified.employee', [ App\Http\Middleware\VerifiedEmployee::class]);
          $middleware->group('justClient', [ App\Http\Middleware\JustClient::class]);
          $middleware->group('check.permission', [ App\Http\Middleware\CheckPermission::class]);
 

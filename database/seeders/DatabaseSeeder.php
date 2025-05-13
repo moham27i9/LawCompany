@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             RoutesTableSeeder::class,
             PermissionTableSeeder::class,
+            LawyerSeeder::class,
+            IssueSeeder::class,
         ]);
 
     }

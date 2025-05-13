@@ -72,4 +72,10 @@ class Lawyer extends Model
     {
         return $this->hasMany(AttendDemand::class);
     }
+
+    public function issues()
+    {
+        return $this->belongsToMany(Issue::class, 'issue_lawyer');
+    }
+
 }

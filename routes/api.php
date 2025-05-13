@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('permissions', [PermissionController::class,'destroy']);
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
+        Route::post('roles/create', [RolePermissionController::class, 'store']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
          //admin & lawyer & intern
         Route::get('/issues', [IssueController::class, 'index']);
@@ -74,6 +75,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/issues/{user_id}', [IssueController::class, 'store']);
         Route::put('/issues/{id}', [IssueController::class, 'update']);
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
+        Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
+        Route::post('/issues/{issue_id}/lawyers/{lawyer_id}', [IssueController::class, 'assignIssue']);
 
        // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);
@@ -84,6 +87,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
+    Route::middleware(['verified.lawyer'])->group(function () {
+
+        Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
+
+        Route::delete('/lawyer/profile', [LawyerController::class, 'destroy']);
+
+        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
+
+        Route::post('/lawyers/create', [LawyerController::class, 'store']);
+    });
 
 
 
@@ -101,17 +114,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
         Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
-    });
-    Route::middleware(['justLawyers'])->group(function () {
-        // Route::apiResource('/lawyers', LawyerController::class);
-
-        Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
-
-        Route::delete('/lawyer/profile', [LawyerController::class, 'destroy']);
-
-        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
-
-        Route::post('/lawyers/create', [LawyerController::class, 'store']);
     });
 
 });

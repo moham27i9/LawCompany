@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Session extends Model
+class Sessionss extends Model
 {
-    protected $table = ['sessionss'];
+
+
     protected $fillable = [
         'outcome',
-        'court',
         'type',
         'is_attend',
         'issue_id',

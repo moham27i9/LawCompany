@@ -32,6 +32,6 @@ class SessionAppointment extends Model
     ];
     public function session()
     {
-        return $this->belongsTo(Session::class);
+        return $this->belongsTo(Sessionss::class);
     }
 }

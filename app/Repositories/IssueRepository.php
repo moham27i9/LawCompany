@@ -22,7 +22,6 @@ class IssueRepository
             'number_of_payments'=> $data['number_of_payments'] ,
             'court_name'=> $data['court_name'] ,
             'opponent_name'=> $data['opponent_name'] ,
-          //  'lawyer_ids' => $data['lawyer_ids'] ?? [], // ✅ هنا
             'user_id'=> $user_id,
         ]);
     }
@@ -52,7 +51,6 @@ class IssueRepository
             'number_of_payments'=> $data['number_of_payments']?? $issue->number_of_payments ,
             'court_name'=> $data['court_name'] ?? $issue->court_name,
             'opponent_name'=> $data['opponent_name'] ?? $issue->opponent_name,
-            'lawyer_ids' => array_key_exists('lawyer_ids', $data) ? $data['lawyer_ids'] : $issue->lawyer_ids,
         ]);
         $info =[
             'title'=> $data['title'] ?? $issue->title ,
@@ -67,7 +65,6 @@ class IssueRepository
             'number_of_payments'=> $data['number_of_payments']?? $issue->number_of_payments ,
             'court_name'=> $data['court_name'] ?? $issue->court_name,
             'opponent_name'=> $data['opponent_name'] ?? $issue->opponent_name,
-            'lawyer_ids' => array_key_exists('lawyer_ids', $data) ? $data['lawyer_ids'] : $issue->lawyer_ids,
         ];
         return $info;
 
@@ -88,13 +85,14 @@ class IssueRepository
         return $issue;
     }
 
-    public function syncIssue($issueId,$lawyerId)
+   public function syncIssue($issueId, array $lawyerIds)
+{
+    $issue = Issue::findOrFail($issueId);
+    return $issue->lawyers()->syncWithoutDetaching($lawyerIds); // يُضيف بدون حذف الموجود
+}
+
+      public function getLawyersByIssueId($caseId)
     {
-   
-        $issue = Issue::findOrFail($issueId);
-         return $issue->lawyers()->attach($lawyerId);
-   
+        return Issue::with('lawyers.user')->findOrFail($caseId)->lawyers;
     }
-
-
 }

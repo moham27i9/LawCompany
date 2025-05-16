@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('points', function (Blueprint $table) {
             $table->id();
             $table->integer('rate');
-            $table->foreignId('session_id')->constrained('sessionss')->onDelete('cascade');
+            $table->foreignId('session_id')->constrained('sessionsses')->onDelete('cascade');
             $table->timestamps();
         });
     }

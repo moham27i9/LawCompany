@@ -14,11 +14,7 @@ class UpdateProfileRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+  
     public function rules(): array
     {
         return [
@@ -30,4 +26,25 @@ class UpdateProfileRequest extends FormRequest
 
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'phone.string' => 'رقم الهاتف يجب أن يكون نصًا.',
+        'phone.max' => 'رقم الهاتف يجب ألا يتجاوز 15 رقمًا.',
+        
+        'age.integer' => 'العمر يجب أن يكون رقمًا صحيحًا.',
+        'age.min' => 'العمر يجب ألا يقل عن 18 سنة.',
+        'age.max' => 'العمر يجب ألا يتجاوز 100 سنة.',
+        
+        'address.string' => 'العنوان يجب أن يكون نصًا.',
+        
+        'scientificLevel.string' => 'المستوى العلمي يجب أن يكون نصًا.',
+        
+        'image.image' => 'الملف يجب أن يكون صورة.',
+        'image.mimes' => ' jpg أو jpeg أو png:يجب أن تكون الصورة بصيغة:',
+        'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميغابايت.',
+    ];
+}
+
 }

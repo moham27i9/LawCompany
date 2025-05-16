@@ -10,8 +10,8 @@ class JustLawyers
     public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
-
-        if ($user->role->name !== 'lawyer' || !$user->lawyer) {
+ 
+        if ($user->role->name !== 'lawyer') {
             return response()->json(['message' => 'لم يتم تفعيلك كمحامي بعد.يجب عليك إكمال ملفك الشخصي'], 403);
         }
 

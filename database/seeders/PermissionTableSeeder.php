@@ -76,6 +76,7 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'add_new_role', 'app_route_id' => 46],
             ['name' => 'update_issue_priority', 'app_route_id' => 47],
             ['name' => 'assign_issue', 'app_route_id' => 48],
+            ['name' => 'show_lawyers_in_issue', 'app_route_id' => 49],
         ];
 
         foreach ($permissions as $permission) {
@@ -120,6 +121,7 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 46],
             ['permission_id' => 47],
             ['permission_id' => 48],
+            ['permission_id' => 49],
 
         ];
         $hr_permissions =[

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('session_appointments', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->foreignId('session_id')->constrained('sessionss')->onDelete('cascade');
+            $table->foreignId('session_id')->constrained('sessionsses')->onDelete('cascade');
             $table->timestamps();
         });
     }

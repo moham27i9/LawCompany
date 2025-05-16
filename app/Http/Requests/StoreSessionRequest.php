@@ -2,24 +2,47 @@
 namespace App\Http\Requests;
 
 use App\Models\Issue;
+
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSessionRequest extends FormRequest
 {
-    public function rules(): array
-    {
-        return [
-            'outcome' => 'required|string',
-            'court' => 'required|string',
-            'type' => 'required|string',
-            'is_attend' => 'required|boolean',
-            'lawyer_id' => ['required', 'integer', function ($attribute, $value, $fail) {
-                $issueId = request()->route('issue_id'); // من URL
-                $issue = Issue::find($issueId);
-                if (!$issue || !in_array($value, $issue->lawyer_ids ?? [])) {
-                    $fail("This lawyer is not assigned to this issue.");
-                }
-            }],
-        ];
-    }
+   
+public function rules(): array
+{
+    return [
+        'outcome' => 'sometimes|in:held,postponed,canceled,rescheduled,closed,judged,attended_by_lawyer_only,attended_by_client_only,absent',
+        'type' => 'required|in:preliminary,hearing,judgment,pleading,postponed,mediation,followup,consultation',
+        'is_attend' => 'sometimes|boolean',
+        'lawyer_id' => ['required', 'integer', function ($attribute, $value, $fail) {
+            $issueId = request()->route('issue_id'); 
+            $issue = Issue::with('lawyers')->find($issueId);
+            if (!$issue) {
+                $fail("Issue not found.");
+                return;
+            }
+            $session= $issue->sessions;
+            $lawyerIds = $issue->lawyers->pluck('id')->toArray();
+            if (!in_array($value, $lawyerIds)) {
+                $fail("This lawyer is not assigned to this issue.");
+            }
+            if (in_array($value, $session->pluck('lawyer_id')->toArray())) {
+                $fail("This lawyer is assigned to this session actually.");
+            }
+        }],
+    ];
+}
+         public function messages(): array
+{
+    return [
+
+        'type.required' => 'حقل نوع الجلسة مطلوب.',
+        'is_attend.boolean'    => '(true أو false)قيمة الحضور يجب أن تكون .',
+        'outcome.in' => 'held, postponed, canceled,rescheduled,closed, judged, attended_by_lawyer_only, attended_by_client_only, absent :نتيجة الجلسة يجب أن تكون واحدة من  ',
+        'type.in' => 'preliminary,hearing,judgment,pleading, postponed, mediation, followup, consultation :الأولوية يجب أن تكون واحدة من',
+        'lawyer_id.required' => 'معرف المحامي مطلوب.',
+        'lawyer_id.integer' => 'معرف المحامي يجب أن يكون عدداً صحيحاً.',
+    ];
+}
+
 }

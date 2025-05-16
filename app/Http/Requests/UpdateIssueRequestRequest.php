@@ -26,4 +26,13 @@ class UpdateIssueRequestRequest extends FormRequest
             'description' => 'sometimes|string',
         ];
     }
+
+       public function messages(): array
+{
+    return [
+        'title.string' => ' العنوان يجب أن يكون نصًا.',
+        'title.max' => 'العنوان يجب ألا يتجاوز 255 محرفاً.',
+        'description.string' => 'العنوان يجب أن يكون نصًا.',
+    ];
+}
 }

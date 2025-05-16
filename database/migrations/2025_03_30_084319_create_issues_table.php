@@ -15,19 +15,19 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('issue_number')->unique();
-            $table->string('category');                    // تصنيف مثل "مدنية" - "جنائية" - "تجارية"
-            $table->string('opponent_name')->nullable();   //اسم الخصم
+            $table->string('category');                   
+            $table->string('opponent_name')->nullable();   
             $table->string('court_name');
-            $table->integer('number_of_payments')->default(0); // عدد الدفعات المدفوعة
-            $table->decimal('total_cost', 12, 2)->nullable();  // التكلفة الإجمالية
-            $table->decimal('amount_paid', 12, 2)->default(0); // المبلغ المدفوع حتى الآن
+            $table->integer('number_of_payments')->default(0); 
+            $table->decimal('total_cost', 12, 2)->nullable();  
+            $table->decimal('amount_paid', 12, 2)->default(0); 
             $table->text('description')->nullable();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // صاحب القضية (العميل)
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
             $table->enum('status', ['open', 'in_progress', 'closed', 'archived'])->default('open');
             $table->enum('priority', ['normal', 'medium', 'high', 'critical'])->default('normal');
-            $table->timestamp('start_date')->nullable();    // تاريخ بدء القضية
-            $table->timestamp('end_date')->nullable();      // تاريخ إنهاء القضية (عند الإغلاق)
-            // $table->json('lawyer_ids'); // معرفات المحامين المسؤولين
+            $table->timestamp('start_date')->nullable();   
+            $table->timestamp('end_date')->nullable();     
+        
             $table->timestamps();
         });
 

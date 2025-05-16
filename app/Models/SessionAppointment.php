@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $date
@@ -25,11 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SessionAppointment extends Model
 {
-    protected $fillable = [
-        'session_id',
-        'date',
- 
-    ];
+protected $fillable = ['date', 'type', 'session_id'];
     public function session()
     {
         return $this->belongsTo(Session::class);

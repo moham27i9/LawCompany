@@ -76,6 +76,12 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'add_new_role', 'app_route_id' => 46],
             ['name' => 'update_issue_priority', 'app_route_id' => 47],
             ['name' => 'assign_issue', 'app_route_id' => 48],
+            //appointments
+            ['name' => 'create_appointment', 'app_route_id' => 49],
+            ['name' => 'show_appointments', 'app_route_id' => 50],
+            ['name' => 'show_appointment', 'app_route_id' => 51],
+            ['name' => 'update_appointment', 'app_route_id' => 52],
+            ['name' => 'delete_appointment', 'app_route_id' => 53],
         ];
 
         foreach ($permissions as $permission) {
@@ -131,7 +137,11 @@ class PermissionTableSeeder extends Seeder
             [ 'permission_id' => 28],
             ['permission_id' => 33],
             ['permission_id' => 34],
-
+            ['permission_id' => 49],
+            ['permission_id' => 50],
+            ['permission_id' => 51],
+            ['permission_id' => 52],
+            ['permission_id' => 53],
         ];
         $intern_permissions =[
             [ 'permission_id' => 26],
@@ -139,6 +149,11 @@ class PermissionTableSeeder extends Seeder
             [ 'permission_id' => 28],
             ['permission_id' => 33],
             ['permission_id' => 34],
+             ['permission_id' => 49],
+            ['permission_id' => 50],
+            ['permission_id' => 51],
+            ['permission_id' => 52],
+            ['permission_id' => 53],
 
         ];
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
+use App\Http\Controllers\SessionAppointmentController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Route;
 
@@ -84,6 +85,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/sessions/{id}', [SessionController::class, 'show']);
         Route::put('/sessions/{id}', [SessionController::class, 'update']);
         Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);
+
+        // sessions appointments
+        Route::prefix('appointments')->group(function () {
+        Route::get('/session/{session_id}', [SessionAppointmentController::class, 'index']); //  جلب كل المواعيد لجلسة معينة
+        Route::post('/{session_id}', [SessionAppointmentController::class, 'store']);
+        Route::get('/{appointment_id}', [SessionAppointmentController::class, 'show']);
+        Route::put('/{appointment_id}', [SessionAppointmentController::class, 'update']);
+        Route::delete('/{appointment_id}', [SessionAppointmentController::class, 'destroy']);
+    });
+
+
     });
 
 

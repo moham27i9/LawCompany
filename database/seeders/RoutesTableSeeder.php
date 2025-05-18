@@ -77,7 +77,12 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'show appointment','path' => '/api/appointments/{appointment_id}','method' => 'GET'],//51
             ['name' => 'update appointment','path' => '/api/appointments/{appointment_id}','method' => 'PUT',],//52
             ['name' => 'delete appointment','path' => '/api/appointments/{appointment_id}','method' => 'DELETE'],//53
-
+            //AttendDemand
+            ['name' => 'create AttendDemand','path' => '/api/AttendDemand/{issue_id}','method' => 'POST'],//54
+            ['name' => 'show AttendDemands','path' => '/api/AttendDemand/issue/{issue_id}','method' => 'GET'],//55
+            ['name' => 'show AttendDemand','path' => '/api/AttendDemand/{attendDemand_id}','method' => 'GET'],//56
+            ['name' => 'update AttendDemand','path' => '/api/AttendDemand/{attendDemand_id}','method' => 'PUT'],//57
+            ['name' => 'delete AttendDemand','path' => '/api/AttendDemand/{attendDemand_id}','method' => 'DELETE'],//58
 
         ];
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attend_demands', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('resault');
+            $table->string('resault')->nullable();
             $table->foreignId('issue_id')->constrained('issues')->onDelete('cascade');
             $table->foreignId('lawyer_id')->constrained('lawyers')->onDelete('cascade');
             $table->timestamps();

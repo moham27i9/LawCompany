@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendDemandController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
@@ -93,7 +94,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{appointment_id}', [SessionAppointmentController::class, 'show']);
         Route::put('/{appointment_id}', [SessionAppointmentController::class, 'update']);
         Route::delete('/{appointment_id}', [SessionAppointmentController::class, 'destroy']);
-    });
+         });
+
+
+          // attend demand
+        Route::prefix('AttendDemand')->group(function () {
+        Route::get('/issue/{issue_id}', [AttendDemandController::class, 'index']);
+        Route::post('/{issue_id}', [AttendDemandController::class, 'store']);
+        Route::get('/{attendDemand_id}', [AttendDemandController::class, 'show']);
+        Route::put('/{attendDemand_id}', [AttendDemandController::class, 'update']);
+        Route::delete('/{attendDemand_id}', [AttendDemandController::class, 'destroy']);
+         });
 
 
     });

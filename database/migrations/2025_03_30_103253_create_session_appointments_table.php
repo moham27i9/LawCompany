@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->dateTime('date');
             $table->string('type')->nullable(); // مثلاً: follow_up, judgment
-            $table->foreignId('session_id')->constrained('sessionss')->onDelete('cascade');
+            $table->foreignId('session_id')->constrained('sessionsses')->onDelete('cascade');
             $table->timestamps();
         });
     }

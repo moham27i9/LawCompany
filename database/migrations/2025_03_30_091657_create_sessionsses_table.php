@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sessionss', function (Blueprint $table) {
+        Schema::create('sessionsses', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->string('outcome');
-            $table->boolean('is_attend');
+            $table->enum('type', ['preliminary', 'hearing', 'judgment', 'pleading', 'postponed', 'mediation', 'followup', 'consultation']);
+            $table->enum('outcome', [ 'held', 'postponed', 'canceled', 'rescheduled', 'closed', 'judged', 'attended_by_lawyer_only', 'attended_by_client_only', 'absent' ]);
+            $table->boolean('is_attend')->default(false);
             $table->foreignId('issue_id')->constrained('issues')->onDelete('cascade');
             $table->foreignId('lawyer_id')->constrained('lawyers')->onDelete('cascade');
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sessionss');
+        Schema::dropIfExists('sessionsses');
     }
 };

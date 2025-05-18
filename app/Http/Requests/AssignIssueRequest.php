@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRoleRequest extends FormRequest
+class AssignIssueRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,8 @@ class UpdateUserRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-          'role_name' => 'required|string'
+                 'lawyer_ids' => 'required|array',
+                 'lawyer_ids.*' => 'exists:lawyers,id'
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'role_name.required' => 'حقل اسم الدور مطلوب.',
-            'role_name.string'   => 'يجب أن يكون اسم الدور نصًا.',
-        ];
-    }
-
 }

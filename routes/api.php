@@ -52,7 +52,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('issue-requests', IssueRequestController::class)->only(['index','show']);
     Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
 
-
+    Route::put('/sessions/{id}', [SessionController::class, 'update']);
+    
+    
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
@@ -70,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
-         //admin & lawyer & intern
+        //admin & lawyer & intern
         Route::get('/issues', [IssueController::class, 'index']);
         Route::get('/issues/{id}', [IssueController::class, 'show']);
         //admin
@@ -78,13 +80,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/issues/{id}', [IssueController::class, 'update']);
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
         Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
-        Route::post('/issues/{issue_id}/lawyers/{lawyer_id}', [IssueController::class, 'assignIssue']);
-
-       // sessions managment
+        Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
+        Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
+        
+        
+        // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);
         Route::post('/sessions/{issue_id}', [SessionController::class, 'store']);
         Route::get('/sessions/{id}', [SessionController::class, 'show']);
-        Route::put('/sessions/{id}', [SessionController::class, 'update']);
         Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);
 
         // sessions appointments
@@ -116,12 +119,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::delete('/lawyer/profile', [LawyerController::class, 'destroy']);
 
-        Route::put('/lawyer/profile', [LawyerController::class, 'update']);
+        Route::post('/lawyer/profile', [LawyerController::class, 'update']);
 
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
     });
-
-
 
     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);

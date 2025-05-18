@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AssignIssueRequest;
 use App\Http\Requests\CreateIssueRequest;
 use App\Http\Requests\UpdateIssuePriorityRequest;
 use App\Http\Requests\UpdateIssueRequest;
@@ -59,10 +60,17 @@ class IssueController extends Controller
         return $this->successResponse($issue, 'تم تغيير أولوية القضية');
     }
 
-    public function assignIssue($issueId,$lawyerId)
+    public function assignIssue(AssignIssueRequest $request, $issueId)
     {
-        //   dd($lawyerId   );
-        $this->issueService->assignIssue($issueId, $lawyerId);
-        return $this->successResponse(null,'issue assigned for lawyer');
+        $this->issueService->assignIssue($issueId, $request->lawyer_ids);
+
+        return $this->successResponse(null, 'تم إسناد القضية للمحامين');
     }
+
+       public function getIssueLawyers($caseId)
+    {
+        $lawyers = $this->issueService->getLawyers($caseId);
+        return $this->successResponse($lawyers, 'Lawyers in the issue');
+    }
+
 }

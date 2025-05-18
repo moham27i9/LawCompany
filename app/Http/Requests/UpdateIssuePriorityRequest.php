@@ -25,4 +25,12 @@ class UpdateIssuePriorityRequest extends FormRequest
                 'priority' => 'required|in:normal,medium,high,critical'
         ];
     }
+
+     public function messages(): array
+{
+    return [
+        'priority.required' => ' الأولوية مطلوبة.',
+        'priority.in' => '"critical" (حرجة) أو"high" (عالية) ,"medium" (متوسطة) , "normal" (عادية):يجب أن تكون الحالة إما ',
+    ];
+}
 }

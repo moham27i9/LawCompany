@@ -28,6 +28,6 @@ class SessionAppointment extends Model
 protected $fillable = ['date', 'type', 'session_id'];
     public function session()
     {
-        return $this->belongsTo(Session::class);
+        return $this->belongsTo(Sessionss::class);
     }
 }

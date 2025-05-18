@@ -24,7 +24,6 @@ class LawyerRepository
 public function getAll()
 {
     return Lawyer::all(); // لجلب معلومات المستخدم المرتبط
-    // return Lawyer::with('user')->get(); // لجلب معلومات المستخدم المرتبط
 }
 
 public function getById($id)
@@ -35,14 +34,13 @@ public function getById($id)
 public function update($id, array $data)
 {
     $lawyer = Lawyer::findOrFail($id);
-
     $lawyer->update([
         'license_number'    => $data['license_number']    ?? $lawyer->license_number,
         'experience_years'  => $data['experience_years']  ?? $lawyer->experience_years,
         'certificate'       => $data['certificate']       ?? $lawyer->certificate,
         'specialization'    => $data['specialization']    ?? $lawyer->specialization,
     ]);
-
+    
     $profile = $lawyer->user->profile;
     $lawyerProfile=[];
     if ($profile) {
@@ -52,10 +50,12 @@ public function update($id, array $data)
             'address'         => $data['address']         ?? $profile->address,
             'scientificLevel' => $data['scientificLevel'] ?? $profile->scientificLevel,
         ];
-
+        
+ 
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             $filename = 'user77_' . $lawyer->user_id . '.' . $data['image']->getClientOriginalExtension();
-            $data['image']->storeAs('public/profile_images', $filename);
+            $data['image']->storeAs('profile_images', $filename, 'public');
+    
             $profileData['image'] = 'storage/profile_images/' . $filename;
         }
         $profile->update($profileData);

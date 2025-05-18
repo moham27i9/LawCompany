@@ -35,6 +35,7 @@ class IssueService
     }
     public function update($id, array $data)
     {
+        
         return $this->issueRepository->update($id, $data);
     }
 
@@ -57,12 +58,26 @@ class IssueService
     }
 
 
-    public function assignIssue($issueId,$lawyerId)
+    public function assignIssue($issueId, array $lawyerIds)
     {
-        $lawyer = Lawyer::findOrFail($lawyerId);
-       $issue = Issue::findOrFail($issueId);
-        $lawyer->user->notify(new GeneralNotification('إسناد قضية', 'إليك'.$issue->issue_number.'تم إسناد القضية رقم','/issues/' . $issue->id));
-        return  $this->issueRepository->syncIssue($issueId, $lawyerId);
+        $issue = Issue::findOrFail($issueId);
+
+        foreach ($lawyerIds as $lawyerId) {
+            $lawyer = Lawyer::findOrFail($lawyerId);
+         
+            // إرسال إشعار
+            $lawyer->user->notify(new GeneralNotification(
+                'إسناد قضية',
+                ' إليك'. $issue->issue_number . ' تم إسناد القضية رقم ' ,
+                '/issues/' . $issue->id
+            ));
+        }
+
+        return $this->issueRepository->syncIssue($issueId, $lawyerIds);
     }
 
+      public function getLawyers($caseId)
+    {
+        return $this->issueRepository->getLawyersByIssueId($caseId);
+    }
 }

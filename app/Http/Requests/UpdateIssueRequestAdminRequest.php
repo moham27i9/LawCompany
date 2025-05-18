@@ -26,4 +26,12 @@ class UpdateIssueRequestAdminRequest extends FormRequest
             'status' => 'sometimes|in:approved,rejected',
         ];
     }
+ public function messages(): array
+{
+    return [
+        'admin_note.string' => 'ملاحظة المدير يجب أن تكون نصاً.',
+        'status.in' => '"rejected" (مرفوض) أو "approved" (مقبول):يجب أن تكون الحالة إما ',
+    ];
+}
+
 }

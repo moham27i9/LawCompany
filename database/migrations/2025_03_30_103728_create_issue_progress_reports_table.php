@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('report');
             $table->integer('pre_session_count');
-            $table->foreignId('session_id')->constrained('sessionss')->onDelete('cascade');
+            $table->foreignId('session_id')->constrained('sessionsses')->onDelete('cascade');
             $table->timestamps();
         });
     }

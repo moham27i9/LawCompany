@@ -43,6 +43,7 @@ public function show($id)
 public function update(UpdateLawyerRequest $request)
 {
     $lawyer = $this->lawyerService->update(auth()->user()->lawyer->id, $request->validated());
+
     return $this->successResponse($lawyer, 'Profile updated successfully');
 }
 

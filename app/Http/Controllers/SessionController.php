@@ -3,13 +3,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSessionRequest;
 use App\Http\Requests\UpdateSessionRequest;
+use App\Models\Sessionss;
 use App\Services\SessionService;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SessionController extends Controller
 {
     use ApiResponseTrait;
-
+  use AuthorizesRequests;
     protected $sessionService;
 
     public function __construct(SessionService $sessionService)
@@ -39,7 +41,11 @@ class SessionController extends Controller
 
     public function update(UpdateSessionRequest $request, $id)
     {
+         $sess = Sessionss::findOrFail($id);
+        
+        $this->authorize('update', $sess);
         $session = $this->sessionService->update($id, $request->validated());
+
         if ($session)
             return $this->successResponse($session, 'Session updated successfully');
         return $this->errorResponse('Failed to update session', 422);

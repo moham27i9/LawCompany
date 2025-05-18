@@ -70,8 +70,7 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'delete sessions', 'path' => '/api/sessions/{id}', 'method' => 'DELETE'],//45
             ['name' => 'add new role', 'path' => '/api/roles/create', 'method' => 'POST'],//46
             ['name' => 'update issue priority', 'path' => '/api/issues/{id}/priority', 'method' => 'POST'],//47
-            ['name' => 'assign issue', 'path' => '/api/issues/{issue_id}/lawyers/{lawyer_id}', 'method' => 'POST'],//48
-            //appointments
+             ['name' => 'assign issue', 'path' => '/api/issues/{issueId}/assign', 'method' => 'POST'],//48            //appointments
             ['name' => 'create appointment','path' => '/api/appointments/{session_id}','method' => 'POST'],//49
             ['name' => 'show appointments','path' => '/api/appointments/session/{session_id}','method' => 'GET'],//50
             ['name' => 'show appointment','path' => '/api/appointments/{appointment_id}','method' => 'GET'],//51
@@ -83,6 +82,9 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'show AttendDemand','path' => '/api/AttendDemand/{attendDemand_id}','method' => 'GET'],//56
             ['name' => 'update AttendDemand','path' => '/api/AttendDemand/{attendDemand_id}','method' => 'PUT'],//57
             ['name' => 'delete AttendDemand','path' => '/api/AttendDemand/{attendDemand_id}','method' => 'DELETE'],//58
+
+            ['name' => 'show lawyer in issue', 'path' => '/api/issues/{issueId}/lawyers', 'method' => 'GET'],//59
+
 
         ];
 

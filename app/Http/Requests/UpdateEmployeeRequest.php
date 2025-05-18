@@ -27,4 +27,15 @@ class UpdateEmployeeRequest extends FormRequest
             'certificate' => 'sometimes|string',
         ];
     }
+
+    public function messages(): array
+{
+    return [
+
+        'salary.numeric' => 'الراتب يجب أن يكون رقمًا.',
+        'hire_date.date' => 'تاريخ التوظيف يجب أن يكون تاريخًا صحيحًا.',
+        'certificate.string' => 'رابط الشهادة يجب أن يكون نصًا.',
+    ];
+}
+
 }

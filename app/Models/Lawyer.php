@@ -66,7 +66,7 @@ class Lawyer extends Model
 
     public function sessions()
     {
-        return $this->hasMany(Session::class);
+        return $this->hasMany(Sessionss::class);
     }
     public function attend_demand()
     {

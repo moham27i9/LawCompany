@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Repositories\LawyerRepository;
 use App\Models\User;
 use App\Events\NewNotificationEvent;
-
+use App\Models\Lawyer;
 use Illuminate\Support\Facades\DB;
 
 class LawyerService
@@ -17,19 +17,25 @@ class LawyerService
         $this->lawyerRepository = $lawyerRepository;
     }
 
-    public function create(array $data)
-    {
-        return DB::transaction(function () use ($data) {
-            // تحديث role_id للمستخدم إلى 5 (محامي)
-            $user =auth()->user();
+  public function create(array $data)
+{
+    return DB::transaction(function () use ($data) {
+        $user = auth()->user();
 
-            if ($user->lawyer) {
-               return null;
-            }
-            // إنشاء المحامي
-            return $this->lawyerRepository->create($data);
-        });
-    }
+        if ($user->lawyer) {
+            return null;
+        }
+
+        // التعامل مع الملف
+        if (isset($data['certificate']) && $data['certificate'] instanceof \Illuminate\Http\UploadedFile) {
+            $filename = 'lawyer_cert_' . $user->id . '.' . $data['certificate']->getClientOriginalExtension();
+            $certificatePath = $data['certificate']->storeAs('storage/certificates', $filename, 'public');
+            $data['certificate'] = $certificatePath;
+        }
+
+        return $this->lawyerRepository->create($data);
+    });
+}
 
     // app/Services/LawyerService.php
 
@@ -82,7 +88,7 @@ public function getById($id)
             'experience_years' => $lawyer->experience_years,
             'type' => $lawyer->type,
             'specialization' => $lawyer->specialization,
-            'certificate' => $lawyer->certificate,
+            'certificate' =>asset($lawyer->certificate),
         ];
     }
 
@@ -107,4 +113,11 @@ public function delete($id)
     return $this->lawyerRepository->delete($id);
 }
 
+  public function getLawyerIssues() {
+        return $this->lawyerRepository->getIssuesForLawyer();
+    }
+
+  public function getLawyerSessions() {
+        return $this->lawyerRepository->getSessionsForLawyer();
+    }
 }

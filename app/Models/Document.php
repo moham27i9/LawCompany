@@ -28,10 +28,11 @@ class Document extends Model
     protected $fillable = [
         'session_id',
         'file',
+        'privacy',
  
     ];
     public function session()
     {
-        return $this->belongsTo(Session::class);
+        return $this->belongsTo(Sessionss::class);
     }
 }

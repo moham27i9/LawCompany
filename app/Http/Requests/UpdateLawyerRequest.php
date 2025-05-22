@@ -26,7 +26,7 @@ class UpdateLawyerRequest extends FormRequest
         'experience_years' => 'sometimes|integer',
         'type' => 'sometimes|string',
         'specialization' => 'sometimes|string',
-        'certificate' => 'sometimes|string',
+        'certificate' => 'sometimes|file|mimes:pdf,doc,docx,txt|max:2048',
              'phone' => 'sometimes|string|max:15',
             'age' => 'sometimes|integer|min:18|max:100',
             'address' => 'sometimes|string',
@@ -38,12 +38,14 @@ class UpdateLawyerRequest extends FormRequest
     public function messages(): array
 {
     return [
-        'license_number.string' => 'رقم الرخصة يجب أن يكون نصًا.',
-        'experience_years.integer' => 'عدد سنوات الخبرة يجب أن يكون رقمًا صحيحًا.',
+        'license_number.string' => 'رقم الرخصة يجب أن يكون نصًا',
+        'experience_years.integer' => 'عدد سنوات الخبرة يجب أن يكون رقمًا صحيحًا',
         'type.string' => '(lawyer أو intern) نوع المحامي يجب أن يكون إما.',
         'specialization.string' => 'التخصص يجب أن يكون نصًا.',
-        'certificate.string' => 'رابط الشهادة يجب أن يكون نصًا.',
-        'phone.string' => 'رقم الهاتف يجب أن يكون نصًا.',
+        'certificate.file' => ' الشهادة يجب أن تكون ملفاً',
+        'certificate.max' => ' 2MB حجم الشهادة يجب أن لا يتجاوز  ',
+        'certificate.mimes' => 'pdf,doc,docx,txt :ملف الشهادة يجب أن يكون بتنسيق',
+        'phone.string' => 'رقم الهاتف يجب أن يكون نصًا',
         'phone.max' => 'رقم الهاتف لا يجب أن يتجاوز 15 رقمًا.',
         'age.integer' => 'العمر يجب أن يكون رقمًا.',
         'age.min' => 'العمر يجب أن لا يقل عن 18 سنة.',

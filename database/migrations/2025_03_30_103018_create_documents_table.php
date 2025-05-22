@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('session_id')->constrained('sessionsses')->onDelete('cascade');
             $table->string('file');
+            $table->enum('privacy', ['public', 'private'])->default('public');
             $table->timestamps();
         });
     }

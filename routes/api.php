@@ -14,6 +14,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\SessionAppointmentController;
@@ -51,8 +52,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('issue-requests', IssueRequestController::class)->only(['store','update','destroy']);
     Route::apiResource('issue-requests', IssueRequestController::class)->only(['index','show']);
     Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
-
+    Route::get('/issues/track/{id}', [IssueController::class, 'track']);
     Route::put('/sessions/{id}', [SessionController::class, 'update']);
+    Route::get('/issues/client/show', [IssueController::class, 'showClientIssue']);
+    Route::get('/sessions/client/show', [IssueController::class, 'showClientSession']);
     
     
     Route::middleware(['check.permission'])->group(function () {
@@ -73,23 +76,25 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/create', [RolePermissionController::class, 'store']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
         //admin & lawyer & intern
+          
         Route::get('/issues', [IssueController::class, 'index']);
         Route::get('/issues/{id}', [IssueController::class, 'show']);
         //admin
         Route::post('/issues/{user_id}', [IssueController::class, 'store']);
         Route::put('/issues/{id}', [IssueController::class, 'update']);
+        Route::put('/issues/{id}/status', [IssueController::class, 'updateStatus']);
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
         Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
         Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
         Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
-        
-        
+         
         // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);
         Route::post('/sessions/{issue_id}', [SessionController::class, 'store']);
         Route::get('/sessions/{id}', [SessionController::class, 'show']);
         Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);
 
+     
         // sessions appointments
         Route::prefix('appointments')->group(function () {
         Route::get('/session/{session_id}', [SessionAppointmentController::class, 'index']); //  جلب كل المواعيد لجلسة معينة
@@ -116,12 +121,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['verified.lawyer'])->group(function () {
 
         Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
+        Route::get('/lawyer/issues', [LawyerController::class, 'showMyIssue']);
+        Route::get('/lawyer/sessions', [LawyerController::class, 'showMySession']);
 
         Route::delete('/lawyer/profile', [LawyerController::class, 'destroy']);
 
         Route::post('/lawyer/profile', [LawyerController::class, 'update']);
 
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
+
+           // documents
+        Route::get('/sessions/documents', [DocumentController::class, 'index']);
+        Route::post('/sessions/{issue_id}/documents', [DocumentController::class, 'store']);
+        Route::get('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'show']);
+        Route::delete('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'destroy']);
+
     });
 
     Route::prefix('notifications')->group(function () {

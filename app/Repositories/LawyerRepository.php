@@ -34,15 +34,26 @@ public function getById($id)
 public function update($id, array $data)
 {
     $lawyer = Lawyer::findOrFail($id);
+
+    // التعامل مع ملف الشهادة
+    if (isset($data['certificate']) && $data['certificate'] instanceof \Illuminate\Http\UploadedFile) {
+        $filename = 'lawyer_cert_' . $lawyer->user_id . '.' . $data['certificate']->getClientOriginalExtension();
+        $data['certificate']->storeAs('certificates', $filename, 'public');
+        $certificatePath = 'storage/certificates/' . $filename;
+    } else {
+        $certificatePath = $lawyer->certificate;
+    }
+
     $lawyer->update([
         'license_number'    => $data['license_number']    ?? $lawyer->license_number,
         'experience_years'  => $data['experience_years']  ?? $lawyer->experience_years,
-        'certificate'       => $data['certificate']       ?? $lawyer->certificate,
+        'certificate'       => $certificatePath,
         'specialization'    => $data['specialization']    ?? $lawyer->specialization,
     ]);
-    
+
     $profile = $lawyer->user->profile;
-    $lawyerProfile=[];
+    $lawyerProfile = [];
+
     if ($profile) {
         $profileData = [
             'age'             => $data['age']             ?? $profile->age,
@@ -50,30 +61,32 @@ public function update($id, array $data)
             'address'         => $data['address']         ?? $profile->address,
             'scientificLevel' => $data['scientificLevel'] ?? $profile->scientificLevel,
         ];
-        
- 
+
+        // التعامل مع الصورة
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
             $filename = 'user77_' . $lawyer->user_id . '.' . $data['image']->getClientOriginalExtension();
             $data['image']->storeAs('profile_images', $filename, 'public');
-    
             $profileData['image'] = 'storage/profile_images/' . $filename;
         }
+
         $profile->update($profileData);
 
         $lawyerProfile = [
-        'license_number'    => $data['license_number']    ?? $lawyer->license_number,
-        'experience_years'  => $data['experience_years']  ?? $lawyer->experience_years,
-        'certificate'       => $data['certificate']       ?? $lawyer->certificate,
-        'specialization'    => $data['specialization']    ?? $lawyer->specialization,
-        'age'             => $data['age']             ?? $profile->age,
-        'phone'           => $data['phone']           ?? $profile->phone,
-        'address'         => $data['address']         ?? $profile->address,
-        'scientificLevel' => $data['scientificLevel'] ?? $profile->scientificLevel,
-        'image' => $profile->image ? asset($profile->image) : null,
+            'license_number'    => $lawyer->license_number,
+            'experience_years'  => $lawyer->experience_years,
+            'certificate'       => $lawyer->certificate,
+            'specialization'    => $lawyer->specialization,
+            'age'               => $profile->age,
+            'phone'             => $profile->phone,
+            'address'           => $profile->address,
+            'scientificLevel'   => $profile->scientificLevel,
+            'image'             => $profile->image ? asset($profile->image) : null,
         ];
     }
+
     return $lawyerProfile;
 }
+
 
 public function delete($id)
 {
@@ -86,4 +99,12 @@ public function delete($id)
     return true;
 }
 
+  public function getIssuesForLawyer() {
+      $issues = auth()->user()->lawyer->issues;
+        return  $issues;
+    }
+  public function getSessionsForLawyer() {
+      $sessions = auth()->user()->lawyer->sessions;
+        return  $sessions;
+    }
 }

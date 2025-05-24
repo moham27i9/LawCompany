@@ -95,4 +95,23 @@ class IssueRepository
     {
         return Issue::with('lawyers.user')->findOrFail($caseId)->lawyers;
     }
+
+    public function track($id)
+    {
+        return Issue::with([
+            'sessions',
+            'lawyers',
+            // 'sessions.documents',
+        ])->findOrFail($id);
+    }
+
+      public function getIssuesForClient() {
+         return Issue::where('user_id',auth()->user()->id)->get();
+    }
+  public function getSessionsForClient() {
+    $sessions =Issue::where('user_id',auth()->user()->id)->with('sessions')->get();
+
+        return  $sessions;
+    }
+
 }

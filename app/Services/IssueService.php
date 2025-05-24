@@ -8,9 +8,11 @@ use App\Models\User;
 use App\Notifications\GeneralNotification;
 use App\Notifications\IssuePriorityChanged;
 use App\Repositories\IssueRepository;
+use App\Traits\ApiResponseTrait;
 
 class IssueService
 {
+    use ApiResponseTrait;
     protected $issueRepository;
 
     public function __construct(IssueRepository $issueRepository)
@@ -80,4 +82,36 @@ class IssueService
     {
         return $this->issueRepository->getLawyersByIssueId($caseId);
     }
+
+    public function track($id)
+{
+    $issue = $this->issueRepository->track($id);
+
+    // تحقق من ملكية القضية
+    if ($issue->user_id !== auth()->user()->id) {
+        return $this->errorResponse('Unauthorized', 403);
+    }
+
+    return $this->successResponse([
+        'title' => $issue->title,
+        'issue_number' => $issue->issue_number,
+        'total_cost' => $issue->total_cost,
+        'installments_per_payment' => $issue->total_cost / $issue->number_of_payments,
+        'balance_due' => $issue->total_cost - $issue->amount_paid,
+        'last_update' => $issue->updated_at,
+        'lawyers' => $issue->lawyers,
+        'sessions' => $issue->sessions,
+        // 'documents' => $issue->sessions->documents,
+
+    ]);
+}
+
+  public function getClientIssues() {
+        return $this->issueRepository->getIssuesForClient();
+    }
+
+  public function getClientSessions() {
+        return $this->issueRepository->getSessionsForClient();
+    }
+
 }

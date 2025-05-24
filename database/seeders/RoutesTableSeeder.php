@@ -84,6 +84,7 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'delete AttendDemand','path' => '/api/AttendDemand/{attendDemand_id}','method' => 'DELETE'],//58
 
             ['name' => 'show lawyer in issue', 'path' => '/api/issues/{issueId}/lawyers', 'method' => 'GET'],//59
+            ['name' => 'update issue status', 'path' => '/api/issues/{id}/status', 'method' => 'PUT'],//60
 
 
         ];

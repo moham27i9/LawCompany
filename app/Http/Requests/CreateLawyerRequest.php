@@ -26,7 +26,26 @@ class CreateLawyerRequest extends FormRequest
             'experience_years' => 'required|integer|min:0',
             'type' => 'required|string',
             'specialization' => 'required|string',
-            'certificate' => 'required|string',
+           'certificate' => 'required|file|mimes:pdf,doc,docx,txt|max:2048',
         ];
     }
+
+     public function messages(): array
+{
+    return [
+        'license_number.required' => 'رقم الرخصة مطلوب',
+        'license_number.string' => 'رقم الرخصة يجب أن يكون نصًا',
+        'experience_years.integer' => 'عدد سنوات الخبرة يجب أن يكون رقمًا صحيحًا',
+        'experience_years.required' => 'عدد سنوات الخبرة مطلوب ',
+        'type.string' => '(lawyer أو intern) نوع المحامي يجب أن يكون إما.',
+        'type.required' => ' نوع المحامي مطلوب.',
+        'specialization.string' => 'التخصص يجب أن يكون نصًا.',
+        'specialization.required' => 'التخصص مطلوب',
+        'certificate.required' => ' الشهادة مطلوبة',
+        'certificate.file' => ' الشهادة يجب أن تكون ملفاً',
+        'certificate.max' => ' 2MB حجم الشهادة يجب أن لا يتجاوز  ',
+        'certificate.mimes' => 'pdf,doc,docx,txt :ملف الشهادة يجب أن يكون بتنسيق',
+      
+    ];
+}
 }

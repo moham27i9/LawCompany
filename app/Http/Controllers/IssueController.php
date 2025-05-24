@@ -98,22 +98,4 @@ class IssueController extends Controller
     }
 
 
-    public function track($id)
-{
-    return $this->issueService->track($id);
-}
-
-    public function showClientIssue() {
-        $issues = $this->issueService->getClientIssues();
-            return $this->successResponse($issues, 'Your issues retrieved');
-             return $this->errorResponse('something wrong!!', 422);
-    }
-
-     public function showClientSession() {
-        $sessions = $this->issueService->getClientSessions();
-            return $this->successResponse($sessions, 'Your sessions retrieved');
-             return $this->errorResponse('something wrong!!', 422);
-    }
-
-
 }

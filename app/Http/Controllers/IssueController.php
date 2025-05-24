@@ -6,6 +6,7 @@ use App\Http\Requests\AssignIssueRequest;
 use App\Http\Requests\CreateIssueRequest;
 use App\Http\Requests\UpdateIssuePriorityRequest;
 use App\Http\Requests\UpdateIssueRequest;
+use App\Http\Requests\UpdateIssueStatusRequest;
 use App\Services\IssueService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class IssueController extends Controller
 
     public function store(CreateIssueRequest $request , $user_id)
     {
-       
+
         $issue = $this->issueService->create($request->validated() , $user_id);
         return $this->successResponse($issue, 'Issue created successfully');
     }
@@ -46,6 +47,12 @@ class IssueController extends Controller
         return $this->successResponse($issue, 'Issue updated');
     }
 
+    public function updateStatus(UpdateIssueStatusRequest $request, $id)
+    {
+        $issue = $this->issueService->update($id ,$request->validated());
+        return $this->successResponse($issue, 'Issue status updated');
+    }
+
     public function destroy($id)
     {
         $this->issueService->delete($id);
@@ -54,8 +61,8 @@ class IssueController extends Controller
 
     public function updatePriority(UpdateIssuePriorityRequest $request, $id)
     {
-       
-      
+
+
         $issue = $this->issueService->changePriority($id,$request->validated());
         return $this->successResponse($issue, 'تم تغيير أولوية القضية');
     }
@@ -72,5 +79,23 @@ class IssueController extends Controller
         $lawyers = $this->issueService->getLawyers($caseId);
         return $this->successResponse($lawyers, 'Lawyers in the issue');
     }
+
+    public function track($id)
+{
+    return $this->issueService->track($id);
+}
+
+    public function showClientIssue() {
+        $issues = $this->issueService->getClientIssues();
+            return $this->successResponse($issues, 'Your issues retrieved');
+             return $this->errorResponse('something wrong!!', 422);
+    }
+
+     public function showClientSession() {
+        $sessions = $this->issueService->getClientSessions();
+            return $this->successResponse($sessions, 'Your sessions retrieved');
+             return $this->errorResponse('something wrong!!', 422);
+    }
+
 
 }

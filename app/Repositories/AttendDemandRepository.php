@@ -32,4 +32,10 @@ class AttendDemandRepository
     {
         return AttendDemand::where('issue_id', $issueId)->get();
     }
+
+     public function updateResault(AttendDemand $attendDemand, string $resault)
+    {
+        $attendDemand->update(['resault' => $resault]);
+        return $attendDemand;
+    }
 }

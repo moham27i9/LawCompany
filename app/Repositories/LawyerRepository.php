@@ -23,7 +23,7 @@ class LawyerRepository
 
 public function getAll()
 {
-    return Lawyer::all(); // لجلب معلومات المستخدم المرتبط
+    return Lawyer::all();
 }
 
 public function getById($id)

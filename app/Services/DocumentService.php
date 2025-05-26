@@ -5,13 +5,14 @@
 namespace App\Services;
 
 use App\Models\Document;
+use App\Models\Sessionss;
 use App\Repositories\DocumentRepository;
-use App\Traits\HandlesFileUpload;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DocumentService
 {
-    
 
+ use AuthorizesRequests;
     protected $repository;
 
     public function __construct(DocumentRepository $repository)
@@ -31,6 +32,10 @@ class DocumentService
 
     public function create(array $data,$session_id)
     {
+           $session = Sessionss::findOrFail($session_id);
+         
+          $this->authorize('create', [Document::class, $session]);
+
            if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
             $filename = 'session_doc_' . $session_id . '.' . $data['file']->getClientOriginalExtension();
             $filePath = $data['file']->storeAs('storage/documents', $filename, 'public');

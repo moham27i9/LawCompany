@@ -90,11 +90,29 @@ class IssueRepository
     $issue = Issue::findOrFail($issueId);
     return $issue->lawyers()->syncWithoutDetaching($lawyerIds); // يُضيف بدون حذف الموجود
 }
+public function getLawyersByIssueId($caseId)
+{
+    $issue = Issue::with('lawyers.user.profile')->findOrFail($caseId);
 
-      public function getLawyersByIssueId($caseId)
-    {
-        return Issue::with('lawyers.user')->findOrFail($caseId)->lawyers;
-    }
+    return $issue->lawyers->map(function ($lawyer) {
+        $profile = $lawyer->user->profile;
+
+        return [
+            'name'             => $lawyer->user->name,
+            'email'             => $lawyer->user->email,
+            'license_number'   => $lawyer->license_number,
+            'experience_years' => $lawyer->experience_years,
+            'certificate'      => $lawyer->certificate,
+            'specialization'   => $lawyer->specialization,
+            'age'              => $profile->age ?? null,
+            'phone'            => $profile->phone ?? null,
+            'address'          => $profile->address ?? null,
+            'scientificLevel'  => $profile->scientificLevel ?? null,
+            'image'            => $profile->image ? asset($profile->image) : null,
+        ];
+    });
+}
+
 
     public function track($id)
     {
@@ -108,6 +126,7 @@ class IssueRepository
       public function getIssuesForClient() {
          return Issue::where('user_id',auth()->user()->id)->get();
     }
+    
   public function getSessionsForClient() {
     $sessions =Issue::where('user_id',auth()->user()->id)->with('sessions')->get();
 

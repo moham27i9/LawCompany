@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
+use App\Http\Controllers\RequiredDocumentController;
 use App\Http\Controllers\SessionAppointmentController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
     Route::get('/lawyers', [LawyerController::class, 'index']);
 
+    Route::put('/attendDemand/{id}/resault', [AttendDemandController::class, 'updateResault']);
+
+    Route::post('required-documents/{id}/upload', [RequiredDocumentController::class, 'updateFile']);
+
+
     Route::get('/hiring-requests/show/{id}', [HiringRequestController::class, 'show']);
     Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
     Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
@@ -57,6 +63,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/issues/client/show', [IssueController::class, 'showClientIssue']);
     Route::get('/sessions/client/show', [IssueController::class, 'showClientSession']);
     
+           // documents
+        Route::get('/sessions/documents', [DocumentController::class, 'index']);
+        Route::post('/sessions/{session_id}/documents', [DocumentController::class, 'store']);
+        Route::get('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'show']);
+        Route::delete('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'destroy']);
     
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
@@ -104,7 +115,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{appointment_id}', [SessionAppointmentController::class, 'destroy']);
          });
 
+        Route::prefix('required-documents')->group(function () {
+            Route::get('/', [RequiredDocumentController::class, 'index']);              // عرض كل المستندات
+            Route::post('/', [RequiredDocumentController::class, 'store']);            // إنشاء مستند جديد
+            Route::get('{id}', [RequiredDocumentController::class, 'show']);           // عرض مستند معين
+            Route::put('{id}', [RequiredDocumentController::class, 'update']);         // تحديث مستند
+            Route::delete('{id}', [RequiredDocumentController::class, 'destroy']);     // حذف مستند
 
+            // رفع/تحديث ملف من قبل المستخدم المرتبط بالقضية
+            Route::post('{id}/upload-file', [RequiredDocumentController::class, 'updateFile']);
+
+            // قبول أو رفض الملف من قبل الأدمن
+            Route::post('{id}/moderate', [RequiredDocumentController::class, 'moderate']);
+        });
           // attend demand
         Route::prefix('AttendDemand')->group(function () {
         Route::get('/issue/{issue_id}', [AttendDemandController::class, 'index']);
@@ -130,11 +153,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
 
-           // documents
-        Route::get('/sessions/documents', [DocumentController::class, 'index']);
-        Route::post('/sessions/{issue_id}/documents', [DocumentController::class, 'store']);
-        Route::get('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'show']);
-        Route::delete('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'destroy']);
 
     });
 

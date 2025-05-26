@@ -134,6 +134,7 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 46],
             ['permission_id' => 47],
             ['permission_id' => 48],
+            ['permission_id' => 54],
             ['permission_id' => 59],
             ['permission_id' => 60],
 

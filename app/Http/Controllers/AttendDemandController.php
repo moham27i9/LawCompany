@@ -3,13 +3,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAttendDemandRequest;
 use App\Http\Requests\UpdateAttendDemandRequest;
+use App\Http\Requests\UpdateAttendDemandResaultRequest;
+use App\Models\AttendDemand;
 use App\Services\AttendDemandService;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class AttendDemandController extends Controller
 {
     use ApiResponseTrait;
-
+     use AuthorizesRequests;
     protected $service;
 
     public function __construct(AttendDemandService $service)
@@ -46,4 +49,17 @@ class AttendDemandController extends Controller
         $this->service->delete($id);
         return $this->successResponse(null, 'AttendDemand deleted successfully');
     }
+
+    public function updateResault(UpdateAttendDemandResaultRequest $request, $id)
+{
+    $attendDemand = AttendDemand::with('issue')->findOrFail($id);
+
+    $this->authorize('update', $attendDemand);
+
+    $updated = $this->service->updateResault($attendDemand, $request->resault);
+
+     return $this->successResponse($updated, 'AttendDemand resault updated successfully');
+  
+}
+
 }

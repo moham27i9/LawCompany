@@ -8,9 +8,11 @@ use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Document;
 use App\Services\DocumentService;
+use App\Traits\ApiResponseTrait;
 
 class DocumentController extends Controller
 {
+     use ApiResponseTrait;
     protected $service;
 
     public function __construct(DocumentService $service)
@@ -20,28 +22,35 @@ class DocumentController extends Controller
 
     public function index()
     {
-        return response()->json($this->service->getAll());
+          return $this->successResponse($this->service->getAll(), 'all documents retrieved');
+             return $this->errorResponse('something wrong!!', 422);
     }
 
     public function store(StoreDocumentRequest $request,$session_id)
     {
         $document = $this->service->create($request->validated(),$session_id);
-        return response()->json($document, 201);
+          return $this->successResponse($document, 'document added successfuly');
+             return $this->errorResponse('something wrong!!', 422);
     }
 
     public function show($id)
     {
-        return response()->json($this->service->find($id));
+            return $this->successResponse($this->service->find($id), 'all documents retrieved');
+             return $this->errorResponse('something wrong!!', 422);
+        
     }
 
     public function update(UpdateDocumentRequest $request,$session_id,$docId)
     {
-        return response()->json($this->service->update($request->validated(),$session_id,$docId));
+        $updated_doc =$this->service->update($request->validated(),$session_id,$docId);
+            return $this->successResponse($updated_doc, 'document updated successfuly');
+             return $this->errorResponse('something wrong!!', 422);
     }
 
     public function destroy($session_id,$docId)
     {
         $this->service->delete($session_id,$docId);
-        return response()->json(null, 204);
+            return $this->successResponse(null, 'document deleted successfuly',204);
+             return $this->errorResponse('something wrong!!', 422);
     }
 }

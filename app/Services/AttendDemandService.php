@@ -1,10 +1,16 @@
 <?php
 namespace App\Services;
 
+use App\Models\AttendDemand;
+use App\Models\Issue;
+use App\Models\User;
+use App\Notifications\GeneralNotification;
 use App\Repositories\AttendDemandRepository;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class AttendDemandService
 {
+     use AuthorizesRequests;
     protected $repo;
 
     public function __construct(AttendDemandRepository $repo)
@@ -14,10 +20,15 @@ class AttendDemandService
 
     public function create(array $data, $issueId)
     {
+        $issue = Issue::findOrFail($issueId);
+        $this->authorize('create', [AttendDemand::class, $issue]);
         $lawyerId = auth()->user()->lawyer->id;
          $data['issue_id']=$issueId;
          $data['lawyer_id']=$lawyerId;
-        return $this->repo->create($data);
+         $user = User::findOrFail($issue->user_id);
+        $attendDemand =$this->repo->create($data);
+        $user->notify(new GeneralNotification('طلب حضور', $data['date'].': بتاريخ '  , '/AttendDemand/'.$attendDemand->id));
+        return $attendDemand ;
     }
 
     public function update(array $data, $id)
@@ -38,6 +49,14 @@ class AttendDemandService
     public function getByIssue($issueId)
     {
         return $this->repo->getByIssue($issueId);
+    }
+
+      public function updateResault(AttendDemand $attendDemand, string $resault)
+    {
+        $resault = $this->repo->updateResault($attendDemand, $resault);
+        $lawyer =User::findOrFail($attendDemand->lawyer->user_id);;
+        $lawyer->notify(new GeneralNotification('إجابة طلب حضور',$attendDemand->resault.': الإجابة '  , '/AttendDemand/'.$attendDemand->id));
+        return  $resault;
     }
 }
 

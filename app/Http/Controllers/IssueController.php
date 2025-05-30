@@ -24,7 +24,7 @@ class IssueController extends Controller
 
     public function store(CreateIssueRequest $request , $user_id)
     {
-       
+
         $issue = $this->issueService->create($request->validated() , $user_id);
         return $this->successResponse($issue, 'Issue created successfully');
     }
@@ -61,8 +61,8 @@ class IssueController extends Controller
 
     public function updatePriority(UpdateIssuePriorityRequest $request, $id)
     {
-       
-      
+
+
         $issue = $this->issueService->changePriority($id,$request->validated());
         return $this->successResponse($issue, 'تم تغيير أولوية القضية');
     }
@@ -96,6 +96,6 @@ class IssueController extends Controller
             return $this->successResponse($sessions, 'Your sessions retrieved');
              return $this->errorResponse('something wrong!!', 422);
     }
-   
+
 
 }

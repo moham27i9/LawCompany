@@ -26,7 +26,7 @@ class SessionRepository
 
     public function update($id, array $data)
     {
-    
+
         $session = Sessionss::findOrFail($id);
         $session->update($data);
         $session->save();
@@ -38,4 +38,8 @@ class SessionRepository
         $session = Sessionss::findOrFail($id);
         return $session->delete();
     }
+
+
+
+
 }

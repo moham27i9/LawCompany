@@ -9,10 +9,12 @@ use App\Notifications\GeneralNotification;
 use App\Notifications\IssuePriorityChanged;
 use App\Repositories\IssueRepository;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class IssueService
 {
     use ApiResponseTrait;
+     use AuthorizesRequests;
     protected $issueRepository;
 
     public function __construct(IssueRepository $issueRepository)
@@ -78,9 +80,11 @@ class IssueService
         return $this->issueRepository->syncIssue($issueId, $lawyerIds);
     }
 
-      public function getLawyers($caseId)
+      public function getLawyers($issueId)
     {
-        return $this->issueRepository->getLawyersByIssueId($caseId);
+        $issue =  $this->getById($issueId);
+          $this->authorize('view', $issue);
+        return $this->issueRepository->getLawyersByIssueId($issueId);
     }
 
     public function track($id)

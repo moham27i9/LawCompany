@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSessionRequest;
+use App\Http\Requests\UpdateSessionOutcomeRequest;
 use App\Http\Requests\UpdateSessionRequest;
 use App\Models\Sessionss;
 use App\Services\SessionService;
@@ -42,7 +43,7 @@ class SessionController extends Controller
     public function update(UpdateSessionRequest $request, $id)
     {
          $sess = Sessionss::findOrFail($id);
-        
+
         $this->authorize('update', $sess);
         $session = $this->sessionService->update($id, $request->validated());
 
@@ -58,4 +59,6 @@ class SessionController extends Controller
             return $this->successResponse(null, 'Session deleted successfully');
         return $this->errorResponse('Failed to delete session', 422);
     }
+
+
 }

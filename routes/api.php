@@ -69,6 +69,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'show']);
         Route::delete('/sessions/{session_id}/documents/{id}', [DocumentController::class, 'destroy']);
     
+
+           // required documents
+          Route::prefix('required-documents')->group(function () {
+            Route::get('/', [RequiredDocumentController::class, 'index']);              // عرض كل المستندات
+            Route::post('/{issue_id}', [RequiredDocumentController::class, 'store']);            // إنشاء مستند جديد
+            Route::get('{id}', [RequiredDocumentController::class, 'show']);           // عرض مستند معين
+            Route::put('{id}', [RequiredDocumentController::class, 'update']);         // تحديث مستند
+            Route::delete('{id}', [RequiredDocumentController::class, 'destroy']);     // حذف مستند
+
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
@@ -115,13 +124,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{appointment_id}', [SessionAppointmentController::class, 'destroy']);
          });
 
-        Route::prefix('required-documents')->group(function () {
-            Route::get('/', [RequiredDocumentController::class, 'index']);              // عرض كل المستندات
-            Route::post('/', [RequiredDocumentController::class, 'store']);            // إنشاء مستند جديد
-            Route::get('{id}', [RequiredDocumentController::class, 'show']);           // عرض مستند معين
-            Route::put('{id}', [RequiredDocumentController::class, 'update']);         // تحديث مستند
-            Route::delete('{id}', [RequiredDocumentController::class, 'destroy']);     // حذف مستند
-
+      
             // رفع/تحديث ملف من قبل المستخدم المرتبط بالقضية
             Route::post('{id}/upload-file', [RequiredDocumentController::class, 'updateFile']);
 

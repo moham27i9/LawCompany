@@ -16,14 +16,14 @@ class RequiredDocumentRepository
         return RequiredDocument::findOrFail($id);
     }
 
-    public function create(array $data)
+    public function create(array $data,$issue_id)
     {
-        if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
-            $filename = time() . '_' . uniqid() . '.' . $data['file']->getClientOriginalExtension();
-            $data['file']->storeAs('required_docs', $filename, 'public');
-            $data['file'] = 'storage/required_docs/' . $filename;
-        }
-
+        // if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
+        //     $filename = time() . '_' . uniqid() . '.' . $data['file']->getClientOriginalExtension();
+        //     $data['file']->storeAs('required_docs', $filename, 'public');
+        //     $data['file'] = 'storage/required_docs/' . $filename;
+        // }
+         $data['issue_id'] =$issue_id;
         return RequiredDocument::create($data);
     }
 
@@ -50,10 +50,12 @@ class RequiredDocumentRepository
     public function updateFile($id, $userId,$file)
 {
     $document = RequiredDocument::with('issue')->findOrFail($id);
-
-    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-    $file->storeAs('required_docs', $filename, 'public');
-
+  if (isset($file['file']) && $file['file'] instanceof \Illuminate\Http\UploadedFile) {
+            $filename =  time() . '_' . uniqid() . '.' . $file['file']->getClientOriginalExtension();
+            $filePath = $file['file']->storeAs('storage/req-documents', $filename, 'public');
+            $file['file'] = $filePath;
+        }
+        $file['user_id'] =  $userId;
     $document->update([
         'file' => 'storage/required_docs/' . $filename,
         'status' => 'pending', // إعادة التقييم بعد الرفع

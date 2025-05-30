@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RequiredDocumentRequest;
 use App\Http\Requests\UpdateFileRequiredDocumentRequest;
+use App\Http\Requests\UpdateRequiredDoc_ClinetRequest;
 use App\Services\RequiredDocumentService;
 use Illuminate\Http\Request;
 
@@ -21,10 +22,10 @@ class RequiredDocumentController extends Controller
         return response()->json($this->service->getAll());
     }
 
-    public function store(RequiredDocumentRequest $request)
+    public function store(RequiredDocumentRequest $request,$issue_id)
     {
-        $doc = $this->service->create($request->validated());
-        return response()->json(['message' => 'تم إنشاء المستند بنجاح', 'data' => $doc]);
+        $doc = $this->service->create($request->validated(),$issue_id);
+        return response()->json(['message' => 'تم طلب إضافة مستند بنجاح', 'data' => $doc]);
     }
 
     public function show($id)
@@ -32,7 +33,7 @@ class RequiredDocumentController extends Controller
         return response()->json($this->service->find($id));
     }
 
-    public function update(RequiredDocumentRequest $request, $id)
+    public function update(UpdateRequiredDoc_ClinetRequest $request, $id)
     {
         $doc = $this->service->update($id, $request->validated());
         return response()->json(['message' => 'تم التحديث بنجاح', 'data' => $doc]);

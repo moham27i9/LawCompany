@@ -98,6 +98,7 @@ public function getLawyersByIssueId($caseId)
         $profile = $lawyer->user->profile;
 
         return [
+            'id'               =>$lawyer->id,
             'name'             => $lawyer->user->name,
             'email'             => $lawyer->user->email,
             'license_number'   => $lawyer->license_number,

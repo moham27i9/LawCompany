@@ -20,9 +20,9 @@ class RequiredDocumentService
         return $this->repo->getAll();
     }
 
-    public function create($data)
+    public function create($data,$issue_id)
     {
-        return $this->repo->create($data);
+        return $this->repo->create($data,$issue_id);
     }
 
     public function update($id, $data)
@@ -43,7 +43,6 @@ class RequiredDocumentService
     public function updateFile($id, $userId,$file)
     {
           $document = $this->repo->findById($id);
-
           $this->authorize('updateFile', $document);
         return $this->repo->updateFile($id, $userId, $file);
     }

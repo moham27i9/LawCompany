@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             PermissionTableSeeder::class,
             LawyerSeeder::class,
             IssueSeeder::class,
+             SessionTypeSeeder::class,
         ]);
 
     }

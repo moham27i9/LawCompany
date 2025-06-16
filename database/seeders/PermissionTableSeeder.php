@@ -90,7 +90,18 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'delete_AttendDemand', 'app_route_id' => 58],
             ['name' => 'show_lawyers_in_issue', 'app_route_id' => 59],
             ['name' => 'update_issue_status', 'app_route_id' => 60],
-
+            ['name' => 'show_all_session_types', 'app_route_id' => 61],
+            ['name' => 'show_session_type', 'app_route_id' => 62],
+            ['name' => 'add_session_type', 'app_route_id' => 63],
+            ['name' => 'update_session_type', 'app_route_id' => 64],
+            ['name' => 'delete_session_type', 'app_route_id' => 65],
+            ['name' => 'sessions_calculate_amount', 'app_route_id' => 66],
+            // ['name' => 'show_all_furloughs', 'app_route_id' => 67],
+            // ['name' => 'show_furlough', 'app_route_id' => 68],
+            // ['name' => 'add_furlough', 'app_route_id' => 69],
+            // ['name' => 'update_furlough', 'app_route_id' => 70],
+            // ['name' => 'delete_furlough', 'app_route_id' => 71],
+     
         ];
 
         foreach ($permissions as $permission) {
@@ -147,10 +158,23 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 58],
             ['permission_id' => 59],
             ['permission_id' => 60],
+            ['permission_id' => 61],
+            ['permission_id' => 62],
+            ['permission_id' => 63],
+            ['permission_id' => 64],
+            ['permission_id' => 65],
+            ['permission_id' => 66],
+            // ['permission_id' => 67],
+            // ['permission_id' => 68],
 
         ];
         $hr_permissions =[
-            [ 'permission_id' => 32],];
+            [ 'permission_id' => 32],
+             ['permission_id' => 61],
+            ['permission_id' => 62],
+            // ['permission_id' => 68],
+        
+        ];
 
         $lawyer_permissions =[
             [ 'permission_id' => 26],
@@ -168,6 +192,9 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 56],
             ['permission_id' => 57],
             ['permission_id' => 58],
+                 ['permission_id' => 61],
+            ['permission_id' => 62],
+            //  ['permission_id' => 68],
         ];
         $intern_permissions =[
             [ 'permission_id' => 26],
@@ -185,6 +212,9 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 56],
             ['permission_id' => 57],
             ['permission_id' => 58],
+            ['permission_id' => 61],
+            ['permission_id' => 62],
+            //  ['permission_id' => 68],
 
         ];
 

@@ -15,11 +15,13 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FurloughRequestController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\RequiredDocumentController;
 use App\Http\Controllers\SessionAppointmentController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SessionTypeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -50,21 +52,36 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('required-documents/{id}/upload', [RequiredDocumentController::class, 'updateFile']);
 
-
     Route::get('/hiring-requests/show/{id}', [HiringRequestController::class, 'show']);
     Route::get('/hiring-requests', [HiringRequestController::class, 'index']);
     Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
 
     Route::apiResource('issue-requests', IssueRequestController::class)->only(['store','update','destroy']);
     Route::apiResource('issue-requests', IssueRequestController::class)->only(['index','show']);
+    Route::get('/myissue-requests', [IssueRequestController::class, 'myRequests']);
+    Route::put('/myissue-requests/{id}', [IssueRequestController::class, 'updateMyRequest']);
+
+    Route::post('/issue-requests/{id}/lock', [IssueRequestController::class, 'startReview']);
+    Route::post('/issue-requests/{id}/unlock', [IssueRequestController::class, 'endReview']);
+
     Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
     Route::get('/issues/track/{id}', [IssueController::class, 'track']);
     Route::put('/sessions/{id}', [SessionController::class, 'update']);
+    Route::get('/sessions/issue/{issue_id}', [SessionController::class, 'showByIssueId']);
+
     Route::get('/issues/client/show', [IssueController::class, 'showClientIssue']);
     Route::get('/sessions/client/show', [IssueController::class, 'showClientSession']);
     
     Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
 
+  Route::prefix('furloughs')->group(function () {
+            Route::get('/', [FurloughRequestController::class, 'index']);
+            Route::post('/', [FurloughRequestController::class, 'store']);
+            Route::get('/{id}', [FurloughRequestController::class, 'show']);
+            Route::put('/{id}', [FurloughRequestController::class, 'update']);
+            Route::put('/status/{id}', [FurloughRequestController::class, 'updateStatus']);
+            Route::delete('/{id}', [FurloughRequestController::class, 'destroy']);
+        });
 
            // documents
         Route::get('/sessions/documents', [DocumentController::class, 'index']);
@@ -109,18 +126,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
         Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
         Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
-         
+
+        
         // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);
         Route::post('/sessions/{issue_id}', [SessionController::class, 'store']);
         Route::get('/sessions/{id}', [SessionController::class, 'show']);
         Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);
-        Route::put('/sessions/{id}', [SessionController::class, 'update']);
-
-
-
-
-
+        
+        //calculate session amount
+        Route::get('sessions/calculate/{issueId}', [SessionController::class, 'calculateAmounts']);
+        
 
         // sessions appointments
         Route::prefix('appointments')->group(function () {
@@ -131,23 +147,31 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{appointment_id}', [SessionAppointmentController::class, 'destroy']);
          });
 
-      
+            Route::prefix('session-types')->group(function () {
+            Route::get('/', [SessionTypeController::class, 'index']);
+            Route::post('/', [SessionTypeController::class, 'store']);
+            Route::get('/{id}', [SessionTypeController::class, 'show']);
+            Route::put('/{id}', [SessionTypeController::class, 'update']);
+            Route::delete('/{id}', [SessionTypeController::class, 'destroy']);
+        });
+
+          
            
             Route::post('{id}/upload-file', [RequiredDocumentController::class, 'updateFile']);
 
             // قبول أو رفض الملف من قبل الأدمن
             Route::post('{id}/moderate', [RequiredDocumentController::class, 'moderate']);
-            // attend demand
-            Route::prefix('AttendDemand')->group(function () {
-                Route::get('/issue/{issue_id}', [AttendDemandController::class, 'index']);
-                Route::post('/{issue_id}', [AttendDemandController::class, 'store']);
-                Route::get('/{attendDemand_id}', [AttendDemandController::class, 'show']);
-                Route::put('/{attendDemand_id}', [AttendDemandController::class, 'update']);
-                Route::delete('/{attendDemand_id}', [AttendDemandController::class, 'destroy']);
-            });
         });
-
-
+        
+        
+        // attend demand
+        Route::prefix('AttendDemand')->group(function () {
+            Route::get('/issue/{issue_id}', [AttendDemandController::class, 'index']);
+            Route::post('/{issue_id}', [AttendDemandController::class, 'store']);
+            Route::get('/{attendDemand_id}', [AttendDemandController::class, 'show']);
+            Route::put('/{attendDemand_id}', [AttendDemandController::class, 'update']);
+            Route::delete('/{attendDemand_id}', [AttendDemandController::class, 'destroy']);
+        });
 
 
 
@@ -162,6 +186,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/lawyer/profile', [LawyerController::class, 'update']);
 
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
+        
+        Route::post('/lawyer/session-report', [SessionController::class, 'generateLawyerReport']);
 
 
     });

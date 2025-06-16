@@ -23,8 +23,9 @@ class CreateIssueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'total_cost' => 'sometimes|decimal:2',
+            'total_cost' => 'sometimes|numeric',
             'number_of_payments' => 'required|integer',
+            'lawyer_percentage' => 'sometimes|integer|max:100',
             'title' => 'required|string|max:255',
             'issue_number' => 'required|string|unique:issues,issue_number',
             'category' => 'required|string',
@@ -36,8 +37,6 @@ class CreateIssueRequest extends FormRequest
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'description' => 'nullable|string',
-            // 'lawyer_ids'   => ['required', 'array', 'size:4'],
-            // 'lawyer_ids.*' => ['integer', 'exists:users,id'],
 
         ];
     }

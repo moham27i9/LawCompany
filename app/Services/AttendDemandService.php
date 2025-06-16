@@ -17,7 +17,6 @@ class AttendDemandService
     {
         $this->repo = $repo;
     }
-
     public function create(array $data, $issueId)
     {
         $issue = Issue::findOrFail($issueId);

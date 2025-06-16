@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('points', function (Blueprint $table) {
-            $table->id();
-            $table->integer('rate');
-            $table->foreignId('session_id')->constrained('sessionsses')->onDelete('cascade');
+        Schema::create('session_types', function (Blueprint $table) {
+           $table->id();
+            $table->string('type');
+            $table->integer('points')->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('points');
+        Schema::dropIfExists('session_types');
     }
 };

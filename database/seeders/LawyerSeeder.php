@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Lawyer;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Hash;
 
 class LawyerSeeder extends Seeder
@@ -14,7 +15,7 @@ class LawyerSeeder extends Seeder
         $lawyersData = [
             [
                 'name' => 'Ahmed Ali',
-                'email' => 'ahmed.lawyer@example.com',
+                'email' => 'ahmed@gmail.com',
                 'license_number' => 'LAW-0093',
                 'experience_years' => 7,
                 'specialization' => 'Criminal Law',
@@ -23,7 +24,7 @@ class LawyerSeeder extends Seeder
             ],
             [
                 'name' => 'Mona Hassan',
-                'email' => 'mona.hassan@example.com',
+                'email' => 'mona@gmail.com',
                 'license_number' => 'LAW-0104',
                 'experience_years' => 5,
                 'specialization' => 'Family Law',
@@ -32,7 +33,7 @@ class LawyerSeeder extends Seeder
             ],
             [
                 'name' => 'Khaled Youssef',
-                'email' => 'khaled.y@example.com',
+                'email' => 'khaled@gmail.com',
                 'license_number' => 'LAW-0071',
                 'experience_years' => 9,
                 'specialization' => 'Corporate Law',
@@ -41,7 +42,7 @@ class LawyerSeeder extends Seeder
             ],
             [
                 'name' => 'Salma Tarek',
-                'email' => 'salma.t@example.com',
+                'email' => 'salma@gmail.com',
                 'license_number' => 'LAW-0117',
                 'experience_years' => 3,
                 'specialization' => 'Intellectual Property',
@@ -58,6 +59,7 @@ class LawyerSeeder extends Seeder
                 'role_id' => 5, // محامي
             ]);
 
+
             Lawyer::create([
                 'user_id' => $user->id,
                 'license_number' => $data['license_number'],
@@ -67,6 +69,15 @@ class LawyerSeeder extends Seeder
                 'certificate' => $data['certificate'],
                 'type' => 'lawyer',
             ]);
+
+              Profile::create([
+        'user_id' => $user->id,
+        'address' => '123 Main St',
+        'phone' => '0123456789',
+        'scientificLevel' => 'Bachelor of Law',
+        'age' => rand(25, 50),
+       
+    ]);
         }
     }
 }

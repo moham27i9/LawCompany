@@ -37,7 +37,13 @@ class AttendDemandPolicy
      */
   public function create(User $user, $issue): bool
 {
-    return $issue->lawyers->contains('id', $user->lawyer->id);
+    //  dd($user->role_id);
+    if( $user->role_id === 1)
+    return true;
+    else if($issue->lawyers->contains('id', $user->lawyer->id))
+    return true;
+
+    return false;
 }
 
 

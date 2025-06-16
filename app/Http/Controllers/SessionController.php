@@ -1,12 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GenerateLawyerReportRequest;
 use App\Http\Requests\StoreSessionRequest;
 use App\Http\Requests\UpdateSessionRequest;
 use App\Models\Sessionss;
 use App\Services\SessionService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
@@ -29,7 +31,15 @@ class SessionController extends Controller
     {
         $session = $this->sessionService->getById($id);
         if ($session)
-            return $this->successResponse($session, 'Session retrieved successfully');
+        return $this->successResponse($session, 'Session retrieved successfully');
+        return $this->errorResponse('Session not found', 404);
+    }
+    
+    public function showByIssueId($issue_id)
+    {
+        $session = $this->sessionService->getByIssueId($issue_id);
+        if ($session)
+            return $this->successResponse($session, 'Sessions retrieved successfully');
         return $this->errorResponse('Session not found', 404);
     }
 
@@ -57,5 +67,20 @@ class SessionController extends Controller
         if ($deleted)
             return $this->successResponse(null, 'Session deleted successfully');
         return $this->errorResponse('Failed to delete session', 422);
+    }
+
+      public function calculateAmounts($issueId)
+    {
+        $result = $this->sessionService->calculateSessionsPayment($issueId);
+
+        return $this->successResponse($result, 'Payment per session calculated');
+    }
+
+        public function generateLawyerReport(GenerateLawyerReportRequest $request)
+    {
+        $lawyerId = auth()->user()->lawyer->id;
+        $report = $this->sessionService->generateLawyerReport($lawyerId, $request->validated());
+
+        return $this->successResponse($report, 'تم إنشاء التقرير بنجاح');
     }
 }

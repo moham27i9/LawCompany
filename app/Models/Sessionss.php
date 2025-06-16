@@ -10,10 +10,10 @@ class Sessionss extends Model
 
     protected $fillable = [
         'outcome',
-        'type',
         'is_attend',
         'issue_id',
         'lawyer_id',
+        'session_type_id'
        
     ];
     public function issue()
@@ -24,10 +24,7 @@ class Sessionss extends Model
 {
     return $this->belongsTo(Lawyer::class);
 }
-    public function point()
-{
-    return $this->hasOne(Point::class);
-}
+
     public function issueProgressReport()
 {
     return $this->hasOne(IssueProgressReport::class);
@@ -40,4 +37,9 @@ class Sessionss extends Model
 {
     return $this->hasMany(Document::class);
 }
+    public function sessionType()
+    {
+        return $this->belongsTo(SessionType::class);
+    }
+
 }

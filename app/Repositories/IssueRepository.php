@@ -19,6 +19,7 @@ class IssueRepository
             'priority'=> $data['priority'] ,
             'amount_paid'=> $data['amount_paid'] ,
             'total_cost'=> $data['total_cost'] ,
+            'lawyer_percentage'=> $data['lawyer_percentage'] ,
             'number_of_payments'=> $data['number_of_payments'] ,
             'court_name'=> $data['court_name'] ,
             'opponent_name'=> $data['opponent_name'] ,
@@ -37,7 +38,6 @@ class IssueRepository
     public function update($id, array $data)
     {
         $issue = Issue::findOrFail($id);
-        // dd($data);
         $issue->update([
             'title'=> $data['title'] ?? $issue->title ,
             'status'=> $data['status'] ?? $issue->status,

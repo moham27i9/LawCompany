@@ -45,13 +45,13 @@ class IssueRequestController extends Controller
     public function update(UpdateIssueRequestRequest $request, $id)
     {
         $issue = IssueRequest::findOrFail($id);
-    
-        // تفويض الصلاحية
+   
         $this->authorize('update', $issue);
     
         $updated = $this->service->update($id, $request->validated());
-    
+    if($updated)
         return $this->successResponse($updated, 'Issue request updated');
+        return $this->errorResponse('You are not allowed to update this request. It might be locked or not yours.', 403);
     }
     
     public function updateIssueRequestAdmin(UpdateIssueRequestAdminRequest $request, $id)
@@ -62,9 +62,46 @@ class IssueRequestController extends Controller
     }
     
 
+    public function myRequests()
+    {
+        
+        $requests = $this->service->listClientRequests(auth()->user()->id);
+        return $this->successResponse($requests, 'My issue requests');
+    }
+
+    public function updateMyRequest(UpdateIssueRequestRequest $request, $id)
+    {
+
+        $issueRequest = IssueRequest::findOrFail($id);
+           $this->authorize('update', $issueRequest);
+
+               $updated = $this->service->updateClientRequest($id,auth()->user()->id, $request->validated());
+               return $this->successResponse($updated, 'Issue request updated');
+         
+         
+    }
+
+    public function startReview($id)
+    {
+         $issueRequest = IssueRequest::findOrFail($id);
+
+        $this->authorize('isAdmin',$issueRequest); // تأكد أن المستخدم أدمن
+        $this->service->lockRequest($id);
+        return $this->successResponse($issueRequest, 'Request locked for review');
+    }
+
+    public function endReview($id)
+    {
+        $issueRequest = IssueRequest::findOrFail($id);
+        $this->authorize('isAdmin',$issueRequest); // تأكد أن المستخدم أدمن
+        $this->service->unlockRequest($id);
+        return $this->successResponse($issueRequest, 'Request unlocked');
+    }
+
     public function destroy($id)
     {
         $issueRequest = IssueRequest::findOrFail($id);
+        
         $this->authorize('delete', $issueRequest);
         $issueRequest = $this->service->delete($id);
         return $this->successResponse(null, 'Issue request deleted');

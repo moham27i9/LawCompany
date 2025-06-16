@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
+            $table->boolean('is_locked')->default(false);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('admin_note')->nullable(); // في حالة الرفض أو الملاحظات
             $table->timestamps();

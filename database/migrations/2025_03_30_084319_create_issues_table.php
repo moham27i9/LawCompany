@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('court_name');
             $table->integer('number_of_payments')->default(0); 
             $table->decimal('total_cost', 12, 2)->nullable();  
+            $table->integer('lawyer_percentage')->default(0);
             $table->decimal('amount_paid', 12, 2)->default(0); 
             $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 

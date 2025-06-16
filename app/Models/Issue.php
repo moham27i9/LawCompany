@@ -61,7 +61,7 @@ class Issue extends Model
         'priority',
         'start_date',
         'end_date',
-        // 'lawyer_ids', 
+        'lawyer_percentage', 
     ];
 
     // protected $casts = [

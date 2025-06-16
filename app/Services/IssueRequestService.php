@@ -45,6 +45,38 @@ class IssueRequestService
         return  $issueRequest;
     }
 
+    public function listClientRequests($userId)
+    {
+        return $this->repository->getByUser($userId);
+    }
+
+    public function updateClientRequest($id, $userId, array $data)
+    {
+        return $this->repository->updateClientRequest($id, $userId, $data);
+    }
+
+    public function lockRequest($id)
+    {
+        $request = $this->repository->getById($id);
+         if (!$request) {
+        throw new \Exception("Request not found");
+          }
+        $request->update(['is_locked' => true]);
+      
+        return $request;
+    }
+
+    public function unlockRequest($id)
+    {
+        $request = $this->repository->getById($id);
+         if (!$request) {
+        throw new \Exception("Request not found");
+    }
+        $request->update(['is_locked' => false]);
+
+        return $request;
+    }
+
     public function delete($id)
     {
         return $this->repository->delete($id);

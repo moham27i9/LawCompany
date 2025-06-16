@@ -9,14 +9,19 @@ class SessionRepository
 {
     public function all()
     {
-        return Sessionss::with(['issue', 'lawyer'])->get();
-                // return Sessionss::with(['issue', 'lawyer', 'point', 'issueProgressReport', 'appointments', 'documents'])->get();
+        return Sessionss::with(['issue', 'lawyer','sessionType'])->get();
+           
 
     }
 
     public function getById($id)
     {
-        return Sessionss::with(['issue', 'lawyer'])->findOrFail($id);
+        return Sessionss::with(['issue', 'lawyer','sessionType'])->findOrFail($id);
+    }
+
+    public function getByIssueId($id)
+    {
+        return Sessionss::with(['issue', 'lawyer','sessionType'])->where('issue_id',$id)->get();
     }
 
     public function create(array $data)
@@ -37,5 +42,24 @@ class SessionRepository
     {
         $session = Sessionss::findOrFail($id);
         return $session->delete();
+    }
+
+    public function sumPointsByIssue($issueId)
+{
+    return Sessionss::with('sessionType')
+        ->where('issue_id', $issueId)
+        ->get()
+        ->sum(function ($session) {
+            return optional($session->sessionType)->points ?? 0;
+        });
+}
+
+
+    public function getSessionsForLawyerReport($lawyerId, $from, $to)
+    {
+        return Sessionss::with(['issue', 'appointments'])
+            ->where('lawyer_id', $lawyerId)
+            ->whereBetween('created_at', [$from, $to])
+            ->get();
     }
 }

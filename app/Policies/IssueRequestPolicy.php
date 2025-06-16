@@ -8,6 +8,11 @@ use Illuminate\Auth\Access\Response;
 
 class IssueRequestPolicy
 {
+     public function isAdmin(User $user, IssueRequest $issueRequest)
+    {
+        return $user->role->name === 'admin';
+    }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -32,6 +37,7 @@ class IssueRequestPolicy
     {
         return false;
     }
+
 
     /**
      * Determine whether the user can update the model.

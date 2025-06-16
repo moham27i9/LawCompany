@@ -12,7 +12,7 @@ public function rules(): array
 {
     return [
         'outcome' => 'sometimes|in:held,postponed,canceled,rescheduled,closed,judged,attended_by_lawyer_only,attended_by_client_only,absent',
-        'type' => 'required|in:preliminary,hearing,judgment,pleading,postponed,mediation,followup,consultation',
+        'session_type_id' => ['required', 'exists:session_types,id'],   
         'is_attend' => 'sometimes|boolean',
         'lawyer_id' => ['required', 'integer', function ($attribute, $value, $fail) {
             $issueId = request()->route('issue_id'); 
@@ -26,9 +26,9 @@ public function rules(): array
             if (!in_array($value, $lawyerIds)) {
                 $fail("This lawyer is not assigned to this issue.");
             }
-            if (in_array($value, $session->pluck('lawyer_id')->toArray())) {
-                $fail("This lawyer is assigned to this session actually.");
-            }
+            // if (in_array($value, $session->pluck('lawyer_id')->toArray())) {
+            //     $fail("This lawyer is assigned to this session actually.");
+            // }
         }],
     ];
 }
@@ -36,10 +36,9 @@ public function rules(): array
 {
     return [
 
-        'type.required' => 'حقل نوع الجلسة مطلوب.',
+        'session_type_id.required' => 'حقل نوع الجلسة مطلوب.',
         'is_attend.boolean'    => '(true أو false)قيمة الحضور يجب أن تكون .',
         'outcome.in' => 'held, postponed, canceled,rescheduled,closed, judged, attended_by_lawyer_only, attended_by_client_only, absent :نتيجة الجلسة يجب أن تكون واحدة من  ',
-        'type.in' => 'preliminary,hearing,judgment,pleading, postponed, mediation, followup, consultation :الأولوية يجب أن تكون واحدة من',
         'lawyer_id.required' => 'معرف المحامي مطلوب.',
         'lawyer_id.integer' => 'معرف المحامي يجب أن يكون عدداً صحيحاً.',
     ];

@@ -106,9 +106,9 @@ public function issues()
 {
     return $this->hasMany(Issue::class);
 }
-public function consulations()
+public function consultationRequests()
 {
-    return $this->hasMany(Consulation::class);
+    return $this->hasMany(ConsultationRequest::class);
 }
 public function savedLegalBook()
 {

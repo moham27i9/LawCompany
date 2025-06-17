@@ -49,8 +49,7 @@ class FurloughRequestPolicy
     }
 
     public function updateStatus(User $user, FurloughRequest $furloughRequest): bool
-    {
-        
+    {  
         return  $user->role->name === 'admin' ;
     }
 

@@ -15,10 +15,22 @@ class RequiredDocumentService
         $this->repo = $repo;
     }
 
-    public function getAll()
-    {
-        return $this->repo->getAll();
-    }
+public function getAll()
+{
+    $documents = $this->repo->getAll();
+
+    return $documents->map(function ($document) {
+        return [
+            'id' => $document->id,
+            'issue_id' => $document->issue_id,
+            'require_file_type' => $document->require_file_type,
+            'status' => $document->status,
+            'note' => $document->note,
+            'file' => $document->file ? asset($document->file) : null,
+        ];
+    });
+}
+
 
     public function create($data,$issue_id)
     {
@@ -37,7 +49,20 @@ class RequiredDocumentService
 
     public function find($id)
     {
-        return $this->repo->findById($id);
+        $document = $this->repo->findById($id);
+
+        if ($document) {
+            return [
+                'id'         => $document->id,
+                'issue_id' => $document->issue_id,
+                'status' => $document->status,
+                'note' => $document->note,
+                'require_file_type' => $document->require_file_type,
+                'file'       => $document->file ? asset('storage/' . $document->file) : null,
+            ];
+        }
+
+        return null;
     }
 
     public function updateFile($id, $userId,$file)

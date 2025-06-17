@@ -28,4 +28,9 @@ class PermissionService
     {
         return $this->repo->delete($id);
     }
+
+        public function getPermissionsByUserId($userId)
+    {
+        return $this->repo->getUserPermissions($userId);
+    }
 }

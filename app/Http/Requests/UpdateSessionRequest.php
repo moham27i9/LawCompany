@@ -19,6 +19,8 @@ class UpdateSessionRequest extends FormRequest
             'is_attend' => 'nullable|boolean',
             'issue_id' => 'sometimes|exists:issues,id',
             'lawyer_id' => 'sometimes|exists:lawyers,id',
+            'notes' => 'nullable|string|max:1000',
+
         ];
     }
 

@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreatePermissionRequest;
+use App\Models\Permission;
+use App\Models\User;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
 class PermissionController extends Controller
 {
-    use ApiResponseTrait;
+    use ApiResponseTrait;use AuthorizesRequests;
     protected $service;
 
     public function __construct(PermissionService $service)
@@ -35,5 +38,16 @@ class PermissionController extends Controller
         $this->service->delete($id);
         return $this->successResponse(null, 'Permission deleted successfully ');
     }
+
+ public function getUserPermissions($userId)
+{
+    $this->authorize('viewAny', Permission::class);
+
+    $permissions = $this->service->getPermissionsByUserId($userId);
+
+    return $this->successResponse($permissions, 'User permissions retrieved successfully');
+}
+
+
 }
 

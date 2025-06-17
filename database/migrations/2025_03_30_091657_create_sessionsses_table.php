@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('issue_id')->constrained('issues')->onDelete('cascade');
             $table->foreignId('lawyer_id')->constrained('lawyers')->onDelete('cascade');
             $table->foreignId('session_type_id')->constrained('session_types')->onDelete('cascade');
+            $table->text('notes')->nullable();
+
             $table->timestamps();
         });
     }

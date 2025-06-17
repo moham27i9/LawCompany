@@ -37,7 +37,7 @@ class DocumentController extends Controller
     {
             return $this->successResponse($this->service->find($id), 'all documents retrieved');
              return $this->errorResponse('something wrong!!', 422);
-        
+
     }
 
     public function update(UpdateDocumentRequest $request,$session_id,$docId)
@@ -50,7 +50,7 @@ class DocumentController extends Controller
     public function destroy($session_id,$docId)
     {
         $this->service->delete($session_id,$docId);
-            return $this->successResponse(null, 'document deleted successfuly',204);
+            return $this->successResponse(null, 'document deleted successfuly');
              return $this->errorResponse('something wrong!!', 422);
     }
 }

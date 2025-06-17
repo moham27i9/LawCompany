@@ -27,13 +27,25 @@ class DocumentService
 
     public function find($id)
     {
-        return $this->repository->find($id);
+        $document = $this->repository->find($id);
+
+        if ($document) {
+            return [
+                'id'         => $document->id,
+                'session_id' => $document->session_id,
+                'file'       => $document->file ? asset('storage/' . $document->file) : null,
+                'privacy'    => $document->privacy,
+            ];
+        }
+
+        return null;
     }
+
 
     public function create(array $data,$session_id)
     {
            $session = Sessionss::findOrFail($session_id);
-         
+
           $this->authorize('create', [Document::class, $session]);
 
            if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {

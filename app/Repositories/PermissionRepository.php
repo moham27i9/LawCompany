@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Permission;
+use App\Models\User;
 
 class PermissionRepository
 {
@@ -22,5 +23,12 @@ class PermissionRepository
     public function delete($id)
     {
         return Permission::findOrFail($id)->delete();
+    }
+
+        public function getUserPermissions($userId)
+    {
+        $user = User::with('role.permissions')->findOrFail($userId);
+
+        return $user->role?->permissions ?? collect(); // return empty collection if no role
     }
 }

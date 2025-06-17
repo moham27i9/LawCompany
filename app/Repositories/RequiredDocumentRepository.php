@@ -8,7 +8,7 @@ class RequiredDocumentRepository
 {
     public function getAll()
     {
-        return RequiredDocument::with('issue')->latest()->get();
+        return RequiredDocument::get();
     }
 
     public function findById($id)
@@ -18,11 +18,11 @@ class RequiredDocumentRepository
 
     public function create(array $data,$issue_id)
     {
-        // if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
-        //     $filename = time() . '_' . uniqid() . '.' . $data['file']->getClientOriginalExtension();
-        //     $data['file']->storeAs('required_docs', $filename, 'public');
-        //     $data['file'] = 'storage/required_docs/' . $filename;
-        // }
+        if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
+            $filename = time() . '_' . uniqid() . '.' . $data['file']->getClientOriginalExtension();
+            $filePath=$data['file']->storeAs('storage/required_docs', $filename, 'public');
+            $data['file'] = $filePath;
+        }
          $data['issue_id'] =$issue_id;
         return RequiredDocument::create($data);
     }

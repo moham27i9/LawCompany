@@ -26,6 +26,7 @@ class DocumentRepository
     {
         $document = Document::where('session_id',$session_id)->findOrFail($docId)->first();
         $document->update($data);
+         $document->save();
         return $document;
     }
 

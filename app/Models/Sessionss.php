@@ -13,8 +13,9 @@ class Sessionss extends Model
         'is_attend',
         'issue_id',
         'lawyer_id',
-        'session_type_id'
-       
+        'session_type_id',
+         'notes',
+
     ];
     public function issue()
 {

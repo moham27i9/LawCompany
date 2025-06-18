@@ -18,9 +18,14 @@ class ConsultationService
         return $this->repository->getAll();
     }
 
-    public function create(array $data)
+    public function create(array $data,$cons_reqId)
     {
-        return $this->repository->create($data);
+     
+        
+        $cons = $this->repository->create($data,$cons_reqId);
+        if($cons)
+        return $cons;
+        return null;
     }
 
     public function getById($id)
@@ -37,4 +42,6 @@ class ConsultationService
     {
         return $this->repository->delete($id);
     }
+
+  
 }

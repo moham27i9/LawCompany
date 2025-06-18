@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ConsultationRequest extends Model
 {
-    protected $fillable = ['subject', 'details', 'status', 'user_id'];
+    protected $fillable = ['subject', 'details', 'status', 'user_id',  'is_locked'];
 
     public function user()
     {

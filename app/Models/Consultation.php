@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Consultation extends Model
 {
-    protected $fillable = [
-        'description', 'status', 'lawyer_id','consultation_id'
+     protected $table = 'consulations';
+   protected $fillable = [
+        'consultation_req_id',
+        'lawyer_id',
+        'resault',
+      
     ];
+
 
 
     public function lawyer()

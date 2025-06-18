@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('consulations', function (Blueprint $table) {
             $table->id();
-            $table->text('description');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('resault');
             $table->foreignId('lawyer_id')->constrained('lawyers')->onDelete('cascade');
             $table->foreignId('consultation_req_id')->constrained('consultation_requests')->onDelete('cascade');
             $table->timestamps();

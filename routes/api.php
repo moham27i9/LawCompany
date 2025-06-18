@@ -14,6 +14,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationRequestController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FurloughRequestController;
@@ -93,6 +94,16 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/status/{id}', [ConsultationRequestController::class, 'updateStatus']);
             Route::delete('/{id}', [ConsultationRequestController::class, 'destroy']);
         });
+            Route::prefix('consultations')->group(function () {
+            Route::get('/', [ConsultationController::class, 'index']);
+            Route::post('/{id}', [ConsultationController::class, 'store']);
+            Route::get('/{id}', [ConsultationController::class, 'show']);
+            Route::put('/{id}', [ConsultationController::class, 'update']);
+            Route::delete('/{id}', [ConsultationController::class, 'destroy']);
+              Route::post('/{id}/lock', [ConsultationRequestController::class, 'startReview']);
+              Route::post('/{id}/unlock', [ConsultationRequestController::class, 'endReview']);
+        });
+        
 
            // documents
         Route::get('/sessions/documents', [DocumentController::class, 'index']);

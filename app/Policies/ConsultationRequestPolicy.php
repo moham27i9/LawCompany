@@ -8,6 +8,10 @@ use Illuminate\Auth\Access\Response;
 
 class ConsultationRequestPolicy
 {
+      public function isAdmin(User $user, ConsultationRequest $consultationRequest)
+    {
+        return $user->role->name === 'admin'|| $user->lawyer;
+    }
     /**
      * Determine whether the user can view any models.
      */

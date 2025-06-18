@@ -22,9 +22,7 @@ class StoreConsultationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'required|string',
-            'status' => 'in:pending,approved,rejected',
-            'lawyer_id' => 'required|exists:lawyers,id'
+            'resault' => 'required|string',
         ];
     }
 }

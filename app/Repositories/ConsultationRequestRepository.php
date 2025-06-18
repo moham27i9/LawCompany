@@ -23,9 +23,13 @@ class ConsultationRequestRepository
 
     public function update($id, array $data)
     {
-        $item = ConsultationRequest::findOrFail($id);
-        $item->update($data);
-        return $item;
+        try{
+                $item = ConsultationRequest::findOrFail($id);
+                $item->update($data);
+                return $item;
+        }
+         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+             return null;}
     }
 
     public function delete($id)

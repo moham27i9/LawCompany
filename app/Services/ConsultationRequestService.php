@@ -36,4 +36,26 @@ class ConsultationRequestService
     {
         return $this->repository->delete($id);
     }
+        public function lockConsultation($id)
+    {
+        $consultation = $this->repository->getById($id);
+         if (!$consultation) {
+        throw new \Exception("Consultation not found");
+          }
+        $consultation->update(['is_locked' => true]);
+        $consultation->save();
+      
+        return $consultation;
+    }
+
+    public function unlockConsultation($id)
+    {
+        $consultation = $this->repository->getById($id);
+         if (!$consultation) {
+        throw new \Exception("Consultation not found");
+    }
+        $consultation->update(['is_locked' => false]);
+          $consultation->save();
+        return $consultation;
+    }
 }

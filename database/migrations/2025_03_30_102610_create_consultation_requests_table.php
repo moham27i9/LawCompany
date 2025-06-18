@@ -15,6 +15,7 @@ return new class extends Migration
     $table->id();
     $table->text('subject');
     $table->text('details')->nullable();
+    $table->boolean('is_locked')->default(false);
     $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
     $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
     $table->timestamps();

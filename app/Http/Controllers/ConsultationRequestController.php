@@ -7,6 +7,7 @@ use App\Services\ConsultationService;
 use App\Http\Requests\StoreConsultationRequestRequest;
 use App\Http\Requests\StoreConsultationRequest;
 use App\Http\Requests\UpdateConsultationRequestRequest;
+use App\Models\ConsultationRequest;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use App\Traits\ApiResponseTrait;
@@ -77,5 +78,20 @@ class ConsultationRequestController extends Controller
             $this->service->delete($id),
             'Consultation request deleted'
         );
+    }
+        public function startReview($id)
+    {
+         $consultation = ConsultationRequest::findOrFail($id);
+        $this->authorize('isAdmin',$consultation); // تأكد أن المستخدم أدمن
+        $this->service->lockConsultation($id);
+        return $this->successResponse($consultation, 'consultation locked for review');
+    }
+
+    public function endReview($id)
+    {
+        $consultation = ConsultationRequest::findOrFail($id);
+        $this->authorize('isAdmin',$consultation); // تأكد أن المستخدم أدمن
+        $this->service->unlockConsultation($id);
+        return $this->successResponse($consultation, 'consultation unlocked');
     }
 }

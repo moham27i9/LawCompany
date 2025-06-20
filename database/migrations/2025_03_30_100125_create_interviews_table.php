@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('interviews', function (Blueprint $table) {
-            $table->id();
-            $table->date('date');
-            $table->foreignId('jobApp_id')->constrained('job_applications')->onDelete('cascade');
-            $table->timestamps();
-        });
+Schema::create('interviews', function (Blueprint $table) {
+    $table->id();
+    $table->date('date');
+    $table->enum('result', ['passed', 'failed', 'pending'])->default('pending');
+    $table->text('note')->nullable();
+    $table->foreignId('jobApp_id')->constrained('job_applications')->onDelete('cascade');
+    $table->timestamps();
+});
+
     }
 
     /**

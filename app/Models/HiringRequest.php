@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $jopTitle
@@ -33,18 +33,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HiringRequest extends Model
 {
+     protected $table = 'hiring_requests';
     protected $fillable = [
         'jopTitle',
         'created_by',
         'status',
         'type',
         'description',
-      
+
     ];
 
     public function jobApplication()
     {
-        return $this->hasMany(JobApplication::class);
+        return $this->hasMany(JobApplication::class ,'HirReq_id');
     }
     public function employee()
     {

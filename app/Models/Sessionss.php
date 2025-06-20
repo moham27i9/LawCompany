@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Sessionss extends Model
 {
 
-
     protected $fillable = [
         'outcome',
         'is_attend',
@@ -32,11 +31,11 @@ class Sessionss extends Model
 }
     public function appointments()
 {
-    return $this->hasMany(SessionAppointment::class);
+    return $this->hasMany(SessionAppointment::class, 'session_id');
 }
     public function documents()
 {
-    return $this->hasMany(Document::class);
+    return $this->hasMany(Document::class , 'session_id');
 }
     public function sessionType()
     {

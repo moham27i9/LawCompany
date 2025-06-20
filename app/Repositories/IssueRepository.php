@@ -78,7 +78,7 @@ class IssueRepository
 
     public function updatePriority($issueId, $newPriority)
     {
-          
+
         $issue = Issue::findOrFail($issueId);
         $issue->priority = $newPriority;
         $issue->save();
@@ -117,17 +117,19 @@ public function getLawyersByIssueId($caseId)
 
     public function track($id)
     {
-        return Issue::with([
-            'sessions',
-            'lawyers',
-            // 'sessions.documents',
-        ])->findOrFail($id);
+
+            return Issue::with([
+        'sessions',
+        'sessions.appointments', 
+        'sessions.documents',
+        'lawyers',
+    ])->findOrFail($id);
     }
 
       public function getIssuesForClient() {
          return Issue::where('user_id',auth()->user()->id)->get();
     }
-    
+
   public function getSessionsForClient() {
     $sessions =Issue::where('user_id',auth()->user()->id)->with('sessions')->get();
 

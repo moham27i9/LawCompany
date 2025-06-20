@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $date
@@ -25,14 +25,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Interview extends Model
 {
-    protected $fillable = [
-        'date',
-        'jobApp_id',
-      
-    ];
+    protected $fillable = ['date', 'result', 'note', 'jobApp_id'];
 
     public function jobApplication()
     {
-        return $this->belongsTo(JobApplication::class);
+        return $this->belongsTo(JobApplication::class, 'jobApp_id');
     }
+
 }

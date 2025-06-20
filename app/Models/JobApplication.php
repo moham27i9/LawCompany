@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property int $user_id
@@ -29,12 +29,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class JobApplication extends Model
 {
-
+     protected $table = 'job_applications';
     protected $fillable = [
         'user_id',
         'HirReq_id',
         'cv',
-      
+         'status',
+
     ];
     public function user()
     {
@@ -42,7 +43,7 @@ class JobApplication extends Model
     }
     public function hiringRequest()
     {
-        return $this->belongsTo(HiringRequest::class);
+        return $this->belongsTo(HiringRequest::class , 'HirReq_id');
     }
     public function interview()
 {

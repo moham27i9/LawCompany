@@ -10,7 +10,7 @@ use App\Models\User;
 
 class HiringRequestService
 {
-    
+
     use ApiResponseTrait;
     protected $repository;
 
@@ -23,21 +23,22 @@ class HiringRequestService
     public function list()
     {
         $hiringRequest = $this->repository->getAll();
-        return $this->successResponse($hiringRequest, 'success');  
+        return $this->successResponse($hiringRequest, 'success');
     }
 
     public function show($id)
     {
         $hiringRequest = $this->repository->find($id);
-        return $this->successResponse($hiringRequest, 'success');  
+        return $this->successResponse($hiringRequest, 'success');
     }
+
 
     public function store(array $data)
     {
         $data['created_by'] = auth()->user()->employee->id;
-    
+
         $users = User::all();
-       
+
         $hiringRequest = $this->repository->create($data);
         foreach($users as $user){
 
@@ -48,4 +49,17 @@ class HiringRequestService
 
         return $hiringRequest;
     }
+
+    public function delete($id)
+    {
+        $hiringRequest = $this->repository->delete($id);
+        return $this->successResponse($hiringRequest, 'success');
+    }
+
+    public function updateStatus(int $id, string $status)
+    {
+        return $this->repository->updateStatus($id, $status);
+    }
+
+
 }

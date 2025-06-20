@@ -18,7 +18,23 @@ class HiringRequestRepository
     }
     public function create(array $data)
     {
-       
+
         return HiringRequest::create($data);
     }
+
+    public function delete($id)
+    {
+        $hiringRequest = HiringRequest::findOrFail($id);
+        return $hiringRequest->delete();
+    }
+
+    public function updateStatus($id, string $status)
+{
+    $hiring = HiringRequest::findOrFail($id);
+    $hiring->status = $status;
+    $hiring->save();
+
+    return $hiring;
+}
+
 }

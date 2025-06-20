@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('HirReq_id')->constrained('hiring_requests')->onDelete('cascade');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->string('cv');
             $table->timestamps();
         });

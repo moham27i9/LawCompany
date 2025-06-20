@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FurloughRequestController;
+use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\RequiredDocumentController;
@@ -64,7 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/issue-requests/{id}/lock', [IssueRequestController::class, 'startReview']);
     Route::post('/issue-requests/{id}/unlock', [IssueRequestController::class, 'endReview']);
 
-    Route::post('/job-applications/{id}', [JobApplicationController::class, 'store']);
+
     Route::get('/issues/track/{id}', [IssueController::class, 'track']);
     Route::put('/sessions/{id}', [SessionController::class, 'update']);
     Route::get('/sessions/issue/{issue_id}', [SessionController::class, 'showByIssueId']);
@@ -208,8 +209,41 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['hr_only'])->group(function () {
 
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
-        Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
-    });
+
+        Route::prefix('hiring-requests')->group(function () {
+            Route::post('/', [HiringRequestController::class, 'store']);
+            Route::get('/', [HiringRequestController::class, 'index']);
+            Route::get('/{id}', [HiringRequestController::class, 'show']);
+            Route::delete('/{id}', [HiringRequestController::class, 'delete']);
+
+            Route::post('/status/{id}', [HiringRequestController::class, 'updateStatus']);
+
+            });
+
+        });
+
+
+        //job-applications
+        Route::prefix('job-applications')->group(function () {
+
+            Route::post('/{id}', [JobApplicationController::class, 'store']);
+            Route::get('/', [JobApplicationController::class, 'showMyApplications']);
+            Route::get('/{id}', [JobApplicationController::class, 'show']);
+
+            Route::post('/update-status/{id}', [JobApplicationController::class, 'updateStatus']);
+
+
+        });
+
+        Route::prefix('interviews')->group(function () {
+            Route::get('/application/{jobAppId}', [InterviewController::class, 'index']);
+            Route::post('/{jobAppId}', [InterviewController::class, 'store']);
+            Route::get('/{id}', [InterviewController::class, 'show']);
+            Route::post('update/{id}', [InterviewController::class, 'update']);
+            Route::delete('/{id}', [InterviewController::class, 'destroy']);
+        });
+
+        Route::post('/interviews/result/{id}', [InterviewController::class, 'updateResult']);
 
 });
 

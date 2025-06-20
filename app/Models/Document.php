@@ -10,10 +10,10 @@ class Document extends Model
         'session_id',
         'file',
         'privacy',
- 
+
     ];
     public function session()
     {
-        return $this->belongsTo(Sessionss::class);
+        return $this->belongsTo(Sessionss::class , 'session_id');
     }
 }

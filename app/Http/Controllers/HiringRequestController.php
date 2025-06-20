@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHiringRequest;
+use App\Http\Requests\UpdateHiringRequestStatusRequest;
+use App\Http\Requests\UpdateHiringStatusRequest;
 use App\Services\HiringRequestService;
 use App\Traits\ApiResponseTrait;
+use Request;
 
 class HiringRequestController extends Controller
 {
@@ -33,5 +36,19 @@ class HiringRequestController extends Controller
         $hiring = $this->service->store($request->validated());
         return $this->successResponse($hiring, 'تم إنشاء إعلان التوظيف بنجاح');
     }
+
+    public function delete($id)
+    {
+        return $this->service->delete($id);
+    }
+
+    public function updateStatus(UpdateHiringStatusRequest $request, $id)
+    {
+        $hiring = $this->service->updateStatus($id, $request->status);
+        return $this->successResponse($hiring, 'Hiring status updated successfully');
+    }
+
+
+
 }
 

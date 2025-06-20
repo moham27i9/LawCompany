@@ -6,8 +6,38 @@ use App\Models\JobApplication;
 
 class JobApplicationRepository
 {
-    public function create(array $data)
+    public function create(array $data ,$HirReq_id,$user_id)
     {
-        return JobApplication::create($data);
+        return JobApplication::create([
+            'HirReq_id'=>$HirReq_id,
+            'user_id'=>$user_id,
+            'cv'=>$data['cv'],
+        ]);
     }
+
+
+public function getAllByUserId($userId)
+{
+    return JobApplication::with(['user:id,name', 'hiringRequest:id,jopTitle'])
+        ->where('user_id', $userId)
+        ->get();
+}
+
+public function getById($id)
+{
+    return JobApplication::with(['user:id,name', 'hiringRequest:id,jopTitle'])
+        ->findOrFail($id);
+}
+
+public function updateStatus($id, string $status)
+{
+    $application = JobApplication::findOrFail($id);
+    $application->status = $status;
+    $application->save();
+
+    return $application;
+}
+
+
+
 }

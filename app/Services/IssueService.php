@@ -24,7 +24,7 @@ class IssueService
 
     public function create(array $data , $user_id)
     {
-        
+
         return $this->issueRepository->create($data , $user_id);
     }
 
@@ -39,7 +39,7 @@ class IssueService
     }
     public function update($id, array $data)
     {
-        
+
         return $this->issueRepository->update($id, $data);
     }
 
@@ -48,9 +48,9 @@ class IssueService
         return $this->issueRepository->delete($id);
     }
 
-        
+
     public function changePriority($issueId, $priority)
-    {    
+    {
         $issue = $this->issueRepository->updatePriority($issueId, $priority['priority']);
         $issue->user->notify(new GeneralNotification('إنشاء قضية','تم إنشاء القضية الخاصة بك','/issues/' . $issue->id));
         $lawyers = $issue->lawyers;
@@ -68,7 +68,7 @@ class IssueService
 
         foreach ($lawyerIds as $lawyerId) {
             $lawyer = Lawyer::findOrFail($lawyerId);
-         
+
             // إرسال إشعار
             $lawyer->user->notify(new GeneralNotification(
                 'إسناد قضية',
@@ -87,28 +87,43 @@ class IssueService
         return $this->issueRepository->getLawyersByIssueId($issueId);
     }
 
-    public function track($id)
+public function track($id)
 {
     $issue = $this->issueRepository->track($id);
 
-    // تحقق من ملكية القضية
-    if ($issue->user_id !== auth()->user()->id) {
-        return $this->errorResponse('Unauthorized', 403);
+    // تأكد أن المستخدم صاحب القضية
+    if ($issue->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized');
     }
 
-    return $this->successResponse([
+
+    // استخراج موعد الجلسة القادمة من أول موعد بعد الآن
+    $nextAppointment = $issue->sessions
+        ->flatMap->appointments
+        ->filter(fn($a) => $a->date > now())
+        ->sortBy('date')
+        ->first();
+
+    // استخراج نتائج وملاحظات الجلسات
+    $sessionSummaries = $issue->sessions->map(fn($s) => [
+        'session_date' => optional($s->appointments->first())->date,
+        'outcome' => $s->outcome,
+        'notes' => $s->notes ?? null,
+    ]);
+    return [
         'title' => $issue->title,
         'issue_number' => $issue->issue_number,
         'total_cost' => $issue->total_cost,
-        'installments_per_payment' => $issue->total_cost / $issue->number_of_payments,
+        'installments_per_payment' => $issue->total_cost / max(1, $issue->number_of_payments),
         'balance_due' => $issue->total_cost - $issue->amount_paid,
         'last_update' => $issue->updated_at,
-        'lawyers' => $issue->lawyers,
-        'sessions' => $issue->sessions,
-        // 'documents' => $issue->sessions->documents,
-
-    ]);
+        'lawyers' => $issue->lawyers->pluck('user.name'),
+        'next_session' => $nextAppointment,
+        'documents' => $issue->sessions->flatMap->documents,
+        'previous_sessions' => $sessionSummaries,
+    ];
 }
+
 
   public function getClientIssues() {
         return $this->issueRepository->getIssuesForClient();

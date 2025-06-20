@@ -13,8 +13,8 @@ class StoreJobApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
- 
-            'cv' => 'required|string',
+
+            'cv' => 'required',
         ];
     }
 }

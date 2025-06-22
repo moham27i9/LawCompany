@@ -6,10 +6,13 @@ use App\Http\Requests\RequiredDocumentRequest;
 use App\Http\Requests\UpdateFileRequiredDocumentRequest;
 use App\Http\Requests\UpdateRequiredDoc_ClinetRequest;
 use App\Services\RequiredDocumentService;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
 class RequiredDocumentController extends Controller
 {
+    use ApiResponseTrait;
+
     protected $service;
 
     public function __construct(RequiredDocumentService $service)
@@ -19,38 +22,61 @@ class RequiredDocumentController extends Controller
 
     public function index()
     {
-        return response()->json($this->service->getAll());
+        try {
+            $documents = $this->service->getAll();
+            return $this->successResponse($documents, 'تم استرجاع كل الوثائق');
+        } catch (\Exception $e) {
+            return $this->errorResponse('حدث خطأ أثناء جلب الوثائق', 500, $e->getMessage());
+        }
     }
 
-    public function store(RequiredDocumentRequest $request,$issue_id)
+    public function store(RequiredDocumentRequest $request, $issue_id)
     {
-        $doc = $this->service->create($request->validated(),$issue_id);
-        return response()->json(['message' => 'تم طلب إضافة مستند بنجاح', 'data' => $doc]);
+        try {
+            $doc = $this->service->create($request->validated(), $issue_id);
+            return $this->successResponse($doc, 'تم طلب إضافة مستند بنجاح');
+        } catch (\Exception $e) {
+            return $this->errorResponse('تعذر إنشاء المستند', 500, $e->getMessage());
+        }
     }
 
     public function show($id)
     {
-        return response()->json($this->service->find($id));
+        try {
+            $doc = $this->service->find($id);
+            return $this->successResponse($doc, 'تم جلب المستند بنجاح');
+        } catch (\Exception $e) {
+            return $this->errorResponse('تعذر عرض المستند', 404, $e->getMessage());
+        }
     }
 
     public function update(UpdateRequiredDoc_ClinetRequest $request, $id)
     {
-        $doc = $this->service->update($id, $request->validated());
-        return response()->json(['message' => 'تم التحديث بنجاح', 'data' => $doc]);
+        try {
+            $doc = $this->service->update($id, $request->validated());
+            return $this->successResponse($doc, 'تم التحديث بنجاح');
+        } catch (\Exception $e) {
+            return $this->errorResponse('فشل التحديث', 422, $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        $this->service->delete($id);
-        return response()->json(['message' => 'تم الحذف بنجاح']);
+        try {
+            $this->service->delete($id);
+            return $this->successResponse(null, 'تم الحذف بنجاح');
+        } catch (\Exception $e) {
+            return $this->errorResponse('فشل الحذف', 422, $e->getMessage());
+        }
     }
+
     public function updateFile(UpdateFileRequiredDocumentRequest $request, $id)
     {
-
-        $updated = $this->service->updateFile($id, auth()->user()->id, $request->validated());
-
-        return response()->json(['message' => 'تم رفع الملف بنجاح وإعادة إرساله للمراجعة.', 'data' => $updated]);
+        try {
+            $updated = $this->service->updateFile($id, auth()->user()->id, $request->validated());
+            return $this->successResponse($updated, 'تم رفع الملف بنجاح وإعادة إرساله للمراجعة');
+        } catch (\Exception $e) {
+            return $this->errorResponse('فشل رفع الملف', 422, $e->getMessage());
+        }
     }
-
 }
-

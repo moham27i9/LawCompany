@@ -35,7 +35,7 @@ class SessionController extends Controller
         return $this->successResponse($session, 'Session retrieved successfully');
         return $this->errorResponse('Session not found', 404);
     }
-    
+
     public function showByIssueId($issue_id)
     {
         $session = $this->sessionService->getByIssueId($issue_id);
@@ -84,4 +84,14 @@ class SessionController extends Controller
 
         return $this->successResponse($report, 'تم إنشاء التقرير بنجاح');
     }
+
+    public function markAttendance($sessionId)
+    {
+        $session = $this->sessionService->markAttendance($sessionId);
+        return $this->successResponse($session, 'تم تسجيل الحضور للجلسة وحساب النقاط بنجاح');
+    }
+
+
+
+
 }

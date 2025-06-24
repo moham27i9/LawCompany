@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Issue;
 use App\Models\Lawyer;
+use App\Models\Sessionss;
 use App\Repositories\SessionRepository;
 
 class SessionService
@@ -60,18 +61,21 @@ public function calculateSessionsPayment($issueId)
     $totalCalculatedAmount = 0;
 
     foreach ($sessions as $session) {
-        $percentage = $session->sessionType->points / $totalPoints;
+        // اجلب مجموع نقاط الجلسة من جدول lawyer_points
+        $sessionPoints = \App\Models\LawyerPoint::where('session_id', $session->id)->sum('points');
+
+        // احسب النسبة بشكل صحيح من مجموع النقاط الكلي
+        $percentage = $sessionPoints / max(1, $totalPoints); // تفادي القسمة على صفر
         $sessionAmount = round($percentage * $lawyerAmount, 2);
 
         $totalCalculatedAmount += $sessionAmount;
 
         $result[] = [
             'session_id' => $session->id,
-            'type' => $session->sessionType->type,
             'lawyer_name' => $session->lawyer->user->name,
-            'points' => $session->sessionType->points,
             'percentage' => round($percentage * 100, 2),
             'amount' => $sessionAmount,
+            'point for this session' => $sessionPoints ,
         ];
     }
 
@@ -79,6 +83,7 @@ public function calculateSessionsPayment($issueId)
         'sessions' => $result,
         'amount_total' => round($totalCalculatedAmount, 2),
         'lawyer_total_amount' => $lawyerAmount,
+        'total_points' => $totalPoints,
     ];
 }
 
@@ -113,5 +118,19 @@ public function calculateSessionsPayment($issueId)
 
         return $report;
     }
+
+public function markAttendance($sessionId)
+{
+    $session = Sessionss::findOrFail($sessionId);
+    $lawyerId = auth()->user()->lawyer->id;
+
+    if ($session->lawyer_id !== $lawyerId) {
+        abort(403, 'غير مسموح لك تسجيل الحضور لهذه الجلسة');
+    }
+
+    return $this->sessionRepository->markAttendance($sessionId);
+}
+
+
 
 }

@@ -41,5 +41,10 @@ class Sessionss extends Model
     {
         return $this->belongsTo(SessionType::class);
     }
+    public function points()
+    {
+        return $this->hasMany(LawyerPoint::class);
+    }
+
 
 }

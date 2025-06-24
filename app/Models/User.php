@@ -134,6 +134,11 @@ public function caseRequests()
 {
     return $this->hasMany(IssueRequest::class);
 }
+public function addedPoints()
+{
+    return $this->hasMany(LawyerPoint::class, 'admin_id');
+}
+
 
     protected function casts(): array
     {

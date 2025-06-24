@@ -21,6 +21,7 @@ use App\Http\Controllers\FurloughRequestController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
+use App\Http\Controllers\LawyerPointController;
 use App\Http\Controllers\RequiredDocumentController;
 use App\Http\Controllers\SessionAppointmentController;
 use App\Http\Controllers\SessionController;
@@ -213,6 +214,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
 
+        Route::put('/lawyer/sessions/{sessionId}/attend', [SessionController::class, 'markAttendance']);
+
         Route::post('/lawyer/session-report', [SessionController::class, 'generateLawyerReport']);
 
 
@@ -266,6 +269,6 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         Route::post('/interviews/result/{id}', [InterviewController::class, 'updateResult']);
-
-});
+        Route::post('/admin/lawyer-points/evaluate/{session_id}/{lawyer_id}', [LawyerPointController::class, 'addAdminEvaluation']);});
+        Route::get('/lawyer/points-summary/{lawyerId}', [LawyerPointController::class, 'getPointsSummary']);
 

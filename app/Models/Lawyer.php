@@ -78,4 +78,10 @@ class Lawyer extends Model
         return $this->belongsToMany(Issue::class, 'issue_lawyer');
     }
 
+    public function points()
+    {
+        return $this->hasMany(LawyerPoint::class);
+    }
+
+
 }

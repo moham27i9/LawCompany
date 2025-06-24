@@ -71,6 +71,7 @@ public function profile()
              return $this->errorResponse('something wrong!!', 422);
     }
 
+    
 
 }
 

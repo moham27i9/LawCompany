@@ -100,5 +100,10 @@ class AuthController extends Controller
     ], 'Access token refreshed');
 }
 
+public function showLoginForm()
+{
+    return view('auth.login');
+}
+
 
 }

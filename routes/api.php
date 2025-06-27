@@ -14,6 +14,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationRequestController;
 use App\Http\Controllers\DocumentController;
@@ -39,6 +40,9 @@ Route::post('/refresh', [AuthController::class, 'refreshToken']);
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
 
+    
+  Route::post('/messages', [ChatController::class, 'send']);
+    Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
     //  Profile & Logout
     Route::post('/profiles/create/', [ProfileController::class, 'store']);
     Route::get('/profile/{id}', [ProfileController::class, 'show']);

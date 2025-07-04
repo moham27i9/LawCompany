@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $type
@@ -28,10 +28,12 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
-        'employee_id',
-        'description',
         'type',
-      
+        'file_path',
+        'total_amount',
+        'employee_id',
+        'report_date',
+        'notes',
     ];
     public function employee()
     {

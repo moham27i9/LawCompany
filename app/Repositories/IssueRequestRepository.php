@@ -10,13 +10,13 @@ class IssueRequestRepository
 
     public function getAll()
     {
-        return IssueRequest::with('user')->get();
+        return IssueRequest::with('user','user.profile')->get();
     }
 
     public function getById($id)
     {
-      
-        return IssueRequest::with('user')->findOrFail($id);
+
+        return IssueRequest::with('user','user.profile')->findOrFail($id);
     }
 
       public function getByUser($userId)

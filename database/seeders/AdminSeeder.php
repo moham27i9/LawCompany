@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Employee;
 use App\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Carbon\Carbon;
+
 class AdminSeeder extends Seeder
 {
     /**
@@ -31,5 +34,15 @@ class AdminSeeder extends Seeder
             'password' => bcrypt('12345678'),
             'role_id' => 3 // Admin role
         ]);
+
+                Employee::updateOrCreate(
+            ['id' => 1], // لتفادي التكرار عند إعادة تشغيل seeder
+            [
+                'salary' => 500,
+                'certificate' => 'app/sdd/ddlld/ldldl.pdf',
+                'hire_date' => Carbon::now(),
+                'user_id' => 3,
+            ]
+        );
     }
 }

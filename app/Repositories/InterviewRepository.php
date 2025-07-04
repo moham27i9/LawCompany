@@ -23,11 +23,12 @@ class InterviewRepository
     {
         return Interview::with([
             'jobApplication' => function ($query) {
-                $query->select('id', 'HirReq_id', 'status'); // فقط الأعمدة المطلوبة
+                $query->select('id', 'HirReq_id', 'user_id','status'); // فقط الأعمدة المطلوبة
             },
             'jobApplication.hiringRequest' => function ($query) {
                 $query->select('id', 'jopTitle'); // فقط اسم الوظيفة
-            }
+            },
+            'jobApplication.user'
         ])->findOrFail($id);
     }
 

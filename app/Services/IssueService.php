@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Issue;
+use App\Models\IssueCategory;
 use App\Models\Lawyer;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
@@ -16,10 +17,12 @@ class IssueService
     use ApiResponseTrait;
      use AuthorizesRequests;
     protected $issueRepository;
+    protected $issueCategoryRepository;
 
-    public function __construct(IssueRepository $issueRepository)
+    public function __construct(IssueRepository $issueRepository , IssueCategory $issueCategoryRepository)
     {
         $this->issueRepository = $issueRepository;
+        $this->issueCategoryRepository = $issueCategoryRepository;
     }
 
     public function create(array $data , $user_id)
@@ -132,5 +135,37 @@ public function track($id)
   public function getClientSessions() {
         return $this->issueRepository->getSessionsForClient();
     }
+
+    public function getByCategory($categoryId)
+    {
+        $category = IssueCategory::findOrFail($categoryId);
+        $issues = $this->issueRepository->getIssuesWithChildren($categoryId);
+        $formattedIssues = $issues->map(function ($issue) {
+            return [
+                'id' => $issue->id,
+                'title' => $issue->title,
+                'issue_number' => $issue->issue_number,
+                'status' => $issue->status,
+                'priority' => $issue->priority,
+                'amount_paid' => $issue->amount_paid,
+                'total_cost' => $issue->total_cost,
+                'court_name' => $issue->court_name,
+                'opponent_name' => $issue->opponent_name,
+                'start_date' => $issue->start_date,
+                'end_date' => $issue->end_date,
+            ];
+        });
+
+        return [
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'parent_id' => $category->parent_id,
+            ],
+            'issues' => $formattedIssues
+        ];
+    }
+
+
 
 }

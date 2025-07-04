@@ -45,7 +45,7 @@ class DocumentService
     public function create(array $data,$session_id)
     {
            $session = Sessionss::findOrFail($session_id);
-
+           
           $this->authorize('create', [Document::class, $session]);
 
            if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {

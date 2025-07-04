@@ -67,6 +67,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $table = 'users';
     protected $fillable = [
         'name',
         'email',
@@ -120,7 +121,7 @@ public function savedLegalNews()
 }
 public function jobApplication()
 {
-    return $this->hasMany(JobApplication::class);
+    return $this->hasMany(JobApplication::class,'user_id');
 }
 public function employee()
 {

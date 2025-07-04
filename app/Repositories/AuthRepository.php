@@ -13,12 +13,12 @@ class AuthRepository
 
     public function getAll()
     {
-        return User::with(['role:id,name'])->get();
+        return User::with(['role:id,name','profile'])->get();
     }
 
     public function find($id)
     {
-        return User::findOrFail($id);
+        return User::with('profile')->findOrFail($id);
     }
 
 

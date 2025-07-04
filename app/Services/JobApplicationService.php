@@ -53,6 +53,11 @@ public function store(array $data, $HirReq_id)
         return $this->repo->updateStatus($id, $status);
     }
 
+    public function getByHiringRequest($hiringRequestId)
+    {
+        return $this->repo->getByHiringRequest($hiringRequestId);
+    }
+
 
 
 }

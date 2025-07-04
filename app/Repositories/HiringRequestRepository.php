@@ -37,4 +37,11 @@ class HiringRequestRepository
     return $hiring;
 }
 
+    public function getPublished()
+    {
+        $hirings=HiringRequest::get();
+        return $hirings;
+    }
+
+
 }

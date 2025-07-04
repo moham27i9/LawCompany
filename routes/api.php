@@ -20,13 +20,16 @@ use App\Http\Controllers\ConsultationRequestController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FurloughRequestController;
 use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\LawyerPointController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequiredDocumentController;
 use App\Http\Controllers\SessionAppointmentController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SessionTypeController;
+use App\Models\RequiredDocument;
 use Illuminate\Support\Facades\Route;
 
 
@@ -55,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
     Route::get('/lawyers', [LawyerController::class, 'index']);
+
 
     Route::put('/attendDemand/{id}/resault', [AttendDemandController::class, 'updateResault']);
 
@@ -206,7 +210,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::middleware(['verified.lawyer'])->group(function () {
+        Route::middleware(['verified.lawyer'])->group(function () {
 
         Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
         Route::get('/lawyer/issues', [LawyerController::class, 'showMyIssue']);
@@ -223,9 +227,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/lawyer/session-report', [SessionController::class, 'generateLawyerReport']);
 
 
-    });
+     });
 
-    Route::prefix('notifications')->group(function () {
+     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
         Route::get('/unread', [NotificationController::class, 'unread']);
         Route::post('/mark-all', [NotificationController::class, 'markAll']);
@@ -233,46 +237,69 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [NotificationController::class, 'destroy']);
 
         // lawyers managment
-    });
+     });
 
-    Route::middleware(['hr_only'])->group(function () {
+     Route::get('hiring-requests/published', [HiringRequestController::class, 'getPublished']);
+     Route::middleware(['hr_only'])->group(function () {
 
-        Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+         Route::post('/lawyers/{lawyer_id}/salary', [LawyerController::class, 'setSalary']);
+         Route::prefix('hiring-requests')->group(function () {
+             Route::post('/', [HiringRequestController::class, 'store']);
+             Route::get('/', [HiringRequestController::class, 'index']);
+             Route::get('/{id}', [HiringRequestController::class, 'show']);
+             Route::delete('/{id}', [HiringRequestController::class, 'delete']);
 
-        Route::prefix('hiring-requests')->group(function () {
-            Route::post('/', [HiringRequestController::class, 'store']);
-            Route::get('/', [HiringRequestController::class, 'index']);
-            Route::get('/{id}', [HiringRequestController::class, 'show']);
-            Route::delete('/{id}', [HiringRequestController::class, 'delete']);
-
-            Route::post('/status/{id}', [HiringRequestController::class, 'updateStatus']);
+             Route::post('/status/{id}', [HiringRequestController::class, 'updateStatus']);
 
             });
 
         });
 
 
-        //job-applications
-        Route::prefix('job-applications')->group(function () {
+     //job-applications
+     Route::prefix('job-applications')->group(function () {
 
-            Route::post('/{id}', [JobApplicationController::class, 'store']);
-            Route::get('/', [JobApplicationController::class, 'showMyApplications']);
-            Route::get('/{id}', [JobApplicationController::class, 'show']);
+        Route::post('/{id}', [JobApplicationController::class, 'store']);
+        Route::get('/', [JobApplicationController::class, 'showMyApplications']);
+        Route::get('/{id}', [JobApplicationController::class, 'show']);
 
-            Route::post('/update-status/{id}', [JobApplicationController::class, 'updateStatus']);
+        Route::post('/update-status/{id}', [JobApplicationController::class, 'updateStatus']);
+        Route::get('/by-hiring/{hiringRequestId}', [JobApplicationController::class, 'getByHiringRequest']);
 
 
-        });
+     });
 
-        Route::prefix('interviews')->group(function () {
-            Route::get('/application/{jobAppId}', [InterviewController::class, 'index']);
-            Route::post('/{jobAppId}', [InterviewController::class, 'store']);
-            Route::get('/{id}', [InterviewController::class, 'show']);
-            Route::post('update/{id}', [InterviewController::class, 'update']);
-            Route::delete('/{id}', [InterviewController::class, 'destroy']);
+     Route::prefix('interviews')->group(function () {
+         Route::get('/application/{jobAppId}', [InterviewController::class, 'index']);
+         Route::post('/{jobAppId}', [InterviewController::class, 'store']);
+         Route::get('/{id}', [InterviewController::class, 'show']);
+         Route::post('update/{id}', [InterviewController::class, 'update']);
+         Route::delete('/{id}', [InterviewController::class, 'destroy']);
         });
 
         Route::post('/interviews/result/{id}', [InterviewController::class, 'updateResult']);
-        Route::post('/admin/lawyer-points/evaluate/{session_id}/{lawyer_id}', [LawyerPointController::class, 'addAdminEvaluation']);});
+        Route::post('/admin/lawyer-points/evaluate/{session_id}/{lawyer_id}', [LawyerPointController::class, 'addAdminEvaluation']);
+
         Route::get('/lawyer/points-summary/{lawyerId}', [LawyerPointController::class, 'getPointsSummary']);
+
+
+        Route::get('/issue-categories', [IssueCategoryController::class, 'index']);
+        Route::get('/issues/by-category/{categoryId}', [IssueController::class, 'getByCategory']);
+
+        Route::get('/get_MyRequired_Doc_Up/{issue_id}', [RequiredDocumentController::class, 'getClientDocuments']);
+
+            Route::prefix('reports')->group(function () {
+
+            Route::post('/', [ReportController::class, 'store']);
+            Route::get('/', [ReportController::class, 'index']);
+            Route::get('/{id}', [ReportController::class, 'show']);
+            Route::delete('/{id}', [ReportController::class, 'destroy']);
+        });
+        Route::post('/reports/financial', [ReportController::class, 'generateFinancial']);
+
+
+    });
+
+
 

@@ -72,4 +72,11 @@ public function getAll()
         return $this->repo->updateFile($id, $userId, $file);
     }
 
+    public function getClientDocumentsByIssue($issueId)
+    {
+        $userId = auth()->id();
+        return $this->repo->getByIssueAndUser($issueId, $userId);
+    }
+
+
 }

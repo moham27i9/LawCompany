@@ -49,7 +49,7 @@ class Issue extends Model
     protected $fillable = [
         'title',
         'issue_number',
-        'category',
+        'category_id',
         'opponent_name',
         'court_name',
         'description',
@@ -61,11 +61,11 @@ class Issue extends Model
         'priority',
         'start_date',
         'end_date',
-        'lawyer_percentage', 
+        'lawyer_percentage',
     ];
 
     // protected $casts = [
-    //     'lawyer_ids' => 'array', 
+    //     'lawyer_ids' => 'array',
     // ];
 
 
@@ -92,5 +92,11 @@ public function lawyers()
 {
     return $this->belongsToMany(Lawyer::class, 'issue_lawyer');
 }
+public function category()
+{
+    return $this->belongsTo(IssueCategory::class, 'category_id');
+}
+
+
 
 }

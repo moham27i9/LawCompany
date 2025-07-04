@@ -39,5 +39,22 @@ public function updateStatus($id, string $status)
 }
 
 
+public function getByHiringRequest($hiringRequestId)
+{
+    return JobApplication::with('user')
+        ->where('HirReq_id', $hiringRequestId)
+        ->get()
+        ->map(function ($application) {
+            return [
+                'id' => $application->id,
+                'user_name' => $application->user->name ?? 'غير معروف',
+                'cv_link' => url($application->cv),
+                'status' => $application->status ?? 'pending',
+                'submitted_at' => $application->created_at->format('Y-m-d H:i'),
+            ];
+        });
+}
+
+
 
 }

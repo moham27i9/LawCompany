@@ -120,4 +120,9 @@ public function delete($id)
   public function getLawyerSessions() {
         return $this->lawyerRepository->getSessionsForLawyer();
     }
+
+    public function setSalary($lawyer_id, array $data)
+    {
+        return $this->lawyerRepository->updateSalary($lawyer_id, $data['salary']);
+    }
 }

@@ -15,21 +15,21 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('issue_number')->unique();
-            $table->string('category');                   
-            $table->string('opponent_name')->nullable();   
+            $table->string('opponent_name')->nullable();
             $table->string('court_name');
-            $table->integer('number_of_payments')->default(0); 
-            $table->decimal('total_cost', 12, 2)->nullable();  
+            $table->integer('number_of_payments')->default(0);
+            $table->decimal('total_cost', 12, 2)->nullable();
             $table->integer('lawyer_percentage')->default(0);
-            $table->decimal('amount_paid', 12, 2)->default(0); 
+            $table->decimal('amount_paid', 12, 2)->default(0);
             $table->text('description')->nullable();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['open', 'in_progress', 'closed', 'archived'])->default('open');
             $table->enum('priority', ['normal', 'medium', 'high', 'critical'])->default('normal');
-            $table->timestamp('start_date')->nullable();   
-            $table->timestamp('end_date')->nullable();     
-        
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->foreignId('category_id')->nullable()->constrained('issue_categories')->onDelete('set null');
             $table->timestamps();
+
         });
 
     }

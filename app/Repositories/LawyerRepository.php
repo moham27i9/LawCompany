@@ -107,4 +107,19 @@ public function delete($id)
       $sessions = auth()->user()->lawyer->sessions;
         return  $sessions;
     }
+
+    public function updateSalary($lawyer_id, $salary)
+    {
+        $lawyer = Lawyer::findOrFail($lawyer_id);
+        $lawyer->salary = $salary;
+        $lawyer->save();
+
+        return [
+            'id' => $lawyer->id,
+            'name' => $lawyer->user->name ?? 'غير معروف',
+            'salary' => $lawyer->salary,
+            'profile' => $lawyer->user->profile,
+        ];
+    }
+
 }

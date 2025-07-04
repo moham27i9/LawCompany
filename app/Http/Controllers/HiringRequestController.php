@@ -49,6 +49,17 @@ class HiringRequestController extends Controller
     }
 
 
+    public function getPublished()
+    {
+        $posts = $this->service->getPublished();
+
+        if ($posts->isEmpty()) {
+            return $this->errorResponse('لا يوجد وظائف منشورة حالياً', 404);
+        }
+
+        return $this->successResponse($posts, 'تم استرجاع الوظائف المنشورة');
+    }
+
 
 }
 

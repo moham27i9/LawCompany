@@ -62,4 +62,9 @@ class HiringRequestService
     }
 
 
+    public function getPublished()
+    {
+        return $this->repository->getPublished();
+    }
+
 }

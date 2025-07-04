@@ -13,7 +13,6 @@ public function rules(): array
     return [
         'outcome' => 'sometimes|in:held,postponed,canceled,rescheduled,closed,judged,attended_by_lawyer_only,attended_by_client_only,absent',
         'session_type_id' => ['required', 'exists:session_types,id'],
-        'is_attend' => 'sometimes|boolean',
         'notes' => 'nullable|string|max:1000',
         'lawyer_id' => ['required', 'integer', function ($attribute, $value, $fail) {
             $issueId = request()->route('issue_id');

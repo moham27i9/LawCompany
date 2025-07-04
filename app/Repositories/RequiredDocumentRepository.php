@@ -65,4 +65,14 @@ class RequiredDocumentRepository
     return $document;
 }
 
+    public function getByIssueAndUser($issueId, $userId)
+    {
+        return \App\Models\RequiredDocument::where('issue_id', $issueId)
+            ->whereHas('issue', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->get();
+    }
+
+
 }

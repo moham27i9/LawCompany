@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Issue;
+use App\Models\IssueCategory;
 
 class IssueRepository
 {
@@ -11,7 +12,6 @@ class IssueRepository
         return Issue::create([
             'title'=> $data['title'] ,
             'status'=> $data['status'] ,
-            'category'=> $data['category'] ,
             'start_date'=> $data['start_date'] ,
             'end_date'=> $data['end_date'] ,
             'description'=> $data['description'] ,
@@ -23,6 +23,7 @@ class IssueRepository
             'number_of_payments'=> $data['number_of_payments'] ,
             'court_name'=> $data['court_name'] ,
             'opponent_name'=> $data['opponent_name'] ,
+            'category_id'=> $data['category_id'] ,
             'user_id'=> $user_id,
         ]);
     }
@@ -41,7 +42,7 @@ class IssueRepository
         $issue->update([
             'title'=> $data['title'] ?? $issue->title ,
             'status'=> $data['status'] ?? $issue->status,
-            'category'=> $data['category']?? $issue->category ,
+            'category_id'=> $data['category_id']?? $issue->category_id ,
             'end_date'=> $data['end_date'] ?? $issue->end_date,
             'description'=> $data['description'] ?? $issue->description,
             'issue_number'=> $data['issue_number'] ?? $issue->issue_number,
@@ -55,7 +56,7 @@ class IssueRepository
         $info =[
             'title'=> $data['title'] ?? $issue->title ,
             'status'=> $data['status'] ?? $issue->status,
-            'category'=> $data['category']?? $issue->category ,
+            'category_id'=> $data['category_id']?? $issue->category_id ,
             'end_date'=> $data['end_date'] ?? $issue->end_date,
             'description'=> $data['description'] ?? $issue->description,
             'issue_number'=> $data['issue_number'] ?? $issue->issue_number,
@@ -120,7 +121,7 @@ public function getLawyersByIssueId($caseId)
 
             return Issue::with([
         'sessions',
-        'sessions.appointments', 
+        'sessions.appointments',
         'sessions.documents',
         'lawyers',
     ])->findOrFail($id);
@@ -134,6 +135,32 @@ public function getLawyersByIssueId($caseId)
     $sessions =Issue::where('user_id',auth()->user()->id)->with('sessions')->get();
 
         return  $sessions;
+    }
+
+
+
+    public function getIssuesWithChildren($categoryId)
+    {
+        $category = IssueCategory::with('children')->findOrFail($categoryId);
+        $childIds = $this->getAllChildrenIds($category);
+        $allIds = array_merge([$category->id], $childIds);
+
+        // هنا استخدمنا with('category') لتحميل التصنيف مع القضايا
+        return Issue::with('category')
+                    ->whereIn('category_id', $allIds)
+                    ->get();
+    }
+
+
+    // دالة مساعدة لاستخراج كل الأبناء بشكل متداخل
+    public function getAllChildrenIds($category)
+    {
+        $ids = [];
+        foreach ($category->children as $child) {
+            $ids[] = $child->id;
+            $ids = array_merge($ids, $this->getAllChildrenIds($child)); // Recursive
+        }
+        return $ids;
     }
 
 }

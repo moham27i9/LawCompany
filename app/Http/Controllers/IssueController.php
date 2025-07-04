@@ -24,7 +24,6 @@ class IssueController extends Controller
 
     public function store(CreateIssueRequest $request , $user_id)
     {
-
         $issue = $this->issueService->create($request->validated() , $user_id);
         return $this->successResponse($issue, 'Issue created successfully');
     }
@@ -95,6 +94,12 @@ class IssueController extends Controller
         $sessions = $this->issueService->getClientSessions();
             return $this->successResponse($sessions, 'Your sessions retrieved');
              return $this->errorResponse('something wrong!!', 422);
+    }
+
+    public function getByCategory($categoryId)
+    {
+        $data = $this->issueService->getByCategory($categoryId);
+        return $this->successResponse($data, 'تم استرجاع القضايا حسب التصنيف');
     }
 
 

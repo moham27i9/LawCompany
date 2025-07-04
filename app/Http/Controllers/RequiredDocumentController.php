@@ -79,4 +79,16 @@ class RequiredDocumentController extends Controller
             return $this->errorResponse('فشل رفع الملف', 422, $e->getMessage());
         }
     }
+
+    public function getClientDocuments($issueId)
+    {
+        $documents = $this->service->getClientDocumentsByIssue($issueId);
+
+        if ($documents->isEmpty()) {
+            return $this->errorResponse('لا يوجد مستندات مطلوبة لك في هذه القضية أو أنك لا تملك هذه القضية', 404);
+        }
+
+        return $this->successResponse($documents, 'تم استرجاع المستندات بنجاح');
+    }
+
 }

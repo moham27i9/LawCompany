@@ -62,5 +62,18 @@ public function updateStatus(UpdateJobApplicationStatusRequest $request, $id)
     return $this->successResponse($updatedApplication, 'Job application status updated successfully');
 }
 
+
+public function getByHiringRequest($hiringRequestId)
+{
+    $applications = $this->service->getByHiringRequest($hiringRequestId);
+
+    if ($applications->isEmpty()) {
+        return $this->errorResponse('لا يوجد طلبات توظيف لهذا الإعلان', 404);
+    }
+
+    return $this->successResponse($applications, 'تم استرجاع طلبات التوظيف بنجاح');
+}
+
+
 }
 

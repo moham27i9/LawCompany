@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             LawyerSeeder::class,
             IssueSeeder::class,
              SessionTypeSeeder::class,
+             IssueCategorySeeder::class,
         ]);
 
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateLawyerRequest;
+use App\Http\Requests\SetLawyerSalaryRequest;
 use App\Http\Requests\UpdateLawyerRequest;
 use App\Services\LawyerService;
 use App\Traits\ApiResponseTrait;
@@ -71,7 +72,16 @@ public function profile()
              return $this->errorResponse('something wrong!!', 422);
     }
 
-    
 
+    public function setSalary(SetLawyerSalaryRequest $request, $lawyer_id)
+    {
+        $lawyer = $this->lawyerService->setSalary($lawyer_id, $request->validated());
+
+        if ($lawyer) {
+            return $this->successResponse($lawyer, 'تم تعديل الراتب بنجاح');
+        }
+
+        return $this->errorResponse('فشل في تعديل الراتب', 422);
+    }
 }
 

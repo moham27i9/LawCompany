@@ -58,7 +58,7 @@ class ReportController extends Controller
     public function generateFinancial()
     {
         $result = $this->service->generate();
-        return $this->successResponse($result, 'تم إنشاء التقرير المالي بنجاح');
+        return $this->successResponse($result, ' تم انشاء التقرير المالي  وحساب رواتب الموظفين  بنجاح ' );
     }
 
 }

@@ -4,7 +4,7 @@
 <table border="1" width="100%">
     <thead>
         <tr>
-            <th>اسم المحامي</th>
+            <th>Lawyer Name </th>
             <th>Issue Title</th>
             <th>Total Points</th>
             <th> Salary</th>

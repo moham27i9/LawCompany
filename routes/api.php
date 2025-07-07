@@ -43,7 +43,7 @@ Route::post('/refresh', [AuthController::class, 'refreshToken']);
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
 
-    
+
   Route::post('/messages', [ChatController::class, 'send']);
     Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
     //  Profile & Logout
@@ -95,7 +95,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{id}', [FurloughRequestController::class, 'destroy']);
         });
 
-        
+
             Route::prefix('consultation_requests')->group(function () {
             Route::get('/', [ConsultationRequestController::class, 'index']);
             Route::post('/', [ConsultationRequestController::class, 'store']);
@@ -113,7 +113,7 @@ Route::middleware('auth:sanctum')->group(function () {
               Route::post('/{id}/lock', [ConsultationRequestController::class, 'startReview']);
               Route::post('/{id}/unlock', [ConsultationRequestController::class, 'endReview']);
         });
-        
+
 
            // documents
         Route::get('/sessions/documents', [DocumentController::class, 'index']);
@@ -132,13 +132,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('{id}', [RequiredDocumentController::class, 'destroy']);     // حذف مستند
     });
     Route::get('/users/{userId}/permissions', [PermissionController::class, 'getUserPermissions']);
+     Route::apiResource('/users', AuthController::class);
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
 
         //   employees managment
         Route::apiResource('/employees', EmployeeController::class);
-        Route::apiResource('/users', AuthController::class);
+
         Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
         Route::delete('/users/delete/{id}', [AuthController::class, 'destroy']);
         Route::put('/users/change-role/{id}', [AuthController::class, 'changeRole']);

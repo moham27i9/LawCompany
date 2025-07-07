@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Lawyer;
 use App\Models\Profile;
+use App\Models\Employee;
+
 use Illuminate\Support\Facades\Hash;
 
 class LawyerSeeder extends Seeder
@@ -51,33 +53,41 @@ class LawyerSeeder extends Seeder
             ],
         ];
 
-        foreach ($lawyersData as $data) {
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make('12345678'), // كلمة مرور افتراضية
-                'role_id' => 5, // محامي
-            ]);
 
+foreach ($lawyersData as $data) {
+    $user = User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => Hash::make('12345678'), // كلمة مرور افتراضية
+        'role_id' => 5, // محامي
+    ]);
 
-            Lawyer::create([
-                'user_id' => $user->id,
-                'license_number' => $data['license_number'],
-                'experience_years' => $data['experience_years'],
-                'specialization' => $data['specialization'],
-                'salary' => $data['salary'],
-                'certificate' => $data['certificate'],
-                'type' => 'lawyer',
-            ]);
+    $lawyer = Lawyer::create([
+        'user_id' => $user->id,
+        'license_number' => $data['license_number'],
+        'experience_years' => $data['experience_years'],
+        'specialization' => $data['specialization'],
+        'salary' => $data['salary'],
+        'certificate' => $data['certificate'],
+        'type' => 'lawyer',
+    ]);
 
-              Profile::create([
+    Profile::create([
         'user_id' => $user->id,
         'address' => '123 Main St',
         'phone' => '0123456789',
         'scientificLevel' => 'Bachelor of Law',
         'age' => rand(25, 50),
-       
     ]);
-        }
+
+    // ✅ إنشاء سجل موظف مرتبط بالمحامي
+    Employee::create([
+        'user_id' => $user->id,
+        'salary' => $data['salary'],
+        'certificate' => $data['certificate'],
+        'hire_date' => now(),
+    ]);
+}
+
     }
 }

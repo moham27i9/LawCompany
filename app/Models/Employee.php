@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $salary
@@ -70,6 +70,11 @@ class Employee extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function lawyer()
+    {
+        return $this->hasOne(Lawyer::class);
     }
 
 }

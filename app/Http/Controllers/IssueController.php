@@ -102,5 +102,17 @@ class IssueController extends Controller
         return $this->successResponse($data, 'تم استرجاع القضايا حسب التصنيف');
     }
 
+  public function caseTypePercentages()
+    {
+        
+        $data = $this->issueService->getCaseTypePercentages();
 
+       return $this->successResponse($data, ' issue types and percentages retrieved ');
+    }
+
+       public function countOpenCases()
+    {
+        $count = $this->issueService->getOpenIssuesCount();
+         return $this->successResponse($count, ' open issues count retrieved ');
+    }
 }

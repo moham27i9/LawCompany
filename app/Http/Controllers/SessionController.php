@@ -70,6 +70,13 @@ class SessionController extends Controller
         return $this->errorResponse('Failed to delete session', 422);
     }
 
+    public function sessionsThisMonth()
+    {
+        $session_month = $this->sessionService->sessionsThisMonth();
+            return $this->successResponse($session_month, 'Session in this month retrieved successfully');
+
+    }
+
       public function calculateAmounts($issueId)
     {
         $result = $this->sessionService->calculateSessionsPayment($issueId);

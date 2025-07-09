@@ -38,6 +38,11 @@ class ConsultationController extends Controller
         return $this->successResponse($this->service->getById($id), 'Consultation details');
     }
 
+    public function showCousultByRequestId($consultReqId)
+    {
+        return $this->successResponse($this->service->getCousultByRequestId($consultReqId), 'Consultation for this request');
+    }
+
     public function update(StoreConsultationRequest $request, $id)
     {       $consultation = $this->service->getById($id);
         $this->authorize('update',$consultation);

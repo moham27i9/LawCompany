@@ -20,9 +20,8 @@ class ConsultationService
 
     public function create(array $data,$cons_reqId)
     {
-     
-        
         $cons = $this->repository->create($data,$cons_reqId);
+     
         if($cons)
         return $cons;
         return null;
@@ -31,6 +30,11 @@ class ConsultationService
     public function getById($id)
     {
         return $this->repository->getById($id);
+    }
+
+    public function getCousultByRequestId($consultReqId)
+    {
+        return $this->repository->getCousultByRequestId($consultReqId);
     }
 
     public function update($id, array $data)

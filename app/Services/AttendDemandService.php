@@ -45,6 +45,11 @@ class AttendDemandService
         return $this->repo->getById($id);
     }
 
+    public function getMyDemand()
+    {
+        return $this->repo->getMydemand();
+    }
+
     public function getByIssue($issueId)
     {
         return $this->repo->getByIssue($issueId);

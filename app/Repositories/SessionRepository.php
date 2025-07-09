@@ -44,6 +44,15 @@ class SessionRepository
         $session = Sessionss::findOrFail($id);
         return $session->delete();
     }
+    
+    public function sessionsThisMonth()
+    {
+      $sessionCount = Sessionss::whereMonth('created_at', now()->month)
+       ->whereYear('created_at', now()->year)
+       ->count();
+
+        return $sessionCount;
+    }
 
     public function sumPointsByIssue($issueId)
     {

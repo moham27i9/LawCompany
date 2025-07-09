@@ -32,6 +32,13 @@ class AttendDemandRepository
     {
         return AttendDemand::where('issue_id', $issueId)->get();
     }
+public function getMydemand()
+{
+    $user = auth()->user();
+    $issueIds = $user->issues()->pluck('id');
+    return AttendDemand::whereIn('issue_id', $issueIds)
+                       ->get();
+}
 
      public function updateResault(AttendDemand $attendDemand, string $resault)
     {

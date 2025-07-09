@@ -94,6 +94,11 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'update session type', 'path' => '/api/session-types/{id}', 'method' => 'PUT'],//64
             ['name' => 'delete session type', 'path' => '/api/session-types/{id}', 'method' => 'DELETE'],//65
             ['name' => 'sessions calculate amount', 'path' => '/api/sessions/calculate/{issueId}', 'method' => 'GET'],//66
+            ['name' => 'show consult by consultRequestId', 'path' => '/api/consult/consultRequest/{id}/show', 'method' => 'GET'],//67
+            ['name' => 'sessions this month', 'path' => '/api/sessions/this-month', 'method' => 'GET'],//68
+            ['name' => 'clients count', 'path' => '/api/clients/count', 'method' => 'GET'],//69
+            ['name' => 'open issues count', 'path' => '/api/issues/open/count', 'method' => 'GET'],//70
+            ['name' => 'issues case-type-percentages', 'path' => '/api/issues/case-type-percentages', 'method' => 'GET'],//71
                         
 
         ];

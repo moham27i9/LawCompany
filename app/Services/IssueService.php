@@ -166,6 +166,14 @@ public function track($id)
         ];
     }
 
+  public function getCaseTypePercentages()
+    {
+        return $this->issueRepository->getCaseTypePercentages();
+    }
 
 
+  public function getOpenIssuesCount(): int
+    {
+        return $this->issueRepository->countOpenIssues();
+    }
 }

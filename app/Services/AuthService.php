@@ -147,4 +147,10 @@ public function showRole($id)
     return $this->successResponse($role, 'success');
 }
 
+ public function clientCount()
+{
+    $role = $this->authRepo->clientCount();
+    return $role;
+}
+
 }

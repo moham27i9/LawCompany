@@ -36,4 +36,9 @@ class AuthRepository
             return $user;
         }
 
+         public function clientCount(): int
+    {
+        return User::where('role_id', 2)->count();
+    }
+
 }

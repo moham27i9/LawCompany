@@ -29,6 +29,7 @@ use App\Http\Controllers\RequiredDocumentController;
 use App\Http\Controllers\SessionAppointmentController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SessionTypeController;
+use App\Models\Consultation;
 use App\Models\RequiredDocument;
 use Illuminate\Support\Facades\Route;
 
@@ -133,6 +134,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('/users/{userId}/permissions', [PermissionController::class, 'getUserPermissions']);
      Route::apiResource('/users', AuthController::class);
+
+
+
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
@@ -153,6 +157,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
         //admin & lawyer & intern
 
+        Route::get('/consult/consultRequest/{id}/show', [ConsultationController::class, 'showCousultByRequestId']);
         Route::get('/issues', [IssueController::class, 'index']);
         Route::get('/issues/{id}', [IssueController::class, 'show']);
         //admin
@@ -162,7 +167,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
         Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
         Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
-
+        //dashboard and statistics
+        Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);
+        Route::get('/issues/open/count', [IssueController::class, 'countOpenCases']);
+        Route::get('/clients/count', [AuthController::class, 'getClientCount']);
+        Route::get('/sessions/this-month', [SessionController::class, 'sessionsThisMonth']);
 
         // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);
@@ -207,12 +216,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{attendDemand_id}', [AttendDemandController::class, 'show']);
             Route::put('/{attendDemand_id}', [AttendDemandController::class, 'update']);
             Route::delete('/{attendDemand_id}', [AttendDemandController::class, 'destroy']);
+            Route::get('/', [AttendDemandController::class, 'showMyDemands']);
         });
-
-
-
+        
+        
+        
         Route::middleware(['verified.lawyer'])->group(function () {
-
+            
         Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
         Route::get('/lawyer/issues', [LawyerController::class, 'showMyIssue']);
         Route::get('/lawyer/sessions', [LawyerController::class, 'showMySession']);

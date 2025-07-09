@@ -105,5 +105,9 @@ public function showLoginForm()
     return view('auth.login');
 }
 
-
+   public function getClientCount()
+    {
+        $count = $this->authService->clientCount();
+         return $this->successResponse($count, ' client count retrieved ');
+    }
 }

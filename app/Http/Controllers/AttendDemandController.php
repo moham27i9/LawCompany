@@ -23,31 +23,36 @@ class AttendDemandController extends Controller
     public function index($issue_id)
     {
         $demands = $this->service->getByIssue($issue_id);
-        return $this->successResponse($demands, 'AttendDemands fetched successfully');
+        return $this->successResponse($demands, 'Attend Demands fetched successfully');
     }
 
     public function store(StoreAttendDemandRequest $request, $issue_id)
     {
         $demand = $this->service->create($request->validated(), $issue_id);
-        return $this->successResponse($demand, 'AttendDemand created successfully');
+        return $this->successResponse($demand, 'Attend Demand created successfully');
     }
 
     public function show($id)
     {
         $demand = $this->service->getById($id);
-        return $this->successResponse($demand, 'AttendDemand retrieved successfully');
+        return $this->successResponse($demand, 'Attend Demand retrieved successfully');
+    }
+    public function showMyDemands()
+    {
+        $demand = $this->service->getMyDemand();
+        return $this->successResponse($demand, 'your Attend Demands retrieved successfully');
     }
 
     public function update(UpdateAttendDemandRequest $request, $id)
     {
         $demand = $this->service->update($request->validated(), $id);
-        return $this->successResponse($demand, 'AttendDemand updated successfully');
+        return $this->successResponse($demand, 'Attend Demand updated successfully');
     }
 
     public function destroy($id)
     {
         $this->service->delete($id);
-        return $this->successResponse(null, 'AttendDemand deleted successfully');
+        return $this->successResponse(null, 'Attend Demand deleted successfully');
     }
 
     public function updateResault(UpdateAttendDemandResaultRequest $request, $id)
@@ -58,7 +63,7 @@ class AttendDemandController extends Controller
 
     $updated = $this->service->updateResault($attendDemand, $request->resault);
 
-     return $this->successResponse($updated, 'AttendDemand resault updated successfully');
+     return $this->successResponse($updated, 'Attend Demand resault updated successfully');
   
 }
 

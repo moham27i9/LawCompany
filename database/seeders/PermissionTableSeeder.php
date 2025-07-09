@@ -96,11 +96,11 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'update_session_type', 'app_route_id' => 64],
             ['name' => 'delete_session_type', 'app_route_id' => 65],
             ['name' => 'sessions_calculate_amount', 'app_route_id' => 66],
-            // ['name' => 'show_all_furloughs', 'app_route_id' => 67],
-            // ['name' => 'show_furlough', 'app_route_id' => 68],
-            // ['name' => 'add_furlough', 'app_route_id' => 69],
-            // ['name' => 'update_furlough', 'app_route_id' => 70],
-            // ['name' => 'delete_furlough', 'app_route_id' => 71],
+            ['name' => 'show_consult_by_consultRequestId', 'app_route_id' => 67],
+            ['name' => 'sessions_this_month', 'app_route_id' => 68],
+            ['name' => 'clients_count', 'app_route_id' => 69],
+            ['name' => 'open_issues_count', 'app_route_id' => 70],
+            ['name' => 'issues_case_type_percentages', 'app_route_id' => 71],
      
         ];
 
@@ -164,15 +164,18 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 64],
             ['permission_id' => 65],
             ['permission_id' => 66],
-            // ['permission_id' => 67],
-            // ['permission_id' => 68],
+            ['permission_id' => 67],
+            ['permission_id' => 68],
+            ['permission_id' => 69],
+            ['permission_id' => 70],
+            ['permission_id' => 71],
 
         ];
         $hr_permissions =[
             [ 'permission_id' => 32],
              ['permission_id' => 61],
             ['permission_id' => 62],
-            // ['permission_id' => 68],
+            ['permission_id' => 69],
         
         ];
 
@@ -194,7 +197,7 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 58],
                  ['permission_id' => 61],
             ['permission_id' => 62],
-            //  ['permission_id' => 68],
+             ['permission_id' => 67],
         ];
         $intern_permissions =[
             [ 'permission_id' => 26],
@@ -214,7 +217,7 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 58],
             ['permission_id' => 61],
             ['permission_id' => 62],
-            //  ['permission_id' => 68],
+             ['permission_id' => 67],
 
         ];
 

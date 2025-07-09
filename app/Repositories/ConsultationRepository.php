@@ -34,6 +34,11 @@ class ConsultationRepository
         return Consultation::with('lawyer')->findOrFail($id);
     }
 
+    public function getCousultByRequestId($consultReqId)
+    {
+        return Consultation::where('consultation_req_id',$consultReqId)->get();
+    }
+
     public function update($id, array $data)
     {
         try{

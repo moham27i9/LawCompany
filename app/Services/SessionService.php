@@ -46,6 +46,13 @@ class SessionService
     {
         return $this->sessionRepository->delete($id);
     }
+
+    public function sessionsThisMonth()
+    {
+        return $this->sessionRepository->sessionsThisMonth();
+    }
+
+
 public function calculateSessionsPayment($issueId)
 {
     $sessions = $this->sessionRepository->getByIssueId($issueId);

@@ -163,4 +163,29 @@ public function getLawyersByIssueId($caseId)
         return $ids;
     }
 
+     public function getCaseTypePercentages()
+    {
+        $total = Issue::count();
+        $catg_ids = IssueCategory::select('id')->groupBy('id')->pluck('id');
+        
+        $result = [];
+        
+        foreach ($catg_ids as $ctgId) {
+            $count = Issue::where('category_id', $ctgId)->count();
+            $type = IssueCategory::select('name')->where('id',$ctgId)->get();
+            $percentage = $total > 0 ? round(($count / $total) * 100) : 0;
+
+            $result[] = [
+                'type' => $type,
+                'percentage' => $percentage
+            ];
+        }
+
+        return $result;
+    }
+
+     public function countOpenIssues(): int
+    {
+        return Issue::where('status', 'open')->count();
+    }
 }

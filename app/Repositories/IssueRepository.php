@@ -29,12 +29,12 @@ class IssueRepository
     }
     public function getAll()
     {
-        return Issue::all();
+        return Issue::with(['user.role:id,name','user.profile'])->get();
     }
 
     public function getById($id)
     {
-        return Issue::findOrFail($id);
+        return Issue::with(['user.role:id,name','user.profile'])->findOrFail($id);
     }
     public function update($id, array $data)
     {

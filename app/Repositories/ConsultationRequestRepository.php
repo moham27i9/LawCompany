@@ -7,7 +7,7 @@ class ConsultationRequestRepository
 {
     public function getAll()
     {
-        return ConsultationRequest::with('user.profile')->get();
+        return ConsultationRequest::with(['user.role:id,name','user.profile'])->get();
     }
 
     public function create(array $data)
@@ -18,7 +18,7 @@ class ConsultationRequestRepository
 
     public function getById($id)
     {
-        return ConsultationRequest::with('user.profile')->findOrFail($id);
+        return ConsultationRequest::with(['user.role:id,name','user.profile'])->findOrFail($id);
     }
 
     public function update($id, array $data)

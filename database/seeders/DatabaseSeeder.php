@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             IssueSeeder::class,
              SessionTypeSeeder::class,
              IssueCategorySeeder::class,
+             CommonConsultationSeeder::class,
         ]);
 
     }

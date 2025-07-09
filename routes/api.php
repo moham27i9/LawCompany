@@ -15,6 +15,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CommonConsultationController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationRequestController;
 use App\Http\Controllers\DocumentController;
@@ -135,7 +136,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{userId}/permissions', [PermissionController::class, 'getUserPermissions']);
      Route::apiResource('/users', AuthController::class);
 
-
+   Route::prefix('common-consultations')->group(function () {
+        Route::get('/', [CommonConsultationController::class, 'index']);
+        Route::get('/{id}', [CommonConsultationController::class, 'show']);
+    });
 
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
@@ -167,6 +171,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/issues/{id}', [IssueController::class, 'destroy']);
         Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
         Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
+
+        
+   Route::prefix('common-consultations')->group(function () {
+        Route::post('/', [CommonConsultationController::class, 'store']);
+        Route::put('/{id}', [CommonConsultationController::class, 'update']);
+        Route::delete('/{id}', [CommonConsultationController::class, 'destroy']);
+    });
+
         //dashboard and statistics
         Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);
         Route::get('/issues/open/count', [IssueController::class, 'countOpenCases']);
@@ -239,7 +251,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
      });
-
+ 
      Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
         Route::get('/unread', [NotificationController::class, 'unread']);

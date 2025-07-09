@@ -101,6 +101,9 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'clients_count', 'app_route_id' => 69],
             ['name' => 'open_issues_count', 'app_route_id' => 70],
             ['name' => 'issues_case_type_percentages', 'app_route_id' => 71],
+            ['name' => 'add_common_consultations', 'app_route_id' => 72],
+            ['name' => 'update_common_consultations', 'app_route_id' => 73],
+            ['name' => 'delete_common_consultations', 'app_route_id' => 74],
      
         ];
 
@@ -169,6 +172,9 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 69],
             ['permission_id' => 70],
             ['permission_id' => 71],
+            ['permission_id' => 72],
+            ['permission_id' => 73],
+            ['permission_id' => 74],
 
         ];
         $hr_permissions =[

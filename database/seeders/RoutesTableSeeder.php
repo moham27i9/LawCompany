@@ -99,6 +99,9 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'clients count', 'path' => '/api/clients/count', 'method' => 'GET'],//69
             ['name' => 'open issues count', 'path' => '/api/issues/open/count', 'method' => 'GET'],//70
             ['name' => 'issues case-type-percentages', 'path' => '/api/issues/case-type-percentages', 'method' => 'GET'],//71
+            ['name' => 'add common consultations', 'path' => '/api/common-consultations', 'method' => 'POST'],//72
+            ['name' => 'update common consultations', 'path' => '/api/common-consultations/{id}', 'method' => 'PUT'],//73
+            ['name' => 'delete common consultations', 'path' => '/api/common-consultations/{id}', 'method' => 'DELETE'],//74
                         
 
         ];

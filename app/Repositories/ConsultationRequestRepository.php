@@ -21,6 +21,13 @@ class ConsultationRequestRepository
         return ConsultationRequest::with(['user.role:id,name','user.profile'])->findOrFail($id);
     }
 
+    public function showMyRequests()
+    {
+        return ConsultationRequest::with(['user.role:id,name','user.profile'])
+                                         ->where('user_id',auth()->user()->id)
+                                         ->get();
+    }
+
     public function update($id, array $data)
     {
         try{

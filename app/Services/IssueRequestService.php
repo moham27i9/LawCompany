@@ -62,7 +62,7 @@ class IssueRequestService
         throw new \Exception("Request not found");
           }
         $request->update(['is_locked' => true]);
-      
+        $request->save();
         return $request;
     }
 
@@ -73,7 +73,7 @@ class IssueRequestService
         throw new \Exception("Request not found");
     }
         $request->update(['is_locked' => false]);
-
+        $request->save();
         return $request;
     }
 

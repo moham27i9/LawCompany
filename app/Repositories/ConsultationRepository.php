@@ -12,22 +12,36 @@ class ConsultationRepository
         return Consultation::with('lawyer')->get();
     }
 
-    public function create(array $data,$cons_reqId)
-    {
+  public function create(array $data, $cons_reqId)
+{
+    try {
+        $request = ConsultationRequest::where('id', $cons_reqId)
+            ->where('is_locked', false)
+            ->where('status', 'approved')
+            ->firstOrFail();
 
-        try{
-            
-            $request_approved_unlock = ConsultationRequest::where('is_locked', true)->where('status', 'approved')->findOrFail($cons_reqId);
-                 if($request_approved_unlock){
-                    $data['lawyer_id'] = auth()->user()->lawyer->id;
-                    $data['consultation_req_id'] = $cons_reqId;
-                     return Consultation::create($data);
-                 }
-                return null;
-        }
-         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-             return null;}
+        // قفل الاستشارة وتعيين المحامي
+        $request->update([
+            'is_locked' => true,
+        ]);
+
+        $data['lawyer_id'] = auth()->user()->lawyer->id;
+        $data['consultation_req_id'] = $cons_reqId;
+
+        // إنشاء الاستشارة
+        $consultation = Consultation::create($data);
+
+        // تغيير الحالة إلى مغلقة
+        $request->update([
+            'status' => 'closed'
+        ]);
+
+        return $consultation;
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return null;
     }
+}
+
 
     public function getById($id)
     {

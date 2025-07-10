@@ -43,6 +43,11 @@ class ConsultationRequestController extends Controller
         return $this->successResponse($this->service->getById($id), 'Consultation request details');
     }
 
+    public function showMyRequests()
+    {
+        return $this->successResponse($this->service->showMyRequests(), 'Consultations request details');
+    }
+
     public function update(UpdateConsultationRequestRequest $request, $id)
     {
        $updated = $this->service->update($id, $request->validated());

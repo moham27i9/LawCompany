@@ -100,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
             Route::prefix('consultation_requests')->group(function () {
             Route::get('/', [ConsultationRequestController::class, 'index']);
+            Route::get('/showMyRequests', [ConsultationRequestController::class, 'showMyRequests']);
             Route::post('/', [ConsultationRequestController::class, 'store']);
             Route::get('/{id}', [ConsultationRequestController::class, 'show']);
             Route::put('/{id}', [ConsultationRequestController::class, 'update']);
@@ -159,6 +160,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+        
+             //dashboard and statistics
+        Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);
+        Route::get('/issues/open/count', [IssueController::class, 'countOpenCases']);
+        Route::get('/clients/count', [AuthController::class, 'getClientCount']);
+        Route::get('/sessions/this-month', [SessionController::class, 'sessionsThisMonth']);
+        
         //admin & lawyer & intern
 
         Route::get('/consult/consultRequest/{id}/show', [ConsultationController::class, 'showCousultByRequestId']);
@@ -179,11 +187,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [CommonConsultationController::class, 'destroy']);
     });
 
-        //dashboard and statistics
-        Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);
-        Route::get('/issues/open/count', [IssueController::class, 'countOpenCases']);
-        Route::get('/clients/count', [AuthController::class, 'getClientCount']);
-        Route::get('/sessions/this-month', [SessionController::class, 'sessionsThisMonth']);
+   
 
         // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);

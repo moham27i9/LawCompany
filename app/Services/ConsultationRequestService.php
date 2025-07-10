@@ -26,6 +26,10 @@ class ConsultationRequestService
     {
         return $this->repository->getById($id);
     }
+    public function showMyRequests()
+    {
+        return $this->repository->showMyRequests();
+    }
 
     public function update($id, array $data)
     {

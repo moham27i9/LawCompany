@@ -28,19 +28,27 @@ class ConsultationRequestRepository
                                          ->get();
     }
 
-    public function update($id, array $data)
-    {
-        try{
-                $item = ConsultationRequest::findOrFail($id);
-                $item->update($data);
-                return $item;
-        }
-         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-             return null;}
+  public function update($id, array $data)
+{
+    $item = ConsultationRequest::findOrFail($id);
+
+    if ($item->status !== 'pending') {
+        throw new \Exception('لا يمكن تعديل الاستشارة بعد الموافقة عليها أو رفضها.');
     }
+
+    $item->update($data);
+    return $item->refresh();
+}
+
 
     public function delete($id)
     {
-        return ConsultationRequest::destroy($id);
+        $deleted = ConsultationRequest::findOrFail($id);
+
+    if ($deleted->status !== 'pending' || $deleted->status !== 'rejected') {
+        throw new \Exception('لا يمكن حذف الاستشارة بعد الموافقة عليها  .');
+    }
+    
+         $deleted->destroy();
     }
 }

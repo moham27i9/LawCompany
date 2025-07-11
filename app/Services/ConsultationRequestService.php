@@ -42,24 +42,41 @@ class ConsultationRequestService
     }
         public function lockConsultation($id)
     {
-        $consultation = $this->repository->getById($id);
-         if (!$consultation) {
-        throw new \Exception("Consultation not found");
-          }
-        $consultation->update(['is_locked' => true]);
-        $consultation->save();
-      
-        return $consultation;
+        $consultation = $this->repository->getById($id);     
+    // إذا كانت مغلقة تمامًا (تمت الإجابة)
+    if ($consultation->status === 'closed') {
+        throw new \Exception("Cannot lock a closed consultation.");
     }
 
-    public function unlockConsultation($id)
-    {
-        $consultation = $this->repository->getById($id);
-         if (!$consultation) {
-        throw new \Exception("Consultation not found");
+    // إذا كانت مقفلة من محامي آخر
+    if ($consultation->is_locked && $consultation->locked_by !== auth()->user()->lawyer->id) {
+        throw new \Exception("This consultation is locked by another lawyer.");
     }
-        $consultation->update(['is_locked' => false]);
-          $consultation->save();
-        return $consultation;
+
+    // قفل وتعيين المحامي الحالي
+         $consultation->is_locked = true;
+        $consultation->locked_by = auth()->user()->lawyer->id;
+        $consultation->save();
+         return $consultation;
     }
+
+public function unlockConsultation($id)
+{
+    $consultation = $this->repository->getById($id);
+
+    if (
+        auth()->user()->role->name !== 'admin' &&
+        $consultation->locked_by !== optional(auth()->user()->lawyer)->id
+    ) {
+        throw new \Exception("You cannot unlock a consultation you didn't lock.");
+    }
+
+    $consultation->is_locked = false;
+    $consultation->locked_by = null;
+    $consultation->save();
+
+    return $consultation->refresh();
+}
+
+
 }

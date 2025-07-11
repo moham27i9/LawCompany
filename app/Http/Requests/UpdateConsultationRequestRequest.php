@@ -24,7 +24,7 @@ class UpdateConsultationRequestRequest extends FormRequest
        return [
             'subject' => 'sometimes|string|max:255',
             'details' => 'nullable|string',
-            'status' => 'sometimes|in:pending,approved,rejected',
+            'status' => 'sometimes|in:pending,approved,rejected,closed',
         ];
     }
 }

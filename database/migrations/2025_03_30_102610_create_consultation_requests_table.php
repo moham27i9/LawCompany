@@ -16,6 +16,7 @@ return new class extends Migration
     $table->text('subject');
     $table->text('details')->nullable();
     $table->boolean('is_locked')->default(false);
+    $table->foreignId('locked_by')->nullable()->constrained('lawyers')->nullOnDelete();
     $table->enum('status', ['pending', 'approved', 'rejected','closed'])->default('pending');
     $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
     $table->timestamps();

@@ -48,6 +48,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
   Route::post('/messages', [ChatController::class, 'send']);
     Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
+
+
+
+    Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
     //  Profile & Logout
     Route::post('/profiles/create/', [ProfileController::class, 'store']);
     Route::get('/profile/{id}', [ProfileController::class, 'show']);

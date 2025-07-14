@@ -110,4 +110,18 @@ public function showLoginForm()
         $count = $this->authService->clientCount();
          return $this->successResponse($count, ' client count retrieved ');
     }
+
+    public function saveFcmToken(Request $request)
+{
+    $request->validate([
+        'fcm_token' => 'required|string',
+    ]);
+
+    $user = auth()->user();
+    $user->fcm_token = $request->fcm_token;
+    $user->save();
+
+    return response()->json(['message' => 'FCM token saved successfully']);
+}
+
 }

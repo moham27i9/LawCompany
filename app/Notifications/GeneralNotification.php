@@ -23,7 +23,7 @@ class GeneralNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+          return ['database', 'fcm'];
     }
 
     public function toDatabase($notifiable)
@@ -32,6 +32,21 @@ class GeneralNotification extends Notification
             'title' => $this->title,
             'body' => $this->body,
             'url' => $this->url,
+        ];
+    }
+
+        public function toFcm($notifiable)
+    {
+        return [
+            'token' => $notifiable->fcm_token,
+            'notification' => [
+                'title' => $this->title,
+                'body' => $this->body,
+            ],
+            'data' => [
+                 'body' => $this->body,
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+            ]
         ];
     }
     

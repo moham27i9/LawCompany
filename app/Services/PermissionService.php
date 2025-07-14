@@ -24,6 +24,11 @@ class PermissionService
         return $this->repo->create($data,$id);
     }
 
+       public function update($data,$id)
+    {
+        return $this->repo->update($data,$id);
+    }
+
     public function delete($id)
     {
         return $this->repo->delete($id);

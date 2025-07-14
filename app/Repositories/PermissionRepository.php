@@ -25,6 +25,14 @@ class PermissionRepository
         return Permission::findOrFail($id)->delete();
     }
 
+     public function update( array $data, $id)
+    {
+
+        $permission = Permission::findOrFail($id);
+        $permission->update($data);
+        $permission->save();
+        return $permission;
+    }
         public function getUserPermissions($userId)
     {
         $user = User::with('role.permissions')->findOrFail($userId);

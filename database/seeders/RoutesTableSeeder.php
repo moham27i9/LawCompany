@@ -41,7 +41,7 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'delete routes', 'path' => '/api/routes/{id}', 'method' => 'DELETE'],
             ['name' => 'show permissions', 'path' => '/api/permissions', 'method' => 'GET'],
             ['name' => 'add permission', 'path' => '/api/permissions/{id}', 'method' => 'POST'],
-            ['name' => 'delete permission', 'path' => '/api/permissions', 'method' => 'DELETE'],
+            ['name' => 'delete permission', 'path' => '/api/permissions/{id}', 'method' => 'DELETE'],
             ['name' => 'assign permission to role', 'path' => '/api/roles/{roleId}/permissions/{permissionId}', 'method' => 'POST'],
             ['name' => 'show permissions for role', 'path' => '/api/roles/{roleId}/permissions', 'method' => 'GET'],
 
@@ -102,6 +102,7 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'add common consultations', 'path' => '/api/common-consultations', 'method' => 'POST'],//72
             ['name' => 'update common consultations', 'path' => '/api/common-consultations/{id}', 'method' => 'PUT'],//73
             ['name' => 'delete common consultations', 'path' => '/api/common-consultations/{id}', 'method' => 'DELETE'],//74
+            ['name' => 'update permission', 'path' => '/api/permissions/{id}', 'method' => 'PUT'],//75
                         
 
         ];

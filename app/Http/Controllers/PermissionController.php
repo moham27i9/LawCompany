@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreatePermissionRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
@@ -37,6 +38,14 @@ class PermissionController extends Controller
     {
         $this->service->delete($id);
         return $this->successResponse(null, 'Permission deleted successfully ');
+    }
+
+     public function update(UpdatePermissionRequest $request , $id)
+    {
+
+        $permission = $this->service->update($request->validated(),$id);
+        return $this->successResponse($permission, 'permission updated successfully');
+        return $this->errorResponse('no updates yet!', 422, null);
     }
 
  public function getUserPermissions($userId)

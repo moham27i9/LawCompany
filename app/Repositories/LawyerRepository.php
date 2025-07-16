@@ -8,6 +8,8 @@ class LawyerRepository
 {
     public function create(array $data)
     {
+           // التعامل مع ملف الشهادة
+
         return Lawyer::create([
             'user_id' => auth()->user()->id,
             'license_number' => $data['license_number'],
@@ -18,8 +20,6 @@ class LawyerRepository
         ]);
     }
 
-
-    // app/Repositories/LawyerRepository.php
 
 public function getAll()
 {

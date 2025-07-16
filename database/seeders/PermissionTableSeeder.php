@@ -107,6 +107,8 @@ class PermissionTableSeeder extends Seeder
 
     
             ['name' => 'update_permission', 'app_route_id' => 75],
+            ['name' => 'show_employee_by_id', 'app_route_id' => 76],
+            ['name' => 'delete_employee', 'app_route_id' => 77],
      
         ];
 
@@ -179,6 +181,8 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 73],
             ['permission_id' => 74],
             ['permission_id' => 75],
+            ['permission_id' => 76],
+            ['permission_id' => 77],
 
 
         ];
@@ -188,6 +192,8 @@ class PermissionTableSeeder extends Seeder
              ['permission_id' => 61],
             ['permission_id' => 62],
             ['permission_id' => 69],
+            ['permission_id' => 76],
+            ['permission_id' => 77],
         
         ];
 
@@ -207,7 +213,7 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 56],
             ['permission_id' => 57],
             ['permission_id' => 58],
-                 ['permission_id' => 61],
+             ['permission_id' => 61],
             ['permission_id' => 62],
              ['permission_id' => 67],
         ];

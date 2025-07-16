@@ -146,12 +146,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [CommonConsultationController::class, 'show']);
     });
 
+    Route::put('/employees', [EmployeeController::class, 'update']);
+
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
 
         //   employees managment
-        Route::apiResource('/employees', EmployeeController::class);
+        Route::get('/employees', [EmployeeController::class,'index']);
+        Route::delete('/employees/{employee}', [EmployeeController::class,'destroy']);
+        Route::get('/employees/{employee}', [EmployeeController::class,'show']);
+        Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+
 
         Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
         Route::delete('/users/delete/{id}', [AuthController::class, 'destroy']);
@@ -164,7 +170,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
-        Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
         
              //dashboard and statistics
         Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);

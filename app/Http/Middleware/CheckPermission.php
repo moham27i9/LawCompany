@@ -13,7 +13,6 @@ class CheckPermission
     {
         $user = auth()->user();
 
-        // المسار بصيغته الثابتة من Laravel
         $routePath ='/'.$request->route()->uri(); // مثال: api/users/change-role/{id}
         $method = $request->method();          // مثال: PUT أو POST
         $route = AppRoute::where('path',$routePath)

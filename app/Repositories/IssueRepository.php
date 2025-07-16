@@ -137,8 +137,6 @@ public function getLawyersByIssueId($caseId)
         return  $sessions;
     }
 
-
-
     public function getIssuesWithChildren($categoryId)
     {
         $category = IssueCategory::with('children')->findOrFail($categoryId);
@@ -146,7 +144,7 @@ public function getLawyersByIssueId($caseId)
         $allIds = array_merge([$category->id], $childIds);
 
         // هنا استخدمنا with('category') لتحميل التصنيف مع القضايا
-        return Issue::with('category')
+        return Issue::with(['user.role:id,name','user.profile','category'])
                     ->whereIn('category_id', $allIds)
                     ->get();
     }

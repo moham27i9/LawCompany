@@ -57,7 +57,8 @@ public function create(array $data, $cons_reqId)
             return $consultation;
         }
          catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-             return null;}
+             return null;
+            }
     }
 
     public function delete($id)

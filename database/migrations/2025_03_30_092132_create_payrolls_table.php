@@ -16,7 +16,9 @@ return new class extends Migration
             $table->float('payment');
             $table->integer('confirm');
             $table->enum('status', ['pending', 'approved', 'paid', 'rejected', 'on_hold'])->default('pending');
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->unsignedBigInteger('payable_id');
+            $table->string('payable_type');
+
             $table->timestamps();
         });
     }

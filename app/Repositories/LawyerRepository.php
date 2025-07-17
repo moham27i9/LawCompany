@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Consultation;
 use App\Models\Lawyer;
 
 class LawyerRepository
@@ -120,6 +121,12 @@ public function delete($id)
             'salary' => $lawyer->salary,
             'profile' => $lawyer->user->profile,
         ];
+    }
+
+    public function show_myconsultations_lawyer($lawyer_id)
+    {
+        $consultations = Consultation::where('lawyer_id' , $lawyer_id)->get();
+        return $consultations;
     }
 
 }

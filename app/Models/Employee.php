@@ -72,9 +72,10 @@ class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function lawyer()
+    public function payrolls()
     {
-        return $this->hasOne(Lawyer::class);
+        return $this->morphMany(Payroll::class, 'payable');
     }
+
 
 }

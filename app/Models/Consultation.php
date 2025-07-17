@@ -11,7 +11,7 @@ class Consultation extends Model
         'consultation_req_id',
         'lawyer_id',
         'resault',
-      
+
     ];
 
 
@@ -23,6 +23,6 @@ class Consultation extends Model
 
     public function consultationRequests()
     {
-        return $this->belongsTo(ConsultationRequest::class);
+        return $this->belongsTo(ConsultationRequest::class );
     }
 }

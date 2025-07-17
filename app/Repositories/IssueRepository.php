@@ -146,7 +146,7 @@ public function getLawyersByIssueId($caseId)
         $allIds = array_merge([$category->id], $childIds);
 
         // هنا استخدمنا with('category') لتحميل التصنيف مع القضايا
-        return Issue::with('category')
+        return Issue::with('category','user.role:id,name','user.profile')
                     ->whereIn('category_id', $allIds)
                     ->get();
     }
@@ -165,12 +165,12 @@ public function getLawyersByIssueId($caseId)
 
      public function getCaseTypePercentages()
     {
-      
+
         $total = Issue::count();
         $catg_ids = IssueCategory::select('id')->groupBy('id')->pluck('id');
-        
+
         $result = [];
-        
+
         foreach ($catg_ids as $ctgId) {
             $count = Issue::where('category_id', $ctgId)->count();
             $type = IssueCategory::select('name')->where('id',$ctgId)->get();

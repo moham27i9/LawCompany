@@ -5,14 +5,16 @@ namespace App\Services;
 use App\Models\Issue;
 use App\Models\LawyerPoint;
 use App\Models\Report;
+use App\Models\Sessionss;
 use App\Repositories\ReportRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
 use Storage;
-
+use App\Traits\ApiResponseTrait;
 
 class ReportService
 {
+    use ApiResponseTrait;
     protected $repo;
 
     public function __construct(ReportRepository $repo)
@@ -91,28 +93,45 @@ class ReportService
         return $reportData;
     }
 
-    public function storePayrollsFromReport(array $reportData): void
-    {
-        foreach ($reportData as $entry) {
-            $employee = \App\Models\Lawyer::find($entry['lawyer_id'])->employee ?? null;
-            if (!$employee) continue;
+public function storePayrollsFromReport(array $reportData): void
+{
+    foreach ($reportData as $entry) {
 
-            // تحقق من عدم التكرار
-            $exists = \App\Models\Payroll::where('employee_id', $employee->id)
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
-                ->exists();
+        $payableType = null;
+        $payable = null;
 
-            if (!$exists) {
-                \App\Models\Payroll::create([
-                    'employee_id' => $employee->id,
-                    'payment' => $entry['amount'],
-                    'confirm' => 0,
-                    'status' => 'pending',
-                ]);
+        $lawyer = \App\Models\Lawyer::find($entry['lawyer_id'] ?? null);
+        if ($lawyer) {
+            $payableType = \App\Models\Lawyer::class;
+            $payable = $lawyer;
+        }
+        if (!$payable && isset($entry['employee_id'])) {
+            $employee = \App\Models\Employee::find($entry['employee_id']);
+            if ($employee) {
+                $payableType = \App\Models\Employee::class;
+                $payable = $employee;
             }
         }
+        if (!$payable || !$payableType) continue;
+
+        $exists = \App\Models\Payroll::where('payable_id', $payable->id)
+            ->where('payable_type', $payableType)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->exists();
+
+        if (!$exists) {
+            \App\Models\Payroll::create([
+                'payment' => $entry['amount'],
+                'confirm' => 0,
+                'status' => 'pending',
+                'payable_id' => $payable->id,
+                'payable_type' => $payableType,
+            ]);
+        }
     }
+}
+
 
     public function generateFinancialPdf(array $reportData): string
     {
@@ -159,4 +178,63 @@ class ReportService
         ];
     }
 
+
+    public function generateLawyerReport(int $lawyerId, string $from, string $to)
+    {
+        $sessions = $this->repo->getSessionsForLawyer($lawyerId, $from, $to);
+        $rows = [];
+        foreach ($sessions as $s) {
+            $attended = $s->is_attend;
+            $points = \App\Models\LawyerPoint::where('session_id', $s->id)
+                        ->where('lawyer_id', $lawyerId)
+                        ->sum('points');
+            $futureAppointments = $s->appointments()
+                                    ->where('date', '>', now())
+                                    ->count();
+
+            $rows[] = [
+                'session_id'       => $s->id,
+                'issue_number'     => $s->issue->issue_number,
+                'issue_title'      => $s->issue->title,
+                'issue_status'     => $s->issue->status,
+                'session_type'     => optional($s->sessionType)->type ?? null,
+                'outcome'          => $s->outcome,
+                'attended'         => $attended ? 'Yes' : 'No',
+                'points'           => $points,
+                'future_appointments' => $futureAppointments,
+            ];
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.lawyer_sessions_report', [
+            'rows' => $rows,
+            'from' => $from,
+            'to'   => $to,
+        ]);
+
+        return $pdf->stream('lawyer_sessions_report.pdf');
+    }
+
+
+    public function generate_session_report($sessionId)
+    {
+        $user = auth()->user();
+        $session = Sessionss::findOrFail($sessionId);
+
+        if (!($user->role->name =='admin' || $user->lawyer?->id === $session->lawyer_id)) {
+            return $this->errorResponse('غير مسموح لك بعرض هذا التقرير', 403);
+        }
+
+        return $this->repo->getSessionReportData($sessionId);
+
+    }
+
+    public function generate_issue_report($issueId)
+    {
+        return $this->repo->getIssueReportData($issueId);
+    }
+
+    public function generate_user_report($userId)
+    {
+        return $this->repo->getUserReportData($userId);
+    }
 }

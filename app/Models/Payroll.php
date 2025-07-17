@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property float $payment
@@ -34,10 +34,15 @@ class Payroll extends Model
         'payment',
         'status',
         'confirm',
-      
+        'payable_id',
+        'payable_type',
+
     ];
-    public function employee()
+
+
+    public function payable()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->morphTo();
     }
+
 }

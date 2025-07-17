@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateReportRequest;
+use App\Http\Requests\GenerateLawyerReportRequest;
 use App\Services\ReportService;
 use App\Traits\ApiResponseTrait;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
@@ -58,7 +60,51 @@ class ReportController extends Controller
     public function generateFinancial()
     {
         $result = $this->service->generate();
-        return $this->successResponse($result, ' تم انشاء التقرير المالي  وحساب رواتب الموظفين  بنجاح ' );
+        return $this->successResponse($result, ' تم انشاء تقرير توضيح لرواتب الموظفين  بنجاح ' );
+    }
+
+public function lawyerSessionsReport(GenerateLawyerReportRequest $request)
+{
+    return $this->service->generateLawyerReport(
+        auth()->user()->lawyer->id,
+        $request->from,
+        $request->to
+    );
+}
+
+
+    public function generate_session_report($sessionId)
+    {
+        $sessionData = $this->service->generate_session_report($sessionId);
+
+        $pdf = Pdf::loadView('reports.session_report', $sessionData);
+
+        return $pdf->stream('session_report.pdf');
+    }
+
+
+    public function generate_issue_report($issueId)
+    {
+        if (!auth()->user()->role->name ='admin') {
+            return $this->errorResponse('غير مسموح لك بعرض هذا التقرير', 403);
+        }
+
+        $data = $this->service->generate_issue_report($issueId);
+
+        $pdf = Pdf::loadView('reports.issue_report', $data);
+        return $pdf->stream('issue_report.pdf');
+    }
+
+    public function generate_user_report($userId)
+    {
+        if (!auth()->user()->role->name ='admin') {
+            return $this->errorResponse('ليس لديك صلاحية', 403);
+        }
+
+        $data = $this->service->generate_user_report($userId);
+        $pdf = Pdf::loadView('reports.user_report', $data);
+
+        return $pdf->stream('user_report.pdf');
     }
 
 }

@@ -83,12 +83,10 @@ class Lawyer extends Model
         return $this->hasMany(LawyerPoint::class);
     }
 
-
-    public function employee()
+    public function payrolls()
     {
-        return $this->hasOne(Employee::class, 'user_id', 'user_id');
+        return $this->morphMany(\App\Models\Payroll::class, 'payable');
     }
-
 
 
 

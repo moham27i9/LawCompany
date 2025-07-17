@@ -169,13 +169,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
-        
+
+        Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+
              //dashboard and statistics
         Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);
         Route::get('/issues/open/count', [IssueController::class, 'countOpenCases']);
         Route::get('/clients/count', [AuthController::class, 'getClientCount']);
         Route::get('/sessions/this-month', [SessionController::class, 'sessionsThisMonth']);
-        
+
         //admin & lawyer & intern
 
         Route::get('/consult/consultRequest/{id}/show', [ConsultationController::class, 'showCousultByRequestId']);
@@ -189,14 +191,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
         Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
 
-        
+
    Route::prefix('common-consultations')->group(function () {
         Route::post('/', [CommonConsultationController::class, 'store']);
         Route::put('/{id}', [CommonConsultationController::class, 'update']);
         Route::delete('/{id}', [CommonConsultationController::class, 'destroy']);
     });
 
-   
+
 
         // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);
@@ -243,11 +245,11 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{attendDemand_id}', [AttendDemandController::class, 'destroy']);
             Route::get('/', [AttendDemandController::class, 'showMyDemands']);
         });
-        
-        
-        
+
+
+
         Route::middleware(['verified.lawyer'])->group(function () {
-            
+
         Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
         Route::get('/lawyer/issues', [LawyerController::class, 'showMyIssue']);
         Route::get('/lawyerIssues/{id}', [LawyerController::class, 'showLawyerIssues']);
@@ -265,7 +267,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
      });
- 
+
      Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
         Route::get('/unread', [NotificationController::class, 'unread']);
@@ -333,8 +335,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{id}', [ReportController::class, 'show']);
             Route::delete('/{id}', [ReportController::class, 'destroy']);
         });
-        Route::post('/reports/financial', [ReportController::class, 'generateFinancial']);
+        Route::get('/consultations_lawyer', [LawyerController::class, 'show_myconsultations_lawyer']);
 
+
+        Route::post('/reports/financial', [ReportController::class, 'generateFinancial']);
+        Route::post('/lawyer/report',[ReportController::class, 'lawyerSessionsReport']);
+        Route::get('/session-report/{session_id}', [ReportController::class, 'generate_session_report']);
+        Route::get('/issue-report/{issueId}', [ReportController::class, 'generate_issue_report']);
+        Route::get('/user-report/{userId}', [ReportController::class, 'generate_user_report']);
 
     });
 

@@ -129,4 +129,11 @@ public function delete($id)
     {
         return $this->lawyerRepository->updateSalary($lawyer_id, $data['salary']);
     }
+
+    public function show_myconsultations_lawyer()
+    {
+        $user=auth()->user();
+        $lawyer_id=$user->lawyer->id;
+        return $this->lawyerRepository->show_myconsultations_lawyer($lawyer_id);
+    }
 }

@@ -2,7 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\Issue;
 use App\Models\Report;
+use App\Models\Sessionss;
+use App\Models\User;
 
 class ReportRepository
 {
@@ -27,4 +30,77 @@ class ReportRepository
         $report->delete();
         return true;
     }
+
+     public function getSessionsForLawyer(int $lawyerId, string $from, string $to)
+    {
+        $sessions= Sessionss::with(['issue','appointments'])
+            ->where('lawyer_id', $lawyerId)
+            ->whereBetween('created_at', [$from, $to])
+            ->get();
+        return $sessions;
+    }
+
+    public function getSessionReportData($sessionId)
+    {
+        $session = Sessionss::with(['documents', 'lawyer.user', 'sessionType', 'appointments'])
+            ->findOrFail($sessionId);
+
+        return [
+            'lawyer_name' => $session->lawyer->user->name ?? 'غير معروف',
+            'issue_name' => $session->issue->name ?? 'غير معروف',
+            'outcome' => $session->outcome,
+            'type' => $session->sessionType->type ?? 'غير محدد',
+            'documents_count' => $session->documents->count(),
+            'date' => optional($session->appointments->first())->date ?? $session->created_at,
+            'session_id' => $session->id,
+        ];
+    }
+
+
+
+    public function getIssueReportData($issueId)
+{
+    $issue = Issue::with(['user', 'lawyers.user', 'sessions.sessionType'])->findOrFail($issueId);
+
+    return [
+        'issue_title' => $issue->title,
+        'owner_name' => $issue->user->name ?? 'غير معروف',
+        'total_cost' => $issue->total_cost,
+        'amount_paid' => $issue->amount_paid,
+        'remaining' => $issue->total_cost - $issue->amount_paid,
+        'lawyers' => $issue->lawyers->map(function ($lawyer) {
+            return $lawyer->user->name ?? 'محامي';
+        }),
+        'sessions' => $issue->sessions->map(function ($session) {
+            return [
+                'session_number' => $session->id ,
+                'lawyer_name' => $session->lawyer->user->name ,
+                'type' => $session->sessionType->type ?? 'غير محدد',
+                'outcome' => $session->outcome,
+                'date' => $session->created_at->format('Y-m-d'),
+            ];
+        }),
+    ];
+}
+
+public function getUserReportData($userId)
+{
+    $user = User::with([
+        'profile',
+        'issues.category',
+        'consultationRequests.user',
+        'complaints',
+        'jobApplication.hiringRequest'
+    ])->findOrFail($userId);
+
+    return [
+        'user' => $user,
+        'profile' => $user->profile,
+        'issues' => $user->issues,
+        'consultations' => $user->consultationRequests,
+        'complaints' => $user->complaints,
+        'job_applications' => $user->jobApplication,
+       
+    ];
+}
 }

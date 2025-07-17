@@ -164,12 +164,12 @@ public function getLawyersByIssueId($caseId)
 
      public function getCaseTypePercentages()
     {
-      
+
         $total = Issue::count();
         $catg_ids = IssueCategory::select('id')->groupBy('id')->pluck('id');
-        
+
         $result = [];
-        
+
         foreach ($catg_ids as $ctgId) {
             $count = Issue::where('category_id', $ctgId)->count();
             $type = IssueCategory::select('name')->where('id',$ctgId)->get();

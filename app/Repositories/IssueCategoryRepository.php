@@ -11,7 +11,7 @@ class IssueCategoryRepository
 {
     public function getTree()
     {
-        return IssueCategory::with('children.children') 
+        return IssueCategory::with('children.children.children')
             ->whereNull('parent_id')
             ->get();
     }

@@ -15,8 +15,8 @@ class ConsultationRequest extends Model
 
     public function consultation()
     {
-         return $this->hasOne(Consultation::class);  
+        return $this->hasOne(Consultation::class, 'consultation_req_id');
     }
-    
+
 }
 

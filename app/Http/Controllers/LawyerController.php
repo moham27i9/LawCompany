@@ -91,5 +91,18 @@ public function profile()
 
         return $this->errorResponse('فشل في تعديل الراتب', 422);
     }
+
+    public function show_myconsultations_lawyer()
+    {
+
+        $consultations = $this->lawyerService->show_myconsultations_lawyer();
+
+        if ($consultations) {
+            return $this->successResponse($consultations, 'تمت استعادة الاستشارات بنجاح');
+        }
+
+        return $this->errorResponse('فشل في استعادة الاستشارات ', 422);
+    }
+
 }
 

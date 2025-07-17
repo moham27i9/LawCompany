@@ -138,33 +138,9 @@ public function track($id)
 
     public function getByCategory($categoryId)
     {
-        $category = IssueCategory::findOrFail($categoryId);
         $issues = $this->issueRepository->getIssuesWithChildren($categoryId);
-        $formattedIssues = $issues->map(function ($issue) {
-            return [
-                'id' => $issue->id,
-                'title' => $issue->title,
-                'issue_number' => $issue->issue_number,
-                'status' => $issue->status,
-                'priority' => $issue->priority,
-                'amount_paid' => $issue->amount_paid,
-                'total_cost' => $issue->total_cost,
-                'court_name' => $issue->court_name,
-                'opponent_name' => $issue->opponent_name,
-                'start_date' => $issue->start_date,
-                'end_date' => $issue->end_date,
-                'user' => $issue->user,
-            ];
-        });
+        return $issues;
 
-        return [
-            'category' => [
-                'id' => $category->id,
-                'name' => $category->name,
-                'parent_id' => $category->parent_id,
-            ],
-            'issues' => $formattedIssues
-        ];
     }
 
   public function getCaseTypePercentages()

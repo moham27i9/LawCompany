@@ -107,4 +107,18 @@ public function lawyerSessionsReport(GenerateLawyerReportRequest $request)
         return $pdf->stream('user_report.pdf');
     }
 
+
+    public function generateInvoicesReport()
+    {
+        $result = $this->service->generateInvoicesReport();
+        return $this->successResponse($result, 'تم إنشاء تقرير الدفعات المالية بنجاح');
+    }
+
+
+    public function generateHiringReport()
+    {
+        $result = $this->service->generateHiringReport();
+        return $this->successResponse($result, 'تم إنشاء تقرير الوظائف والمتقدمين لها بنجاح');
+    }
+
 }

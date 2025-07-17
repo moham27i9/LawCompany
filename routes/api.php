@@ -337,11 +337,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/consultations_lawyer', [LawyerController::class, 'show_myconsultations_lawyer']);
 
 
-        Route::post('/reports/financial', [ReportController::class, 'generateFinancial']);
         Route::post('/lawyer/report',[ReportController::class, 'lawyerSessionsReport']);
         Route::get('/session-report/{session_id}', [ReportController::class, 'generate_session_report']);
         Route::get('/issue-report/{issueId}', [ReportController::class, 'generate_issue_report']);
         Route::get('/user-report/{userId}', [ReportController::class, 'generate_user_report']);
+
+        Route::post('/report-salaries', [ReportController::class, 'generateFinancial']);
+        Route::get('/invoices-report', [ReportController::class, 'generateInvoicesReport']);
+        Route::get('/hiring-report', [ReportController::class, 'generateHiringReport']);
 
     });
 

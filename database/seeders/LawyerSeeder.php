@@ -88,6 +88,5 @@ foreach ($lawyersData as $data) {
         'hire_date' => now(),
     ]);
 }
-
     }
 }

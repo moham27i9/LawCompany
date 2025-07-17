@@ -42,79 +42,95 @@ class ReportService
         return $this->repo->delete($id);
     }
 
-    public function calculateFinancialData(): array
-    {
-        $closedIssues = Issue::with(['sessions.lawyer.user'])->where('status', 'closed')->get();
-        $reportData = [];
+public function calculateFinancialData(): array
+{
+     $reportData = [];
 
-        foreach ($closedIssues as $issue) {
-            $lawyers = [];
+    // 🔸 القسم الأول: المحامون المرتبطون بقضايا مغلقة
+    $closedIssues = Issue::with(['sessions.lawyer.user'])->where('status', 'closed')->get();
 
-            foreach ($issue->sessions as $session) {
-                $lawyer = $session->lawyer;
-                if (!$lawyer) continue;
+    foreach ($closedIssues as $issue) {
+        $lawyers = [];
 
-                $lawyerId = $lawyer->id;
-                if (!isset($lawyers[$lawyerId])) {
-                    $lawyers[$lawyerId] = [
-                        'lawyer_id' => $lawyer->id,
-                        'lawyer_name' => $lawyer->user->name,
-                        'salary' => $lawyer->salary,
-                        'total_points' => 0,
-                        'amount' => 0,
-                        'sessions' => [],
-                        'issue_title' => $issue->title,
-                    ];
-                }
+        foreach ($issue->sessions as $session) {
+            $lawyer = $session->lawyer;
+            if (!$lawyer) continue;
 
-                $points = LawyerPoint::where('session_id', $session->id)
-                    ->where('lawyer_id', $lawyerId)->sum('points');
-
-                $lawyers[$lawyerId]['total_points'] += $points;
-                $lawyers[$lawyerId]['sessions'][] = [
-                    'session_id' => $session->id,
-                    'points' => $points,
+            $lawyerId = $lawyer->id;
+            if (!isset($lawyers[$lawyerId])) {
+                $lawyers[$lawyerId] = [
+                    'lawyer_id' => $lawyer->id,
+                    'lawyer_name' => $lawyer->user->name,
+                    'salary' => $lawyer->salary,
+                    'total_points' => 0,
+                    'amount' => 0,
+                    'type' => 'lawyer',
                 ];
             }
 
-            $issueTotalPoints = LawyerPoint::whereIn('session_id', $issue->sessions->pluck('id'))->sum('points');
-            $issueCost = $issue->total_cost;
-            $issueLawyerPercent = $issue->lawyer_percentage;
-            $lawyerAmountPool = ($issueLawyerPercent / 100) * $issueCost;
+            $points = LawyerPoint::where('session_id', $session->id)
+                ->where('lawyer_id', $lawyerId)->sum('points');
 
-            foreach ($lawyers as &$lawyerData) {
-                $shareRatio = $lawyerData['total_points'] / max(1, $issueTotalPoints);
-                $earned = round($shareRatio * $lawyerAmountPool, 2);
-                $lawyerData['amount'] = $earned + $lawyerData['salary'];
-                $reportData[] = $lawyerData;
-            }
+            $lawyers[$lawyerId]['total_points'] += $points;
         }
 
-        return $reportData;
+        $issueTotalPoints = LawyerPoint::whereIn('session_id', $issue->sessions->pluck('id'))->sum('points');
+        $issueCost = $issue->total_cost;
+        $issueLawyerPercent = $issue->lawyer_percentage;
+        $lawyerAmountPool = ($issueLawyerPercent / 100) * $issueCost;
+
+        foreach ($lawyers as &$lawyerData) {
+            $shareRatio = $lawyerData['total_points'] / max(1, $issueTotalPoints);
+            $earned = round($shareRatio * $lawyerAmountPool, 2);
+            $lawyerData['amount'] = $earned + $lawyerData['salary'];
+            $reportData[] = $lawyerData;
+        }
     }
+
+    // 🔸 القسم الثاني: الموظفين العاديين (غير المحامين)
+    $employees = \App\Models\Employee::with('user')->get();
+    foreach ($employees as $employee) {
+        // تأكد من أن هذا الموظف ليس محاميًا
+        if ($employee->user && !$employee->user->lawyer) {
+            $reportData[] = [
+                'employee_id' => $employee->id,
+                'employee_name' => $employee->user->name,
+                'salary' => $employee->salary ?? 0,
+                'amount' => $employee->salary ?? 0,
+                'type' => 'employee',
+            ];
+        }
+    }
+
+    return $reportData;
+}
+
 
 public function storePayrollsFromReport(array $reportData): void
 {
     foreach ($reportData as $entry) {
-
         $payableType = null;
-        $payable = null;
+        $payableId = null;
 
-        $lawyer = \App\Models\Lawyer::find($entry['lawyer_id'] ?? null);
-        if ($lawyer) {
-            $payableType = \App\Models\Lawyer::class;
-            $payable = $lawyer;
-        }
-        if (!$payable && isset($entry['employee_id'])) {
-            $employee = \App\Models\Employee::find($entry['employee_id']);
-            if ($employee) {
-                $payableType = \App\Models\Employee::class;
-                $payable = $employee;
+        if (($entry['type'] ?? '') === 'lawyer') {
+            $lawyer = \App\Models\Lawyer::find($entry['lawyer_id'] ?? null);
+            if ($lawyer) {
+                $payableType = \App\Models\Lawyer::class;
+                $payableId = $lawyer->id;
             }
         }
-        if (!$payable || !$payableType) continue;
 
-        $exists = \App\Models\Payroll::where('payable_id', $payable->id)
+        if (($entry['type'] ?? '') === 'employee') {
+            $employee = \App\Models\Employee::find($entry['employee_id'] ?? null);
+            if ($employee) {
+                $payableType = \App\Models\Employee::class;
+                $payableId = $employee->id;
+            }
+        }
+
+        if (!$payableType || !$payableId) continue;
+
+        $exists = \App\Models\Payroll::where('payable_id', $payableId)
             ->where('payable_type', $payableType)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -125,12 +141,13 @@ public function storePayrollsFromReport(array $reportData): void
                 'payment' => $entry['amount'],
                 'confirm' => 0,
                 'status' => 'pending',
-                'payable_id' => $payable->id,
+                'payable_id' => $payableId,
                 'payable_type' => $payableType,
             ]);
         }
     }
 }
+
 
 
     public function generateFinancialPdf(array $reportData): string
@@ -237,4 +254,107 @@ public function storePayrollsFromReport(array $reportData): void
     {
         return $this->repo->getUserReportData($userId);
     }
+
+
+
+    public function generateInvoicesReport(): array
+{
+    $issues = \App\Models\Issue::with(['user', 'invoices'])
+        ->whereHas('invoices') // فقط القضايا التي لديها دفعات
+        ->get();
+
+    $reportData = [];
+
+    foreach ($issues as $issue) {
+        $totalCost = $issue->total_cost;
+        $paidAmount = $issue->invoices->sum('amount');
+        $remainingAmount = $totalCost - $paidAmount;
+
+        $lastPaymentDate = $issue->invoices->sortByDesc('created_at')->first()?->created_at?->format('Y-m-d') ?? 'لا يوجد';
+
+        $reportData[] = [
+            'issue_title' => $issue->title,
+            'client_name' => $issue->user->name ?? 'غير معروف',
+            'total_cost' => $totalCost,
+            'paid' => $paidAmount,
+            'remaining' => $remainingAmount,
+            'last_payment' => $lastPaymentDate,
+            'installments' => $issue->number_of_payments,
+        ];
+    }
+
+    // توليد PDF
+    $pdf = PDF::loadView('reports.invoices_report', [
+        'entries' => $reportData,
+        'date' => now()->format('Y-m-d H:i'),
+    ]);
+
+    $filename = 'invoices_report_' . time() . '.pdf';
+    $path = 'storage/reports/' . $filename;
+    \Storage::disk('public')->put('reports/' . $filename, $pdf->output());
+
+    // تخزين التقرير في جدول reports
+    $report = \App\Models\Report::create([
+        'type' => 'financial',
+        'employee_id' => auth()->user()->employee->id ?? null,
+        'file_path' => $path,
+        'report_date' => now(),
+        'notes' => 'تقرير الدفعات المالية للقضايا',
+        'total_amount' => $reportData ? array_sum(array_column($reportData, 'paid')) : 0,
+    ]);
+
+    return [
+        'report_id' => $report->id,
+        'link' => asset($path),
+        'summary_total_paid' => $report->total_amount,
+    ];
+}
+
+
+
+public function generateHiringReport(): array
+{
+    $jobs = \App\Models\HiringRequest::with('jobApplication')->get();
+
+    $reportData = [];
+
+    foreach ($jobs as $job) {
+        $applicantsCount = $job->jobApplication->count();
+        $acceptedCount = $job->jobApplication->where('status', 'accepted')->count();
+
+        $reportData[] = [
+            'job_title' => $job->jopTitle,
+            'published_at' => $job->created_at->format('Y-m-d'),
+            'applicants' => $applicantsCount,
+            'accepted' => $acceptedCount,
+        ];
+    }
+
+    // توليد PDF
+    $pdf = PDF::loadView('reports.hiring_report', [
+        'entries' => $reportData,
+        'date' => now()->format('Y-m-d H:i'),
+    ]);
+
+    $filename = 'hiring_report_' . time() . '.pdf';
+    $path = 'storage/reports/' . $filename;
+    \Storage::disk('public')->put('reports/' . $filename, $pdf->output());
+
+    // تخزين في جدول reports
+    $report = \App\Models\Report::create([
+        'type' => 'hr',
+        'employee_id' => auth()->user()->employee->id ?? null,
+        'file_path' => $path,
+        'report_date' => now(),
+        'notes' => 'تقرير الوظائف والمتقدمين لها',
+    ]);
+
+    return [
+        'report_id' => $report->id,
+        'link' => asset($path),
+        'summary_total_jobs' => count($reportData),
+    ];
+}
+
+
 }

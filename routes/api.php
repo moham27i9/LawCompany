@@ -169,7 +169,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
-
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
 
              //dashboard and statistics

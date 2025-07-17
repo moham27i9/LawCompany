@@ -51,7 +51,6 @@ class IssueService
         return $this->issueRepository->delete($id);
     }
 
-
     public function changePriority($issueId, $priority)
     {
         $issue = $this->issueRepository->updatePriority($issueId, $priority['priority']);
@@ -132,6 +131,7 @@ public function track($id)
         return $this->issueRepository->getIssuesForClient();
     }
 
+
   public function getClientSessions() {
         return $this->issueRepository->getSessionsForClient();
     }
@@ -153,6 +153,7 @@ public function track($id)
                 'opponent_name' => $issue->opponent_name,
                 'start_date' => $issue->start_date,
                 'end_date' => $issue->end_date,
+                'user' => $issue->user,
             ];
         });
 

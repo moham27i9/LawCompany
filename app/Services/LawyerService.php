@@ -117,6 +117,10 @@ public function delete($id)
         return $this->lawyerRepository->getIssuesForLawyer();
     }
 
+  public function getLwIssues($id) {
+        return $this->lawyerRepository->getIssueslawyer($id);
+    }
+
   public function getLawyerSessions() {
         return $this->lawyerRepository->getSessionsForLawyer();
     }

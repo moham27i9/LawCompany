@@ -21,7 +21,7 @@ class IssueRequestRepository
 
       public function getByUser($userId)
     {
-        return IssueRequest::where('user_id', $userId)->get();
+        return IssueRequest::with(['user.role:id,name','user.profile'])->where('user_id', $userId)->get();
     }
 
     public function create(array $data)

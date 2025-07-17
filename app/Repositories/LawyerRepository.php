@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Issue;
 use App\Models\Lawyer;
 
 class LawyerRepository
@@ -101,6 +102,11 @@ public function delete($id)
 
   public function getIssuesForLawyer() {
       $issues = auth()->user()->lawyer->issues;
+        return  $issues;
+    }
+
+  public function getIssueslawyer($id) {
+      $issues = Lawyer::with('issues')->where('id',$id)->get();
         return  $issues;
     }
   public function getSessionsForLawyer() {

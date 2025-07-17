@@ -90,6 +90,8 @@ class IssueController extends Controller
              return $this->errorResponse('something wrong!!', 422);
     }
 
+
+
      public function showClientSession() {
         $sessions = $this->issueService->getClientSessions();
             return $this->successResponse($sessions, 'Your sessions retrieved');

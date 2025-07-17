@@ -131,6 +131,7 @@ public function getLawyersByIssueId($caseId)
          return Issue::where('user_id',auth()->user()->id)->get();
     }
 
+
   public function getSessionsForClient() {
     $sessions =Issue::where('user_id',auth()->user()->id)->with('sessions')->get();
 

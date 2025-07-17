@@ -49,8 +49,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/messages', [ChatController::class, 'send']);
     Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
 
-
-
     Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
     //  Profile & Logout
     Route::post('/profiles/create/', [ProfileController::class, 'store']);
@@ -88,6 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sessions/issue/{issue_id}', [SessionController::class, 'showByIssueId']);
 
     Route::get('/issues/client/show', [IssueController::class, 'showClientIssue']);
+    Route::get('/issues/lawyer/show', [IssueController::class, 'showLawyerIssues']);
     Route::get('/sessions/client/show', [IssueController::class, 'showClientSession']);
 
     Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
@@ -251,6 +250,7 @@ Route::middleware('auth:sanctum')->group(function () {
             
         Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
         Route::get('/lawyer/issues', [LawyerController::class, 'showMyIssue']);
+        Route::get('/lawyerIssues/{id}', [LawyerController::class, 'showLawyerIssues']);
         Route::get('/lawyer/sessions', [LawyerController::class, 'showMySession']);
 
         Route::delete('/lawyer/profile', [LawyerController::class, 'destroy']);

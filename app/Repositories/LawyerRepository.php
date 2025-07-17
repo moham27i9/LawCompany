@@ -9,6 +9,8 @@ class LawyerRepository
 {
     public function create(array $data)
     {
+           // التعامل مع ملف الشهادة
+
         return Lawyer::create([
             'user_id' => auth()->user()->id,
             'license_number' => $data['license_number'],
@@ -19,8 +21,6 @@ class LawyerRepository
         ]);
     }
 
-
-    // app/Repositories/LawyerRepository.php
 
 public function getAll()
 {
@@ -102,6 +102,11 @@ public function delete($id)
 
   public function getIssuesForLawyer() {
       $issues = auth()->user()->lawyer->issues;
+        return  $issues;
+    }
+
+  public function getIssueslawyer($id) {
+      $issues = Lawyer::with('issues')->where('id',$id)->get();
         return  $issues;
     }
   public function getSessionsForLawyer() {

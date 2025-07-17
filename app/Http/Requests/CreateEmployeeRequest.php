@@ -25,7 +25,7 @@ class CreateEmployeeRequest extends FormRequest
             'hire_date' => 'required|date',
             'type' => 'required|in:HR,accountant',
             'salary' => 'required|numeric',
-            'certificate' => 'required|string',
+           'certificate' => 'required|file|mimes:pdf,doc,docx,txt,png,jpg,jpeg|max:2048',
         ];
     }
 }

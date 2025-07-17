@@ -41,6 +41,12 @@ class EmployeeService
                 $user->role_id = 4;
             } 
             $user->save();
+                 // التعامل مع الملف
+        if (isset($data['certificate']) && $data['certificate'] instanceof \Illuminate\Http\UploadedFile) {
+            $filename = 'EMP_cert_' . $user->id . '.' . $data['certificate']->getClientOriginalExtension();
+              $data['certificate']->storeAs('certificates', $filename, 'public');
+            $data['certificate'] =  'storage/certificates/' . $filename;
+        }
             $employee = $this->employeeRepository->create([
                 'hire_date' => $data['hire_date'],
                 'salary' => $data['salary'],
@@ -55,12 +61,34 @@ class EmployeeService
 
     public function show($id)
     {
-        $employee = $this->employeeRepository->find($id);
-        return $this->successResponse($employee, 'success');  
+        $employee = $this->employeeRepository->find($id);      
+    if ($employee) {
+        return [
+            'id'=>$employee->id,
+            'name' => $employee->user->name,
+            'email' => $employee->user->email,
+
+            'address' => $employee->user->profile->address,
+            'phone' => $employee->user->profile->phone,
+            'age' => $employee->user->profile->age,
+            'image' => $employee->user->profile->image ? asset($employee->user->profile->image) : null,
+
+            'salary' => $employee->salary,
+            'hire_date' => $employee->hire_date,
+            'certificate' => $employee->certificate ? asset($employee->certificate):null,
+        ];
+    }
+
+        return null;  
     }
 
     public function update($id, $data)
     {
+         if (isset($data['certificate']) && $data['certificate'] instanceof \Illuminate\Http\UploadedFile) {
+            $filename = 'EMP_cert_' . $id . '.' . $data['certificate']->getClientOriginalExtension();
+              $data['certificate']->storeAs('certificates', $filename, 'public');
+            $data['certificate'] =  'storage/certificates/' . $filename;
+        }
         $employee = $this->employeeRepository->update($id, $data);
         return $this->successResponse($employee, 'success');  
         return $this->errorResponse('Updated failed', 500);

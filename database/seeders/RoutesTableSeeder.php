@@ -103,6 +103,8 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'update common consultations', 'path' => '/api/common-consultations/{id}', 'method' => 'PUT'],//73
             ['name' => 'delete common consultations', 'path' => '/api/common-consultations/{id}', 'method' => 'DELETE'],//74
             ['name' => 'update permission', 'path' => '/api/permissions/{id}', 'method' => 'PUT'],//75
+             ['name' => 'show employee by id', 'path' => '/api/employees/{employee}', 'method' => 'GET'],//76
+             ['name' => 'delete employee', 'path' => '/api/employees/{employee}', 'method' => 'DELETE'],//77
                         
 
         ];

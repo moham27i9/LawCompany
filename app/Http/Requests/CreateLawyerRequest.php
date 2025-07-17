@@ -26,7 +26,7 @@ class CreateLawyerRequest extends FormRequest
             'experience_years' => 'required|integer|min:0',
             'type' => 'required|string',
             'specialization' => 'required|string',
-           'certificate' => 'required|file|mimes:pdf,doc,docx,txt|max:2048',
+           'certificate' => 'required|file|mimes:pdf,doc,docx,txt,png,jpg,jpeg|max:2048',
         ];
     }
 

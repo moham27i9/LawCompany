@@ -29,8 +29,8 @@ class LawyerService
         // التعامل مع الملف
         if (isset($data['certificate']) && $data['certificate'] instanceof \Illuminate\Http\UploadedFile) {
             $filename = 'lawyer_cert_' . $user->id . '.' . $data['certificate']->getClientOriginalExtension();
-            $certificatePath = $data['certificate']->storeAs('storage/certificates', $filename, 'public');
-            $data['certificate'] = $certificatePath;
+              $data['certificate']->storeAs('certificates', $filename, 'public');
+            $data['certificate'] =  'storage/certificates/' . $filename;
         }
 
         return $this->lawyerRepository->create($data);
@@ -62,7 +62,7 @@ class LawyerService
                 'experience_years' => $lawyer->experience_years,
                 'type' => $lawyer->type,
                 'specialization' => $lawyer->specialization,
-                'certificate' => $lawyer->certificate,
+                'certificate' => $lawyer->certificate ? asset($lawyer->certificate): null
             ];
         }
         return $lawyersData;
@@ -115,6 +115,10 @@ public function delete($id)
 
   public function getLawyerIssues() {
         return $this->lawyerRepository->getIssuesForLawyer();
+    }
+
+  public function getLwIssues($id) {
+        return $this->lawyerRepository->getIssueslawyer($id);
     }
 
   public function getLawyerSessions() {

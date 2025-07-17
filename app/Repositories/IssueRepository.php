@@ -131,13 +131,12 @@ public function getLawyersByIssueId($caseId)
          return Issue::where('user_id',auth()->user()->id)->get();
     }
 
+
   public function getSessionsForClient() {
     $sessions =Issue::where('user_id',auth()->user()->id)->with('sessions')->get();
 
         return  $sessions;
     }
-
-
 
     public function getIssuesWithChildren($categoryId)
     {
@@ -147,6 +146,7 @@ public function getLawyersByIssueId($caseId)
 
         // هنا استخدمنا with('category') لتحميل التصنيف مع القضايا
         return Issue::with('category','user.role:id,name','user.profile')
+        return Issue::with(['user.role:id,name','user.profile','category'])
                     ->whereIn('category_id', $allIds)
                     ->get();
     }

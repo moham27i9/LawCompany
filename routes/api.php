@@ -49,8 +49,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/messages', [ChatController::class, 'send']);
     Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
 
-
-
     Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
     //  Profile & Logout
     Route::post('/profiles/create/', [ProfileController::class, 'store']);
@@ -88,6 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sessions/issue/{issue_id}', [SessionController::class, 'showByIssueId']);
 
     Route::get('/issues/client/show', [IssueController::class, 'showClientIssue']);
+    Route::get('/issues/lawyer/show', [IssueController::class, 'showLawyerIssues']);
     Route::get('/sessions/client/show', [IssueController::class, 'showClientSession']);
 
     Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
@@ -146,12 +145,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [CommonConsultationController::class, 'show']);
     });
 
+    Route::put('/employees', [EmployeeController::class, 'update']);
+
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
 
         //   employees managment
-        Route::apiResource('/employees', EmployeeController::class);
+        Route::get('/employees', [EmployeeController::class,'index']);
+        Route::delete('/employees/{employee}', [EmployeeController::class,'destroy']);
+        Route::get('/employees/{employee}', [EmployeeController::class,'show']);
+        Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
+
 
         Route::post('/hiring-requests', [HiringRequestController::class, 'store']);
         Route::delete('/users/delete/{id}', [AuthController::class, 'destroy']);
@@ -164,7 +169,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
-        Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
 
              //dashboard and statistics
         Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);
@@ -246,6 +250,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/lawyer/profile', [LawyerController::class, 'profile']);
         Route::get('/lawyer/issues', [LawyerController::class, 'showMyIssue']);
+        Route::get('/lawyerIssues/{id}', [LawyerController::class, 'showLawyerIssues']);
         Route::get('/lawyer/sessions', [LawyerController::class, 'showMySession']);
 
         Route::delete('/lawyer/profile', [LawyerController::class, 'destroy']);

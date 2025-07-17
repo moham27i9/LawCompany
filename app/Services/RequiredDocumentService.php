@@ -58,7 +58,7 @@ public function getAll()
                 'status' => $document->status,
                 'note' => $document->note,
                 'require_file_type' => $document->require_file_type,
-                'file'       => $document->file ? asset('storage/' . $document->file) : null,
+                'file'       => $document->file ? asset( $document->file) : null,
             ];
         }
 

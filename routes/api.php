@@ -21,6 +21,7 @@ use App\Http\Controllers\ConsultationRequestController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FurloughRequestController;
 use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueRequestController;
@@ -345,6 +346,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/report-salaries', [ReportController::class, 'generateFinancial']);
         Route::get('/invoices-report', [ReportController::class, 'generateInvoicesReport']);
         Route::get('/hiring-report', [ReportController::class, 'generateHiringReport']);
+
+        Route::prefix('invoices')->group(function () {
+        Route::post('/{issueId}/{userId}', [InvoiceController::class, 'store']);
+        Route::get('/user/{userId}', [InvoiceController::class, 'indexByUser']);
+        Route::get('/issue/{issueId}', [InvoiceController::class, 'indexByIssue']);
+        Route::get('/show/{id}', [InvoiceController::class, 'show']);
+        Route::put('/{id}', [InvoiceController::class, 'update']);
+        Route::delete('/{id}', [InvoiceController::class, 'destroy']);
+    });
 
     });
 

@@ -94,10 +94,6 @@ public function delete($id)
 {
     $lawyer = Lawyer::findOrFail($id);
     $lawyer->delete();
-
-    // حذف المستخدم المرتبط إذا أردت
-    // User::destroy($lawyer->user_id);
-
     return true;
 }
 

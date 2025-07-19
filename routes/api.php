@@ -354,7 +354,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [InvoiceController::class, 'show']);
         Route::put('/{id}', [InvoiceController::class, 'update']);
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
-    });
+         });
 
     });
 

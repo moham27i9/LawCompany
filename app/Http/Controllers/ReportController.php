@@ -79,7 +79,14 @@ public function lawyerSessionsReport(GenerateLawyerReportRequest $request)
 
         $pdf = Pdf::loadView('reports.session_report', $sessionData);
 
-        return $pdf->stream('session_report.pdf');
+        $filename = 'user_report_' . $sessionId . '_' . time() . '.pdf';
+        $path = 'reports/' . $filename;
+
+        \Storage::disk('public')->put($path, $pdf->output());
+
+        return $this->successResponse([
+            'url' => asset('storage/' . $path)
+        ], 'تم إنشاء التقرير بنجاح');
     }
 
 
@@ -92,21 +99,34 @@ public function lawyerSessionsReport(GenerateLawyerReportRequest $request)
         $data = $this->service->generate_issue_report($issueId);
 
         $pdf = Pdf::loadView('reports.issue_report', $data);
-        return $pdf->stream('issue_report.pdf');
+                $filename = 'user_report_' . $issueId . '_' . time() . '.pdf';
+        $path = 'reports/' . $filename;
+
+        \Storage::disk('public')->put($path, $pdf->output());
+
+        return $this->successResponse([
+            'url' => asset('storage/' . $path)
+        ], 'تم إنشاء التقرير بنجاح');
     }
 
     public function generate_user_report($userId)
     {
-        if (!auth()->user()->role->name ='admin') {
+        if (auth()->user()->role->name !== 'admin') {
             return $this->errorResponse('ليس لديك صلاحية', 403);
         }
 
         $data = $this->service->generate_user_report($userId);
         $pdf = Pdf::loadView('reports.user_report', $data);
 
-        return $pdf->stream('user_report.pdf');
-    }
+        $filename = 'user_report_' . $userId . '_' . time() . '.pdf';
+        $path = 'reports/' . $filename;
 
+        \Storage::disk('public')->put($path, $pdf->output());
+
+        return $this->successResponse([
+            'url' => asset('storage/' . $path)
+        ], 'تم إنشاء التقرير بنجاح');
+    }
 
     public function generateInvoicesReport()
     {

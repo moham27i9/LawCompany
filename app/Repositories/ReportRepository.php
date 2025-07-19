@@ -42,12 +42,11 @@ class ReportRepository
 
     public function getSessionReportData($sessionId)
     {
-        $session = Sessionss::with(['documents', 'lawyer.user', 'sessionType', 'appointments'])
+        $session = Sessionss::with(['documents','issue', 'lawyer.user', 'sessionType', 'appointments'])
             ->findOrFail($sessionId);
-
         return [
             'lawyer_name' => $session->lawyer->user->name ?? 'غير معروف',
-            'issue_name' => $session->issue->name ?? 'غير معروف',
+            'issue_name' => $session->issue->title ?? 'غير معروف',
             'outcome' => $session->outcome,
             'type' => $session->sessionType->type ?? 'غير محدد',
             'documents_count' => $session->documents->count(),
@@ -66,6 +65,8 @@ class ReportRepository
         'issue_title' => $issue->title,
         'owner_name' => $issue->user->name ?? 'غير معروف',
         'total_cost' => $issue->total_cost,
+        'start_date' => $issue->start_date,
+        'status' => $issue->status,
         'amount_paid' => $issue->amount_paid,
         'remaining' => $issue->total_cost - $issue->amount_paid,
         'lawyers' => $issue->lawyers->map(function ($lawyer) {
@@ -100,7 +101,7 @@ public function getUserReportData($userId)
         'consultations' => $user->consultationRequests,
         'complaints' => $user->complaints,
         'job_applications' => $user->jobApplication,
-       
+
     ];
 }
 }

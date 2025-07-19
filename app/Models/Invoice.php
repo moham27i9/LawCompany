@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property float $amount
@@ -34,12 +34,14 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
     protected $fillable = [
-       
+
         'status',
         'amount',
         'issue_id',
         'user_id',
-        'created_by',
+        'creator_type',
+        'creator_id',
+
 
     ];
     public function user()
@@ -54,4 +56,10 @@ class Invoice extends Model
     {
         return $this->belongsTo(Employee::class);
     }
+
+    public function creator()
+    {
+        return $this->morphTo();
+    }
+
 }

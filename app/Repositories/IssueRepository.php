@@ -27,15 +27,37 @@ class IssueRepository
             'user_id'=> $user_id,
         ]);
     }
+    //Unarchive
     public function getAll()
     {
-        return Issue::with(['user.role:id,name','user.profile'])->get();
+        return Issue::with(['user.role:id,name','user.profile'])->where('status', '!=', 'archived')->get();
     }
 
     public function getById($id)
     {
-        return Issue::with(['user.role:id,name','user.profile'])->findOrFail($id);
+        return Issue::with(['user.role:id,name','user.profile'])->where('status', '!=', 'archived')->findOrFail($id);
     }
+//
+
+//Archive
+    public function getAllArchive()
+    {
+        return Issue::with(['user.role:id,name','user.profile'])->where('status','archived')->get();
+    }
+
+    public function getAllMyArchive()
+    {
+        return Issue::with(['user.role:id,name','user.profile'])
+                ->where('status','archived')
+                ->where('user_id',auth()->user()->id)
+                -> get();
+    }
+
+    public function getByIdArchive($id)
+    {
+        return Issue::with(['user.role:id,name','user.profile'])->where('status', 'archived')->findOrFail($id);
+    }
+
     public function update($id, array $data)
     {
         $issue = Issue::findOrFail($id);
@@ -188,4 +210,23 @@ public function getLawyersByIssueId($caseId)
     {
         return Issue::where('status', 'open')->count();
     }
+
+    public function archive($id)
+    {
+        $issue = Issue::findOrFail($id);
+        $issue->status = 'archived';
+        $issue->save();
+
+        return $issue;
+    }
+
+    public function unarchive($id)
+    {
+        $issue = Issue::findOrFail($id);
+        $issue->status = 'open'; // أو أي حالة منطقية أخرى
+        $issue->save();
+
+        return $issue;
+    }
+
 }

@@ -34,6 +34,7 @@ class IssueRequestRepository
           try{
 
               $issueRequest = IssueRequest::where('status', 'pending')->where('is_locked', false)->findOrFail($id);
+            
               $issueRequest->update($data);
               $issueRequest->save();
               return $issueRequest;

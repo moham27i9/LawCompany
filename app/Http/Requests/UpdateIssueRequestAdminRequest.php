@@ -24,6 +24,7 @@ class UpdateIssueRequestAdminRequest extends FormRequest
         return [
             'admin_note' => 'sometimes|string',
             'status' => 'sometimes|in:approved,rejected',
+             'scheduled_at' => 'sometimes|date', // أو date_format:Y-m-d H:i
         ];
     }
  public function messages(): array

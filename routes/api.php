@@ -94,6 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   Route::prefix('furloughs')->group(function () {
             Route::get('/', [FurloughRequestController::class, 'index']);
+            Route::get('/my/furlough', [FurloughRequestController::class, 'myFurlough']);
             Route::post('/', [FurloughRequestController::class, 'store']);
             Route::get('/{id}', [FurloughRequestController::class, 'show']);
             Route::put('/{id}', [FurloughRequestController::class, 'update']);
@@ -145,6 +146,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [CommonConsultationController::class, 'index']);
         Route::get('/{id}', [CommonConsultationController::class, 'show']);
     });
+    //my Archive
+    Route::get('/getAllMyArchive', [IssueController::class, 'getAllMyArchive']);
+
 
     Route::put('/employees', [EmployeeController::class, 'update']);
 
@@ -183,7 +187,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/consult/consultRequest/{id}/show', [ConsultationController::class, 'showCousultByRequestId']);
         Route::get('/issues', [IssueController::class, 'index']);
         Route::get('/issues/{id}', [IssueController::class, 'show']);
+        Route::get('/show/issue/Archived/{id}', [IssueController::class, 'showArchived']);
+        Route::get('/issuesArchived', [IssueController::class, 'indexArchived']);
         //admin
+        Route::post('/archive/issues/{id}', [IssueController::class, 'archive']);
+        Route::post('/unarchive/issues/{id}', [IssueController::class, 'unarchive']);
         Route::post('/issues/{user_id}', [IssueController::class, 'store']);
         Route::put('/issues/{id}', [IssueController::class, 'update']);
         Route::put('/issues/{id}/status', [IssueController::class, 'updateStatus']);

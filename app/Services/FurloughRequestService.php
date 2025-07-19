@@ -32,6 +32,10 @@ class FurloughRequestService
 
     return $this->repository->create($data);
 }
+        public function myFurlough()
+    {
+        return $this->repository->getAllMyFurlough();
+    }
 
     public function getById($id)
     {

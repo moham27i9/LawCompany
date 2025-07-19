@@ -9,15 +9,20 @@ class FurloughRequestRepository
     {
         return FurloughRequest::all();
     }
-
+    
     public function create(array $data)
     {
         return FurloughRequest::create($data);
     }
-
+    
     public function getById($id)
     {
         return FurloughRequest::findOrFail($id);
+    }
+    
+    public function getAllMyFurlough()
+    {
+        return FurloughRequest::where('covet_by_id',auth()->user()->id)->get();
     }
 
     public function update($id, array $data)

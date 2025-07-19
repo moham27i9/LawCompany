@@ -40,6 +40,24 @@ class IssueController extends Controller
         return $this->successResponse($issue, 'Issue retrieved');
     }
 
+    public function indexArchived()
+    {
+        $issues = $this->issueService->getAllArchive();
+        return $this->successResponse($issues, 'All Archived issues retrieved');
+    }
+    
+    public function showArchived($id)
+    {
+        $issue = $this->issueService->getByIdArchive($id);
+        return $this->successResponse($issue, 'Issue Archived retrieved');
+    }
+
+    public function getAllMyArchive()
+    {
+        $issues = $this->issueService->getAllMyArchive();
+        return $this->successResponse($issues, 'My Archived issues retrieved');
+    }
+
     public function update(UpdateIssueRequest $request, $id)
     {
         $issue = $this->issueService->update($id ,$request->validated());
@@ -116,5 +134,17 @@ class IssueController extends Controller
     {
         $count = $this->issueService->getOpenIssuesCount();
          return $this->successResponse($count, ' open issues count retrieved ');
+    }
+
+        public function archive($id)
+    {
+        $issue = $this->issueService->archive($id);
+         return $this->successResponse($issue, 'Issue archived successfully');
+    }
+
+    public function unarchive($id)
+    {
+          $issue = $this->issueService->unarchive($id);
+         return $this->successResponse($issue,  'Issue restored successfully');
     }
 }

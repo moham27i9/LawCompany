@@ -40,6 +40,22 @@ class IssueService
     {
         return $this->issueRepository->getById($id);
     }
+
+    public function getAllArchive()
+    {
+        return $this->issueRepository->getAllArchive();
+    }
+    
+    public function getByIdArchive($id)
+    {
+        return $this->issueRepository->getByIdArchive($id);
+    }
+    
+    public function getAllMyArchive()
+    {
+        return $this->issueRepository->getAllMyArchive();
+    }
+
     public function update($id, array $data)
     {
 
@@ -176,5 +192,15 @@ public function track($id)
   public function getOpenIssuesCount(): int
     {
         return $this->issueRepository->countOpenIssues();
+    }
+
+        public function archive($id)
+    {
+          return $this->issueRepository->archive($id);
+    }
+
+    public function unarchive($id)
+    {
+          return $this->issueRepository->unarchive($id);
     }
 }

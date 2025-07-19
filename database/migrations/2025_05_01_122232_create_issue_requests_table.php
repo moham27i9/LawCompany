@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('is_locked')->default(false);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('admin_note')->nullable(); // في حالة الرفض أو الملاحظات
+            $table->timestamp('scheduled_at')->nullable(); // تاريخ الموعد المحدد من قبل الأدمن 
             $table->timestamps();
         });
     }

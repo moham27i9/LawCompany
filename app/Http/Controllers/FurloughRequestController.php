@@ -42,6 +42,13 @@ class FurloughRequestController extends Controller
          return $this->successResponse($item, 'furlough Request details');
     }
 
+    public function myFurlough()
+    {
+        $item = $this->service->myFurlough();
+         return $this->successResponse($item, 'your furlough Request');
+    }
+
+
     public function update(UpdateFurloughRequest $request, $id)
     {
            $furlough = $this->service->getById($id);

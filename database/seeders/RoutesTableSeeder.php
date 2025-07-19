@@ -105,6 +105,11 @@ class RoutesTableSeeder extends Seeder
             ['name' => 'update permission', 'path' => '/api/permissions/{id}', 'method' => 'PUT'],//75
              ['name' => 'show employee by id', 'path' => '/api/employees/{employee}', 'method' => 'GET'],//76
              ['name' => 'delete employee', 'path' => '/api/employees/{employee}', 'method' => 'DELETE'],//77
+             ['name' => 'archive issue', 'path' => '/api/archive/issues/{id}', 'method' => 'POST'],//78
+             ['name' => 'unarchive issue', 'path' => '/api/unarchive/issues/{id}', 'method' => 'POST'],//79
+             ['name' => 'show lawyer issues', 'path' => '/api/lawyerIssues/{id}', 'method' => 'GET'],//80
+             ['name' => 'show Archived issues', 'path' => '/api/issuesArchived', 'method' => 'GET'],//81
+             ['name' => 'show selected archived issue', 'path' => '/api/show/issue/Archived/{id}', 'method' => 'GET'],//82
                         
 
         ];

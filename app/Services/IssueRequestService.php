@@ -41,7 +41,7 @@ class IssueRequestService
         
         $issueRequest = $this->repository->update($id, $data);
         $user = User::findOrFail($issueRequest->user_id);
-        $user->notify(new GeneralNotification($data['status'], $data['admin_note']  , '/issue-requests/'.$issueRequest->id));
+        $user->notify(new GeneralNotification($data['status'], 'يتوجب عليك الحضور للموعد في مقر الشركة بتاريخ'.$data['scheduled_at'] .$data['admin_note'] , '/issue-requests/'.$issueRequest->id));
         return  $issueRequest;
     }
 

@@ -12,7 +12,8 @@ class IssueRequest extends Model
         'status',
         'user_id',
         'admin_note',
-        'is_locked'
+        'is_locked',
+        'scheduled_at'
  
     ];
     public function user()

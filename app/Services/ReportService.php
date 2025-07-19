@@ -228,7 +228,14 @@ public function storePayrollsFromReport(array $reportData): void
             'to'   => $to,
         ]);
 
-        return $pdf->stream('lawyer_sessions_report.pdf');
+                $filename = 'user_report_' . $lawyerId . '_' . time() . '.pdf';
+        $path = 'reports/' . $filename;
+
+        \Storage::disk('public')->put($path, $pdf->output());
+
+        return $this->successResponse([
+            'url' => asset('storage/' . $path)
+        ], 'تم إنشاء التقرير بنجاح');
     }
 
 

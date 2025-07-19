@@ -17,7 +17,6 @@ return new class extends Migration
             $table->enum('status', ['pending', 'approved', 'paid', 'rejected', 'on_hold'])->default('pending');
             $table->foreignId('issue_id')->constrained('issues')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('created_by')->constrained('employees')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -12,9 +12,9 @@ class InvoiceService
         $this->repo = $repo;
     }
 
-    public function create(array $data)
+    public function create(array $data ,$request)
     {
-        return $this->repo->create($data);
+        return $this->repo->create($data ,$request);
     }
 
     public function getAllForIssue($issueId)

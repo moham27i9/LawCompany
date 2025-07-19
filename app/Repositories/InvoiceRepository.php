@@ -6,11 +6,11 @@ use App\Models\Issue;
 
 class InvoiceRepository
 {
-    public function create(array $data)
+    public function create(array $data , $request)
     {
         $issue = Issue::findOrFail($data['issue_id']);
         $paidSoFar = Invoice::where('issue_id', $issue->id)
-                            ->where('status', 'paid') // حسب حالتك
+                            ->where('status', 'paid')
                             ->sum('amount');
         $newTotal = $paidSoFar + $data['amount'];
 
@@ -18,7 +18,26 @@ class InvoiceRepository
             throw new \Exception('المبلغ الإجمالي للدفعات تجاوز تكلفة القضية.');
         }
 
-        return Invoice::create($data);
+        $user = auth()->user();
+
+        if ($user) {
+            $invoices= Invoice::create([
+            'amount' => $request->amount,
+            'status' => $request->status,
+            'issue_id' => $data['issue_id'],
+            'user_id' => $data['user_id'],
+            'creator_id' => $user->id,
+            'creator_type' =>$user->role->name,
+             ]);
+             return $invoices;
+
+        }
+        else {
+
+            return response()->json(['message' => 'User not authenticated'], 401);
+        }
+
+
     }
 
     public function getByIssue($issueId)

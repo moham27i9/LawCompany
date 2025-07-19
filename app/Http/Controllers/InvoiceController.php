@@ -18,18 +18,10 @@ class InvoiceController extends Controller
 
     public function store(CreateInvoiceRequest $request, $issueId, $userId)
     {
-        $user = auth()->user();
-        if (!$user || !$user->employee) {
-            return $this->errorResponse('هذا المستخدم لا يملك سجل موظف', 403);
-        }
-        $employeeId = $user->employee->id;
         $data = $request->validated();
         $data['issue_id'] = $issueId;
         $data['user_id'] = $userId;
-        $data['created_by'] = $employeeId;
-
-        $invoice = $this->service->create($data);
-
+        $invoice = $this->service->create($data ,$request);
         return $this->successResponse($invoice, 'تم إنشاء الفاتورة بنجاح');
     }
 

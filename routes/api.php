@@ -24,6 +24,7 @@ use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
+use App\Http\Controllers\IssueProgressReportController;
 use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\LawyerPointController;
 use App\Http\Controllers\ReportController;
@@ -200,11 +201,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
 
 
-   Route::prefix('common-consultations')->group(function () {
-        Route::post('/', [CommonConsultationController::class, 'store']);
-        Route::put('/{id}', [CommonConsultationController::class, 'update']);
-        Route::delete('/{id}', [CommonConsultationController::class, 'destroy']);
-    });
+        Route::prefix('common-consultations')->group(function () {
+                Route::post('/', [CommonConsultationController::class, 'store']);
+                Route::put('/{id}', [CommonConsultationController::class, 'update']);
+                Route::delete('/{id}', [CommonConsultationController::class, 'destroy']);
+            });
 
 
 
@@ -363,6 +364,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{id}', [InvoiceController::class, 'update']);
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
          });
+
+        Route::prefix('issue-progress-reports')->group(function () {
+        Route::get('/', [IssueProgressReportController::class, 'index']);
+        Route::get('{id}', [IssueProgressReportController::class, 'show']);
+        Route::post('store/{session_id}', [IssueProgressReportController::class, 'store']);
+        Route::put('update/{id}', [IssueProgressReportController::class, 'update']);
+        Route::delete('delete/{id}', [IssueProgressReportController::class, 'destroy']);
+        });
+
 
     });
 

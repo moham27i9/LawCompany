@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $report
@@ -31,10 +31,10 @@ class IssueProgressReport extends Model
         'session_id',
         'pre_session_count',
         'report',
- 
+
     ];
     public function session()
     {
-        return $this->belongsTo(Session::class);
+        return $this->belongsTo(Sessionss::class ,  'session_id');
     }
 }

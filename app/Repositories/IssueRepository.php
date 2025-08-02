@@ -150,7 +150,7 @@ public function getLawyersByIssueId($caseId)
     }
 
       public function getIssuesForClient() {
-         return Issue::where('user_id',auth()->user()->id)->get();
+         return Issue::with('user','user.role:id,name','user.profile')->where('user_id',auth()->user()->id)->get();
     }
 
 

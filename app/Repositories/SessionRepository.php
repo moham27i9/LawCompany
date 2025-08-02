@@ -56,10 +56,9 @@ class SessionRepository
 
     public function sumPointsByIssue($issueId)
     {
-        // جلب جميع معرفات الجلسات المرتبطة بالقضية
+
         $sessionIds = Sessionss::where('issue_id', $issueId)->pluck('id');
 
-        // حساب مجموع النقاط من جدول النقاط بحسب معرفات الجلسات
         return \App\Models\LawyerPoint::whereIn('session_id', $sessionIds)->sum('points');
     }
 

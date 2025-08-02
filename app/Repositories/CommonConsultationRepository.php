@@ -18,6 +18,13 @@ class CommonConsultationRepository
         return CommonConsultation::findOrFail($id);
     }
 
+    public function findAndIncrementViews($id)
+{
+    $consultation = CommonConsultation::findOrFail($id);
+    $consultation->increment('views');
+    return $consultation;
+}
+
     public function create(array $data)
     {
         return CommonConsultation::create($data);
@@ -35,4 +42,11 @@ class CommonConsultationRepository
     {
         return CommonConsultation::destroy($id);
     }
+
+    public function getMostViewed($limit = 10)
+{
+    return CommonConsultation::orderByDesc('views')
+        ->take($limit)
+        ->get();
+}
 }

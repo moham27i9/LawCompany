@@ -21,7 +21,7 @@ class CommonConsultationService
 
     public function getById($id)
     {
-        return $this->repository->find($id);
+        return $this->repository->findAndIncrementViews($id);
     }
 
     public function create($data)
@@ -37,5 +37,10 @@ class CommonConsultationService
     public function delete($id)
     {
         return $this->repository->delete($id);
+    }
+
+    public function getMostViewedConsultations($limit = 10)
+    {
+        return $this->repository->getMostViewed($limit);
     }
 }

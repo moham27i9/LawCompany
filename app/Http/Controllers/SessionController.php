@@ -84,6 +84,13 @@ class SessionController extends Controller
         return $this->successResponse($result, 'Payment per session calculated');
     }
 
+      public function calculateLawyeramountIssue($issueId,$lawyerId)
+    {
+        $result = $this->sessionService->calculateLawyerShareForIssue($issueId,$lawyerId);
+
+        return $this->successResponse($result, 'precentage and amount for this lawyer in issue calculated');
+    }
+
         public function generateLawyerReport(GenerateLawyerReportRequest $request)
     {
         $lawyerId = auth()->user()->lawyer->id;

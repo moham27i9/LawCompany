@@ -94,6 +94,41 @@ public function calculateSessionsPayment($issueId)
     ];
 }
 
+public function calculateLawyerShareForIssue($issueId, $lawyerId)
+{
+    $issue = Issue::findOrFail($issueId);
+    $totalAmount = $issue->total_cost;
+    $lawyerShare = $issue->lawyer_percentage;
+
+    // المبلغ المخصص لكل المحامين
+    $totalLawyerAmount = ($lawyerShare / 100) * $totalAmount;
+
+    // إجمالي نقاط كل المحامين في هذه القضية
+    $totalPoints = \App\Models\LawyerPoint::whereHas('session', function ($q) use ($issueId) {
+        $q->where('issue_id', $issueId);
+    })->sum('points');
+
+    // نقاط المحامي المحدد في هذه القضية
+    $lawyerPoints = \App\Models\LawyerPoint::where('lawyer_id', $lawyerId)
+        ->whereHas('session', function ($q) use ($issueId) {
+            $q->where('issue_id', $issueId);
+        })->sum('points');
+
+    // حساب النسبة والمبلغ
+    $percentage = $totalPoints > 0 ? $lawyerPoints / $totalPoints : 0;
+    $lawyerAmount = round($percentage * $totalLawyerAmount, 2);
+
+    return [
+        'lawyer_id' => $lawyerId,
+        'issue_id' => $issueId,
+        'lawyer_points' => $lawyerPoints,
+        'total_points' => $totalPoints,
+        'percentage' => round($percentage * 100, 2), // نسبة مئوية
+        'amount' => $lawyerAmount,
+        'lawyer_share_from_total' => $totalLawyerAmount,
+    ];
+}
+
 
   public function generateLawyerReport($lawyerId, $data)
     {

@@ -42,4 +42,14 @@ class CommonConsultationController extends Controller
     {
        return $this->successResponse($this->service->delete($id), 'Consultation deleted');
     }
+
+    public function mostViewed()
+{
+    $items = $this->service->getMostViewedConsultations();
+
+    return $this->successResponse(
+        $items,
+        'Most viewed consultations retrieved successfully'
+    );
+}
 }

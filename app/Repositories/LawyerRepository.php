@@ -98,13 +98,15 @@ public function delete($id)
 }
 
   public function getIssuesForLawyer() {
-      $issues = auth()->user()->lawyer->issues;
+
+      $issues = auth()->user()->lawyer->issues()->with('user', 'user.role:id,name', 'user.profile')->get();
         return  $issues;
     }
 
   public function getIssueslawyer($id) {
-      $issues = Lawyer::with('issues')->where('id',$id)->get();
-        return  $issues;
+    $lawyer = Lawyer::with(['issues.user.role:id,name', 'issues.user.profile'])->findOrFail($id);
+    $issues = $lawyer->issues;
+            return  $issues;
     }
   public function getSessionsForLawyer() {
       $sessions = auth()->user()->lawyer->sessions;

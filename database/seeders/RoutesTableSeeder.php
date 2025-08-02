@@ -110,6 +110,7 @@ class RoutesTableSeeder extends Seeder
              ['name' => 'show lawyer issues', 'path' => '/api/lawyerIssues/{id}', 'method' => 'GET'],//80
              ['name' => 'show Archived issues', 'path' => '/api/issuesArchived', 'method' => 'GET'],//81
              ['name' => 'show selected archived issue', 'path' => '/api/show/issue/Archived/{id}', 'method' => 'GET'],//82
+             ['name' => 'show amount and precentage for lawyer in issue', 'path' => '/api/calculate/issue/{issueId}/lawyer/{lawyerId}', 'method' => 'GET'],//83
                         
 
         ];

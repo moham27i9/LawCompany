@@ -156,6 +156,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
    Route::prefix('common-consultations')->group(function () {
         Route::get('/', [CommonConsultationController::class, 'index']);
+        Route::get('/popular', [CommonConsultationController::class, 'mostViewed']);
         Route::get('/{id}', [CommonConsultationController::class, 'show']);
     });
     //my Archive
@@ -228,6 +229,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         //calculate session amount
         Route::get('sessions/calculate/{issueId}', [SessionController::class, 'calculateAmounts']);
+        Route::get('calculate/issue/{issueId}/lawyer/{lawyerId}', [SessionController::class, 'calculateLawyeramountIssue']);
 
 
         // sessions appointments
@@ -246,8 +248,6 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/{id}', [SessionTypeController::class, 'update']);
             Route::delete('/{id}', [SessionTypeController::class, 'destroy']);
         });
-
-
 
             Route::post('{id}/upload-file', [RequiredDocumentController::class, 'updateFile']);
 

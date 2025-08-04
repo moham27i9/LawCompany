@@ -27,6 +27,7 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueProgressReportController;
 use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\LawyerPointController;
+use App\Http\Controllers\LegalBookController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequiredDocumentController;
 use App\Http\Controllers\SessionAppointmentController;
@@ -372,6 +373,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('update/{id}', [IssueProgressReportController::class, 'update']);
         Route::delete('delete/{id}', [IssueProgressReportController::class, 'destroy']);
         });
+
+
+
+
+        Route::prefix('legal-books')->group(function () {
+            Route::get('/', [LegalBookController::class, 'index']);
+            Route::post('/', [LegalBookController::class, 'store']);
+            Route::get('{id}', [LegalBookController::class, 'show']);
+            Route::post('{id}', [LegalBookController::class, 'update']); // يمكنك استخدام put أيضاً
+            Route::delete('{id}', [LegalBookController::class, 'destroy']);
+        });
+
+        Route::post('legal-books/{bookId}/save', [LegalBookController::class, 'save']);
+        Route::delete('legal-books/{bookId}/unsave', [LegalBookController::class, 'unsave']);
+        Route::get('legalbooks/saved', [LegalBookController::class, 'getSavedBooks']);
+
 
 
     });

@@ -27,6 +27,7 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueProgressReportController;
 use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\LawyerPointController;
+use App\Http\Controllers\LegalAIController;
 use App\Http\Controllers\LegalBookController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequiredDocumentController;
@@ -392,6 +393,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     });
+    Route::post('/ask-ai', [LegalAIController::class, 'askAI']);
 
 
 

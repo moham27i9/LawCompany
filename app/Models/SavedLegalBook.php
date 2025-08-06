@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property int $user_id
@@ -29,10 +29,15 @@ class SavedLegalBook extends Model
     protected $fillable = [
         'user_id',
         'legalbook_id',
-      
+
     ];
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function legalBook()
+    {
+        return $this->belongsTo(\App\Models\LegalBook::class, 'legalbook_id');
     }
 }

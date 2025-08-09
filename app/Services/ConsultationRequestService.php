@@ -79,4 +79,9 @@ public function unlockConsultation($id)
 }
 
 
+    public function getByLawyer($lawyerId)
+    {
+        return $this->repository->getByLawyer($lawyerId);
+    }
+
 }

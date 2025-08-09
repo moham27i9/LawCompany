@@ -46,5 +46,10 @@ class Sessionss extends Model
         return $this->hasMany(LawyerPoint::class);
     }
 
+    public function delegationRequests()
+    {
+        return $this->hasMany(DelegationRequest::class);
+    }
+
 
 }

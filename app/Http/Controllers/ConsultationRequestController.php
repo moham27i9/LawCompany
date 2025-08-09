@@ -99,4 +99,14 @@ class ConsultationRequestController extends Controller
         $this->service->unlockConsultation($id);
         return $this->successResponse($consultation, 'consultation unlocked');
     }
+
+      public function byLawyer($lawyerId)
+    {
+        $requests = $this->service->getByLawyer($lawyerId);
+
+        return $this->successResponse(
+            $requests,
+            'Consultation requests retrieved for the lawyer successfully.'
+        );
+    }
 }

@@ -49,6 +49,7 @@ class ConsultationController extends Controller
         return $this->successResponse($this->service->update($id, $request->validated()), 'Consultation updated');
     }
 
+  
     public function destroy($id)
     {    $request = $this->service->getById($id);
          $this->authorize('delete',$request);

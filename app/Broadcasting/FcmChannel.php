@@ -12,7 +12,7 @@ class FcmChannel
     public function send($notifiable, Notification $notification)
     {
         if (!$notifiable->fcm_token) {
-            \Log::info("🚫 No FCM token for user ID {$notifiable->id}");
+            \Log::info(" No FCM token for user ID {$notifiable->id}");
             return;
         }
 
@@ -34,13 +34,13 @@ class FcmChannel
                 ))
                 ->withData($data['data']);
 
-            \Log::info('📦 FCM message being sent: ', ['message' => $message]);
+            \Log::info(' FCM message being sent: ', ['message' => $message]);
 
             $messaging->send($message);
 
-            \Log::info('✅ FCM message sent successfully to user ID ' . $notifiable->id);
+            \Log::info(' FCM message sent successfully to user ID ' . $notifiable->id);
         } catch (\Throwable $e) {
-            \Log::error('❌ FCM message failed:', [
+            \Log::error(' FCM message failed:', [
                 'user_id' => $notifiable->id,
                 'error' => $e->getMessage(),
             ]);

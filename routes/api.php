@@ -19,6 +19,7 @@ use App\Http\Controllers\CommonConsultationController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationRequestController;
+use App\Http\Controllers\DelegationRequestController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FurloughRequestController;
 use App\Http\Controllers\InterviewController;
@@ -66,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/lawyers/{id}', [LawyerController::class, 'show']);
     Route::get('/lawyers', [LawyerController::class, 'index']);
 
+     Route::get('hiring-requests/published', [HiringRequestController::class, 'getPublished']);
 
     Route::put('/attendDemand/{id}/resault', [AttendDemandController::class, 'updateResault']);
 
@@ -117,12 +119,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
             Route::prefix('consultation_requests')->group(function () {
             Route::get('/', [ConsultationRequestController::class, 'index']);
+            Route::get('/lawyer/{id}', [ConsultationRequestController::class, 'byLawyer']);
             Route::get('/showMyRequests', [ConsultationRequestController::class, 'showMyRequests']);
             Route::post('/', [ConsultationRequestController::class, 'store']);
             Route::get('/{id}', [ConsultationRequestController::class, 'show']);
             Route::put('/{id}', [ConsultationRequestController::class, 'update']);
             Route::put('/status/{id}', [ConsultationRequestController::class, 'updateStatus']);
             Route::delete('/{id}', [ConsultationRequestController::class, 'destroy']);
+
         });
             Route::prefix('consultations')->group(function () {
             Route::get('/', [ConsultationController::class, 'index']);
@@ -165,6 +169,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/employees', [EmployeeController::class, 'update']);
 
+            Route::prefix('delegations')->group(function () {
+            Route::get('/', [DelegationRequestController::class, 'index']);
+            Route::post('/{id}/approve', [DelegationRequestController::class, 'approve']);
+            Route::post('/{id}/reject', [DelegationRequestController::class, 'reject']);
+            Route::post('/submit/{session_id}', [DelegationRequestController::class, 'submit']);
+            Route::get('/{id}', [DelegationRequestController::class, 'show']);
+            Route::put('/{id}', [DelegationRequestController::class, 'update']);
+            Route::delete('/{id}', [DelegationRequestController::class, 'destroy']);
+        });
+//---------------------------------------------------------------------------------
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
         Route::post('/lawyers/create', [LawyerController::class, 'store']);
@@ -284,9 +298,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/lawyer/sessions/{sessionId}/attend', [SessionController::class, 'markAttendance']);
 
         Route::post('/lawyer/session-report', [SessionController::class, 'generateLawyerReport']);
+        
+    
+});
 
-
-     });
+   
 
      Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
@@ -298,7 +314,6 @@ Route::middleware('auth:sanctum')->group(function () {
         // lawyers managment
      });
 
-     Route::get('hiring-requests/published', [HiringRequestController::class, 'getPublished']);
      Route::middleware(['hr_only'])->group(function () {
 
          Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);

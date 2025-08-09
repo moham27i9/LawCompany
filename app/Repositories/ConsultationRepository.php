@@ -61,6 +61,7 @@ public function create(array $data, $cons_reqId)
             }
     }
 
+
     public function delete($id)
     {
         return Consultation::destroy($id);

@@ -41,6 +41,13 @@ class ConsultationRequestRepository
 }
 
 
+    public function getByLawyer($lawyerId)
+    {
+        return ConsultationRequest::where('locked_by', $lawyerId)
+            ->where('status', 'closed') // أو حسب الحالة التي تدل على الرد
+            ->get();
+    }
+
     public function delete($id)
     {
         $deleted = ConsultationRequest::findOrFail($id);

@@ -1,44 +1,49 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use App\Services\LawyerService;
-use App\Traits\ApiResponseTrait;
-use Illuminate\Support\Facades\Http;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use App\Traits\ApiResponseTrait;
 
 class LegalAIController extends Controller
 {
     use ApiResponseTrait;
 
-    protected $lawyerService;
-
-    public function __construct(LawyerService $lawyerService)
+    public function askAssistant(Request $request)
     {
-        $this->lawyerService = $lawyerService;
-    }
+        // التحقق أن السؤال موجود
+        $request->validate([
+            'question' => 'required|string|max:1000'
+        ]);
 
+        $question = $request->input('question');
 
-    public function askAI(Request $request)
-    {
-        $query = $request->input('query');
+        // زيادة وقت التنفيذ
+        ini_set('max_execution_time', 180); // 3 دقائق
 
-    $response = Http::timeout(500)->post('http://127.0.0.1:8000/rag', [
-        'query' => $query
-    ]);
+        try {
+            // إرسال الطلب إلى FastAPI
+            $response = Http::timeout(180)->post('http://127.0.0.1:8001/legal-assistant', [
+                'question' => $question
+            ]);
 
+            if ($response->successful()) {
+                $answer = $response->json()['answer'] ?? 'لم يتم العثور على إجابة.';
+               return view('assistant.result', [
+                            'question' => $question,
+                            'answer' => $answer
+                    ]);
 
-        if ($response->successful()) {
-            return response()->json([
-                'answer' => $response->json()['answer']
+            } else {
+                return view('assistant.result', [
+                    'answer' => '⚠️ حدث خطأ أثناء الاتصال بالمساعد القانوني.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return view('assistant.result', [
+                'answer' => '❌ فشل الاتصال بالخادم: ' . $e->getMessage()
             ]);
         }
-
-        return response()->json([
-            'error' => 'Failed to get answer from AI server.'
-        ], 500);
+    }
 }
-
-
-}
-

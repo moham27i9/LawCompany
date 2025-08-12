@@ -19,10 +19,9 @@ class LegalBookController extends Controller
 
     public function index()
     {
-        $books = $this->service->getAll()->map(function ($book) {// أو Storage::url() إذا كنت تستخدم symlink
-            return $this->successResponse($book);
-        });
-
+        $books = $this->service->getAll();
+            return $this->successResponse($books);
+        
     }
 
 

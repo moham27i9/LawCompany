@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\LegalAIController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,3 +40,10 @@ Route::middleware(['web-api', 'auth:sanctum'])->group(function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
+
+
+Route::get('/assistant', function () {
+    return view('assistant.form');
+})->name('assistant.form');
+
+Route::post('/assistant/ask', [LegalAIController::class, 'askAssistant'])->name('assistant.ask');

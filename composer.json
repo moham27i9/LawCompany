@@ -13,7 +13,7 @@
         "laravel/reverb": "^1.5",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "lcobucci/clock": "2.5",
+        "lcobucci/clock": "2.0",
         "lcobucci/jwt": "4.1",
         "pusher/pusher-php-server": "^7.2",
         "stripe/stripe-php": "^17.2"

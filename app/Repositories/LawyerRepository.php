@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Consultation;
 use App\Models\Issue;
 use App\Models\Lawyer;
+use App\Models\Sessionss;
 
 class LawyerRepository
 {
@@ -108,10 +109,18 @@ public function delete($id)
     $issues = $lawyer->issues;
             return  $issues;
     }
-  public function getSessionsForLawyer() {
-      $sessions = auth()->user()->lawyer->sessions;
-        return  $sessions;
+
+    public function getSessionsForLawyer()
+    {
+        $sessions = auth()->user()
+            ->lawyer
+            ->sessions()
+            ->with('lawyer.user.profile')
+            ->get();
+
+        return $sessions;
     }
+
 
     public function updateSalary($lawyer_id, $salary)
     {
@@ -131,6 +140,13 @@ public function delete($id)
     {
         $consultations = Consultation::where('lawyer_id' , $lawyer_id)->get();
         return $consultations;
+    }
+
+    public function get_session_it($lawyer_id)
+    {
+        $sessions = Sessionss::with('issue')->where('lawyer_id' , $lawyer_id)->
+                               where('is_attend', 0 )->get();
+        return $sessions;
     }
 
 }

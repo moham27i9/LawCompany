@@ -63,8 +63,8 @@ public function profile()
 
     public function showMyIssue() {
         $issues = $this->lawyerService->getLawyerIssues();
-            return $this->successResponse($issues, 'Your issues retrieved');
-             return $this->errorResponse('something wrong!!', 422);
+        return $this->successResponse($issues, 'Your issues retrieved');
+        return $this->errorResponse('something wrong!!', 422);
     }
 
     public function showLawyerIssues($id) {
@@ -104,5 +104,12 @@ public function profile()
         return $this->errorResponse('فشل في استعادة الاستشارات ', 422);
     }
 
+    public function get_session_it($lawyerId)
+    {
+        $sessions = $this->lawyerService->get_session_it($lawyerId);
+        return $this->successResponse($sessions, 'sessions');
+    }
 }
+
+
 

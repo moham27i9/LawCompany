@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CommonConsultationController;
+use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationRequestController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\LawyerPointController;
 use App\Http\Controllers\LegalAIController;
 use App\Http\Controllers\LegalBookController;
+use App\Http\Controllers\LegalnewsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequiredDocumentController;
 use App\Http\Controllers\SessionAppointmentController;
@@ -300,11 +302,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/lawyer/sessions/{sessionId}/attend', [SessionController::class, 'markAttendance']);
 
         Route::post('/lawyer/session-report', [SessionController::class, 'generateLawyerReport']);
-        
-    
-});
 
-   
+
+});
+        Route::get('/lawyer/session-for-lawyer-by-lawyerId/{lawyerId}', [LawyerController::class, 'get_session_it']);
+
+
 
      Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
@@ -408,13 +411,31 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', [LegalBookController::class, 'index']);
             Route::post('/', [LegalBookController::class, 'store']);
             Route::get('{id}', [LegalBookController::class, 'show']);
-            Route::post('{id}', [LegalBookController::class, 'update']); // يمكنك استخدام put أيضاً
+            Route::post('{id}', [LegalBookController::class, 'update']);
             Route::delete('{id}', [LegalBookController::class, 'destroy']);
         });
 
+        Route::prefix('legal-news')->group(function () {
+            Route::get('/latest', [LegalNewsController::class, 'get_latest']);
+            Route::get('/', [LegalNewsController::class, 'index']);
+            Route::post('/', [LegalNewsController::class, 'store']);
+            Route::get('{id}', [LegalNewsController::class, 'show']);
+            Route::post('{id}', [LegalNewsController::class, 'update']);
+            Route::delete('{id}', [LegalNewsController::class, 'destroy']);
+        });
+
+        //books
         Route::post('legal-books/{bookId}/save', [LegalBookController::class, 'save']);
         Route::delete('legal-books/{bookId}/unsave', [LegalBookController::class, 'unsave']);
         Route::get('legalbooks/saved', [LegalBookController::class, 'getSavedBooks']);
+
+        //news
+        Route::post('legal-news/{newId}/save', [LegalNewsController::class, 'save']);
+        Route::delete('legal-news/{newId}/unsave', [LegalNewsController::class, 'unsave']);
+        Route::get('legalNews/saved', [LegalNewsController::class, 'getSavedNews']);
+        //company info
+        Route::get('/company-info', [CompanyInfoController::class, 'show']);
+        Route::put('/company-info', [CompanyInfoController::class, 'update']);
 
 
 

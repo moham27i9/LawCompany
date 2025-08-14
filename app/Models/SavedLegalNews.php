@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property int $legalNews_id
@@ -28,10 +28,16 @@ class SavedLegalNews extends Model
     protected $fillable = [
         'user_id',
         'legalNews_id',
-      
+
     ];
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function legalNew()
+    {
+        return $this->belongsTo(\App\Models\LegalNews::class, 'legalNews_id');
+    }
+
 }

@@ -121,7 +121,7 @@ public function delete($id)
         return $this->lawyerRepository->getIssueslawyer($id);
     }
 
-  public function getLawyerSessions() {
+    public function getLawyerSessions() {
         return $this->lawyerRepository->getSessionsForLawyer();
     }
 
@@ -136,4 +136,8 @@ public function delete($id)
         $lawyer_id=$user->lawyer->id;
         return $this->lawyerRepository->show_myconsultations_lawyer($lawyer_id);
     }
+
+    public function get_session_it($lawyerId) {
+          return $this->lawyerRepository->get_session_it($lawyerId);
+      }
 }

@@ -15,6 +15,10 @@ class RolePermissionController extends Controller
     {
         $this->service = $service;
     }
+      public function index()
+    {
+        return $this->successResponse($this->service->all(), 'Roles retrieved successfully');
+    }
 
     public function assign(Request $request, $roleId,$permissionId)
     {

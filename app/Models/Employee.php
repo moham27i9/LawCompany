@@ -58,10 +58,16 @@ class Employee extends Model
     {
         return $this->hasMany(Report::class);
     }
-    public function payroll()
+    public function payrolls()
     {
-        return $this->hasMany(Payroll::class);
+        return $this->morphMany(Payroll::class, 'payable');
     }
+
+    public function salaryAdjustments()
+    {
+        return $this->morphMany(SalaryAdjustment::class, 'employable');
+    }
+
 
     public function hiringRequest()
     {
@@ -72,10 +78,6 @@ class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function payrolls()
-    {
-        return $this->morphMany(Payroll::class, 'payable');
-    }
 
 
 }

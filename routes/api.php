@@ -31,8 +31,10 @@ use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\LawyerPointController;
 use App\Http\Controllers\LegalAIController;
 use App\Http\Controllers\LegalBookController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequiredDocumentController;
+use App\Http\Controllers\SalaryAdjustmentController;
 use App\Http\Controllers\SessionAppointmentController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SessionTypeController;
@@ -98,6 +100,26 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
 
+
+    // Payroll
+    Route::prefix('payrolls')->group(function () {
+        Route::get('/', [PayrollController::class, 'index']);
+        Route::get('/testPayrollFor3Months', [PayrollController::class, 'testPayrollFor3Months']);
+        Route::get('/{id}', [PayrollController::class, 'show']);
+        Route::post('/{user_id}', [PayrollController::class, 'store']);
+        Route::put('/{id}', [PayrollController::class, 'update']);
+        Route::delete('/{id}', [PayrollController::class, 'destroy']);
+        Route::patch('/{id}/status', [PayrollController::class, 'updateStatus']);
+    });
+
+    // Salary Adjustments
+    Route::prefix('salary-adjustments')->group(function () {
+        Route::get('/', [SalaryAdjustmentController::class, 'index']);
+        Route::get('/{id}', [SalaryAdjustmentController::class, 'show']);
+        Route::post('/{user_id}', [SalaryAdjustmentController::class, 'store']);
+        Route::put('/{id}', [SalaryAdjustmentController::class, 'update']);
+        Route::delete('/{id}', [SalaryAdjustmentController::class, 'destroy']);
+    });
   Route::prefix('furloughs')->group(function () {
             Route::get('/', [FurloughRequestController::class, 'index']);
             Route::get('/my/furlough', [FurloughRequestController::class, 'myFurlough']);
@@ -180,6 +202,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/{id}', [DelegationRequestController::class, 'update']);
             Route::delete('/{id}', [DelegationRequestController::class, 'destroy']);
         });
+
+         
 //---------------------------------------------------------------------------------
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
@@ -203,6 +227,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
+        Route::get('roles/all', [RolePermissionController::class, 'index']);
+       
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
 
              //dashboard and statistics

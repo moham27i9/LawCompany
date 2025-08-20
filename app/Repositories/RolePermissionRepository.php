@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class RolePermissionRepository
 {
+      public function all()
+    {
+        return Role::with(['users.role:id,name','users.profile'])->get();
+    }
     public function syncPermissions($roleId,$permissionId)
     {
-        // return DB::table('role_permissions')->insert([
-        //     'role_id'=> $roleId,
-        //     'permission_id'=>$permissionId
-        // ]);
         $permission = Permission::findOrFail($permissionId);
          return $permission->roles()->attach($roleId);
    

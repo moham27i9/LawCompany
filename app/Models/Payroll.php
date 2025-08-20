@@ -33,7 +33,9 @@ class Payroll extends Model
         'employee_id',
         'payment',
         'status',
-        'confirm',
+        'allowances',
+         'deductions',
+        // 'confirm',
         'payable_id',
         'payable_type',
 

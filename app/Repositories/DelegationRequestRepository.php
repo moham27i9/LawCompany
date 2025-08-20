@@ -30,7 +30,7 @@ class DelegationRequestRepository
 
     public function getAll()
     {
-        return DelegationRequest::with(['originalLawyer.user', 'delegateLawyer.user', 'session.issue'])
+        return DelegationRequest::with(['originalLawyer.user.role:id,name','originalLawyer.user.profile', 'delegateLawyer.user.role:id,name','delegateLawyer.user.profile', 'session.issue','session.sessionType'])
             ->latest()
             ->get();
     }

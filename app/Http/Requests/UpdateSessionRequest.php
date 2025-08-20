@@ -14,7 +14,7 @@ class UpdateSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'outcome' => 'nullable|string',
+            'outcome' => 'nullable|in:held, postponed, canceled, rescheduled, closed, judged, attended_by_lawyer_only, attended_by_client_only, absent',
             'type' => 'sometimes|string',
             'is_attend' => 'nullable|boolean',
             'issue_id' => 'sometimes|exists:issues,id',
@@ -27,7 +27,7 @@ class UpdateSessionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'outcome.string'       => 'يجب أن يكون نتيجة الجلسة نصًا.',
+            'outcome.in'       => 'يجب أن يكون نتيجة الجلسة إحدى هذه العباراتheld, postponed, canceled, rescheduled, closed, judged, attended_by_lawyer_only, attended_by_client_only, absent.',
             'type.string'          => 'يجب أن يكون نوع الجلسة نصًا.',
             'is_attend.boolean'    => '(true أو false)قيمة الحضور يجب أن تكون صحيحة .',
             'issue_id.exists'      => 'القضية المحددة غير موجودة.',

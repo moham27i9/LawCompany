@@ -17,56 +17,56 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        User::updateOrCreate([
             'name' => 'Super Admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('12345678'),
             'role_id' => Role::where('name', 'admin')->value('id')
         ]);
-        Profile::create([
+        Profile::updateOrCreate([
             'user_id' => 1,
-            'address' => '123 Main St',
-            'phone' => '0123456789',
+            'address' => '982 Main St',
+            'phone' => '0933333333',
             'scientificLevel' => 'Bachelor of Law',
             'age' => rand(25, 50),
         ]);
-        User::create([
+        User::updateOrCreate([
             'name' => 'Lawyer1',
             'email' => 'lawyer1@gmail.com',
             'password' => bcrypt('12345678'),
             'role_id' => 5 // Lawyer role
         ]);
-        Profile::create([
+        Profile::updateOrCreate([
             'user_id' => 2,
-            'address' => '123 Main St',
-            'phone' => '0123456789',
+            'address' => '789 Main St',
+            'phone' => '0933333300',
             'scientificLevel' => 'Bachelor of Law',
             'age' => rand(25, 50),
         ]);
-        User::create([
+        User::updateOrCreate([
             'name' => 'HR',
             'email' => 'hr1@gmail.com',
             'password' => bcrypt('12345678'),
             'role_id' => 3 // HR role
         ]);
-        Profile::create([
+        Profile::updateOrCreate([
             'user_id' => 3,
-            'address' => '123 Main St',
-            'phone' => '0123456789',
+            'address' => '309 Main St',
+            'phone' => '0933333222',
             'scientificLevel' => 'Bachelor of Law',
             'age' => rand(25, 50),
         ]);
-        User::create([
+        User::updateOrCreate([
             'name' => 'acountant',
             'email' => 'acc1@gmail.com',
             'password' => bcrypt('12345678'),
             'role_id' => 4 // acountant role
         ]);
 
-        Profile::create([
+        Profile::updateOrCreate([
             'user_id' => 4,
-            'address' => '123 Main St',
-            'phone' => '0123456789',
+            'address' => '292 Main St',
+            'phone' => '0933333555',
             'scientificLevel' => 'Bachelor of Law',
             'age' => rand(25, 50),
         ]);

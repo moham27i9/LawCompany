@@ -13,6 +13,10 @@ class RolePermissionService
         $this->repo = $repo;
     }
 
+     public function all()
+    {
+        return $this->repo->all();
+    }
     public function assignPermissions($roleId,$permissionId)
     {
         return $this->repo->syncPermissions($roleId, $permissionId);

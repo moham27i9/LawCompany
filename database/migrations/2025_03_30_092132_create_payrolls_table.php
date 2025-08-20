@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
             $table->float('payment');
-            $table->integer('confirm');
+            // $table->integer('confirm');
+            $table->decimal('allowances', 12, 2)->default(0); // إجمالي البدلات
+            $table->decimal('deductions', 12, 2)->default(0); // إجمالي الخصومات
             $table->enum('status', ['pending', 'approved', 'paid', 'rejected', 'on_hold'])->default('pending');
             $table->unsignedBigInteger('payable_id');
             $table->string('payable_type');
-
             $table->timestamps();
         });
     }

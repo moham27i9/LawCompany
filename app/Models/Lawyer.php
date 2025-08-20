@@ -50,11 +50,16 @@ class Lawyer extends Model
     {
         return $this->hasMany(LawyerPoint::class);
     }
-
     public function payrolls()
     {
-        return $this->morphMany(\App\Models\Payroll::class, 'payable');
+        return $this->morphMany(Payroll::class, 'payable');
     }
+
+    public function salaryAdjustments()
+    {
+        return $this->morphMany(SalaryAdjustment::class, 'employable');
+    }
+
 
     public function delegationRequestsSent()
     {

@@ -82,6 +82,12 @@ class DelegationRequestController extends Controller
 
     // جلب المحامي النائب
     $delegateLawyer = Lawyer::with('user')->findOrFail($data['delegate_lawyer_id']);
+     //تحديث المحامي في الجلسة
+      $session = Sessionss::findOrFail($result->session_id);
+      $session->update([
+        'lawyer_id' =>$data['delegate_lawyer_id']
+      ]);
+      $session->save();
 
     // إرسال إشعار للمحامي الأصلي
     if ($originalLawyer->user) {

@@ -246,7 +246,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/issues/{id}', [IssueController::class, 'show']);
         Route::get('/show/issue/Archived/{id}', [IssueController::class, 'showArchived']);
         Route::get('/issuesArchived', [IssueController::class, 'indexArchived']);
-        //admin
+        //admin  
         Route::post('/archive/issues/{id}', [IssueController::class, 'archive']);
         Route::post('/unarchive/issues/{id}', [IssueController::class, 'unarchive']);
         Route::post('/issues/{user_id}', [IssueController::class, 'store']);

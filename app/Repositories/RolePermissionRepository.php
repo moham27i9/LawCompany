@@ -12,6 +12,18 @@ class RolePermissionRepository
     {
         return Role::with(['users.role:id,name','users.profile'])->get();
     }
+
+      public function getById($id)
+    {
+        return Role::findOrFail($id);
+    }
+
+      public function destroy($id)
+    {
+        $role = Role::findOrFail($id);
+        return $role->delete();
+    }
+
     public function syncPermissions($roleId,$permissionId)
     {
         $permission = Permission::findOrFail($permissionId);

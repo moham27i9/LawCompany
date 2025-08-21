@@ -19,6 +19,14 @@ class RolePermissionController extends Controller
     {
         return $this->successResponse($this->service->all(), 'Roles retrieved successfully');
     }
+      public function show($role_id)
+    {
+        return $this->successResponse($this->service->getById($role_id), 'Role details retrieved successfully');
+    }
+      public function destroy($role_id)
+    {
+        return $this->successResponse($this->service->destroy($role_id), 'Role  deleted successfully');
+    }
 
     public function assign(Request $request, $roleId,$permissionId)
     {

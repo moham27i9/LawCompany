@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DelegationRequestFormRequest;
+use App\Http\Resources\DelegationRequestResource;
 use App\Models\DelegationRequest;
 use App\Models\Lawyer;
 use App\Models\Sessionss;
@@ -61,7 +62,7 @@ class DelegationRequestController extends Controller
        
         $result = $this->service->getAllRequests();
           $this->authorize('approve',DelegationRequest::class);
-        return $this->successResponse($result, 'تم جلب جميع طلبات الإنابة');
+        return $this->successResponse(DelegationRequestResource::collection($result), 'تم جلب جميع طلبات الإنابة');
     }
 
 

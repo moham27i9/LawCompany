@@ -17,6 +17,15 @@ class RolePermissionService
     {
         return $this->repo->all();
     }
+
+     public function getById($id)
+    {
+        return $this->repo->getById($id);
+    }
+     public function destroy($id)
+    {
+        return $this->repo->destroy($id);
+    }
     public function assignPermissions($roleId,$permissionId)
     {
         return $this->repo->syncPermissions($roleId, $permissionId);

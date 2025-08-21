@@ -30,9 +30,13 @@ class DelegationRequestRepository
 
     public function getAll()
     {
-        return DelegationRequest::with(['originalLawyer.user.role:id,name','originalLawyer.user.profile', 'delegateLawyer.user.role:id,name','delegateLawyer.user.profile', 'session.issue','session.sessionType'])
-            ->latest()
-            ->get();
+
+     return DelegationRequest::with([
+        'originalLawyer.user.profile',
+        'delegateLawyer.user.profile',
+        'session.issue',
+        'session.sessionType'
+    ])->get();
     }
     public function updateStatus($id, array $data)
     {

@@ -116,6 +116,8 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'show_selected_archived_issue', 'app_route_id' => 82],
             ['name' => 'show_amount_and_precentage_for_lawyer_in_issue', 'app_route_id' => 83],
             ['name' => 'show_all_roles', 'app_route_id' => 84],
+            ['name' => 'DELETE_ROLE', 'app_route_id' => 85],
+            ['name' => 'SHOW_ROLE', 'app_route_id' => 86],
      
         ];
 
@@ -197,6 +199,9 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 82],
             ['permission_id' => 83],
             ['permission_id' => 84],
+            ['permission_id' => 84],
+            ['permission_id' => 85],
+            ['permission_id' => 86],
 
 
         ];

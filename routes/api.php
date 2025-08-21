@@ -227,7 +227,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
+        Route::get('roles/{role_id}', [RolePermissionController::class, 'show']);
         Route::get('roles/all', [RolePermissionController::class, 'index']);
+        Route::get('roles/delete/{role_id}', [RolePermissionController::class, 'destroy']);
        
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
 

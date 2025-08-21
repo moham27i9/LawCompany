@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
              SessionTypeSeeder::class,
              IssueCategorySeeder::class,
              CommonConsultationSeeder::class,
+             CompanyInfoSeeder::class,
         ]);
 
     }

@@ -16,7 +16,7 @@ class PayrollService
     }
 public function generatePayroll($employable, $baseSalary)
 {
-    // 🔹 جلب آخر دفعة
+    //  جلب آخر دفعة
     $lastPayment = $this->payrollRepo->lastPaymentDate(get_class($employable), $employable->id);
 
     $monthsToPay = 1; // الافتراضي شهر واحد
@@ -33,7 +33,7 @@ public function generatePayroll($employable, $baseSalary)
         $monthsToPay = $monthsDiff; // عدد الأشهر التي لم تُدفع
     }
 
-    // 🔹 جمع البدلات والخصومات (شاملة لجميع الشهور)
+    //  جمع البدلات والخصومات (شاملة لجميع الشهور)
     $allowances = $employable->salaryAdjustments()
         ->where('type', 'allowance')
         ->where('processed', false)
@@ -44,10 +44,10 @@ public function generatePayroll($employable, $baseSalary)
         ->where('processed', false)
         ->sum('amount');
 
-    // 🔹 الراتب الصافي للشهور المتراكمة
+    //  الراتب الصافي للشهور المتراكمة
     $netPayment = ($baseSalary * $monthsToPay) + $allowances - $deductions;
 
-    // 🔹 إنشاء سجل جديد في جدول الرواتب
+    //  إنشاء سجل جديد في جدول الرواتب
     $payroll = $this->payrollRepo->create([
         'payment'      => $netPayment,
         'allowances'   => $allowances,
@@ -57,15 +57,20 @@ public function generatePayroll($employable, $baseSalary)
         'payable_type' => get_class($employable),
     ]);
 
-        // 🔹 تحديث المستحقات لتصبح "processed"
+        //  تحديث المستحقات لتصبح "processed"
     $employable->salaryAdjustments()
         ->where('processed', false)
         ->update(['processed' => true]);
 
+        $payroll->expenses()->create([
+        'description' => $employable->user->name.':دفعة راتب للموظف ',
+        'amount' => $payroll->payment,
+        'type' => 'payroll',]);
+
+
+
         return $payroll;
-}
-
-
+    }
 
     public function all()
     {
@@ -86,4 +91,11 @@ public function generatePayroll($employable, $baseSalary)
     {
         return $this->payrollRepo->delete($id);
     }
+
+    public function getMonthlyCosts()
+    {
+        return $this->payrollRepo->getMonthlyCosts();
+    }
+
+    
 }

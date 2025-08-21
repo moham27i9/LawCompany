@@ -22,6 +22,7 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ConsultationRequestController;
 use App\Http\Controllers\DelegationRequestController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FurloughRequestController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\InvoiceController;
@@ -103,25 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
 
 
-    // Payroll
-    Route::prefix('payrolls')->group(function () {
-        Route::get('/', [PayrollController::class, 'index']);
-        Route::get('/testPayrollFor3Months', [PayrollController::class, 'testPayrollFor3Months']);
-        Route::get('/{id}', [PayrollController::class, 'show']);
-        Route::post('/{user_id}', [PayrollController::class, 'store']);
-        Route::put('/{id}', [PayrollController::class, 'update']);
-        Route::delete('/{id}', [PayrollController::class, 'destroy']);
-        Route::patch('/{id}/status', [PayrollController::class, 'updateStatus']);
-    });
-
-    // Salary Adjustments
-    Route::prefix('salary-adjustments')->group(function () {
-        Route::get('/', [SalaryAdjustmentController::class, 'index']);
-        Route::get('/{id}', [SalaryAdjustmentController::class, 'show']);
-        Route::post('/{user_id}', [SalaryAdjustmentController::class, 'store']);
-        Route::put('/{id}', [SalaryAdjustmentController::class, 'update']);
-        Route::delete('/{id}', [SalaryAdjustmentController::class, 'destroy']);
-    });
+  
   Route::prefix('furloughs')->group(function () {
             Route::get('/', [FurloughRequestController::class, 'index']);
             Route::get('/my/furlough', [FurloughRequestController::class, 'myFurlough']);
@@ -229,9 +212,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('roles/{roleId}/permissions/{permissionId}', [RolePermissionController::class, 'assign']);
         Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'getPermissions']);
         Route::post('roles/create', [RolePermissionController::class, 'store']);
-        Route::get('roles/{role_id}', [RolePermissionController::class, 'show']);
         Route::get('roles/all', [RolePermissionController::class, 'index']);
-        Route::get('roles/delete/{role_id}', [RolePermissionController::class, 'destroy']);
+        Route::get('roles/{role_id}', [RolePermissionController::class, 'show']);
+        Route::delete('roles/delete/{role_id}', [RolePermissionController::class, 'destroy']);
        
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
 
@@ -265,7 +248,32 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::delete('/{id}', [CommonConsultationController::class, 'destroy']);
             });
 
+  // Payroll
+    Route::prefix('payrolls')->group(function () {
+        Route::get('/', [PayrollController::class, 'index']);
+        Route::get('/getMonthlyCosts', [PayrollController::class, 'getMonthlyCosts']);
+        Route::get('/{id}', [PayrollController::class, 'show']);
+        Route::post('/{user_id}', [PayrollController::class, 'store']);
+        Route::put('/{id}', [PayrollController::class, 'update']);
+        Route::delete('/{id}', [PayrollController::class, 'destroy']);
+        Route::patch('/{id}/status', [PayrollController::class, 'updateStatus']);
+    });
+        Route::prefix('expenses')->group(function () {
+        Route::get('/', [ExpenseController::class, 'index']);
+        Route::get('/{id}', [ExpenseController::class, 'show']);
+        Route::post('/', [ExpenseController::class, 'store']);
+        Route::put('/{id}', [ExpenseController::class, 'update']);
+        Route::delete('/{id}', [ExpenseController::class, 'destroy']);
+    });
 
+    // Salary Adjustments
+    Route::prefix('salary-adjustments')->group(function () {
+        Route::get('/', [SalaryAdjustmentController::class, 'index']);
+        Route::get('/{id}', [SalaryAdjustmentController::class, 'show']);
+        Route::post('/{user_id}', [SalaryAdjustmentController::class, 'store']);
+        Route::put('/{id}', [SalaryAdjustmentController::class, 'update']);
+        Route::delete('/{id}', [SalaryAdjustmentController::class, 'destroy']);
+    });
 
         // sessions managment
         Route::get('/sessions', [SessionController::class, 'index']);

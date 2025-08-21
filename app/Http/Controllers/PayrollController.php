@@ -55,6 +55,11 @@ class PayrollController extends Controller
     {
          return $this->successResponse($this->service->delete($id), 'تم حذف الدفعة بنجاح ');
     }
+    
+    public function getMonthlyCosts()
+    {
+         return $this->successResponse($this->service->getMonthlyCosts(), 'تم ارجاع التكاليف بنجاح ');
+    }
 
 
 

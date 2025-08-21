@@ -2,6 +2,8 @@
 namespace App\Repositories;
 
 use App\Models\Payroll;
+use Carbon\Carbon;
+use DB;
 
 class PayrollRepository
 {
@@ -40,6 +42,25 @@ class PayrollRepository
         ->first();
 
     return $last?->created_at;
+}
+
+public function getMonthlyCosts()
+{
+    return DB::table('expenses')
+        ->select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('SUM(amount) as total_cost')
+        )
+        ->whereYear('created_at', now()->year)
+        ->groupBy(DB::raw('MONTH(created_at)'))
+        ->orderBy(DB::raw('MONTH(created_at)'))
+        ->get()
+        ->map(function ($row) {
+            return [
+                'month' => Carbon::create()->month($row->month)->format('M'),
+                'total_cost' => $row->total_cost,
+            ];
+        });
 }
 
 }

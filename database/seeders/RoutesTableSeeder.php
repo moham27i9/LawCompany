@@ -114,6 +114,27 @@ class RoutesTableSeeder extends Seeder
              ['name' => 'show all roles', 'path' => '/api/roles/all', 'method' => 'GET'],//84
              ['name' => 'delete role', 'path' => '/api/roles/delete/{role_id}', 'method' => 'DELETE'],//85
              ['name' => 'show role', 'path' => '/api/roles/{role_id}', 'method' => 'GET'],//86
+             
+             ['name' => 'show payrolls', 'path' => '/api/payrolls', 'method' => 'GET'],//87
+             ['name' => 'show payroll details', 'path' => '/api/payrolls/{id}', 'method' => 'GET'],//88
+             ['name' => 'get Monthly Costs', 'path' => '/api/payrolls/getMonthlyCosts', 'method' => 'GET'],//89
+             ['name' => 'add payroll', 'path' => '/api/payrolls/{user_id}', 'method' => 'POST'],//90
+             ['name' => 'update payroll', 'path' => '/api/payrolls/{id}', 'method' => 'PUT'],//91
+             ['name' => 'delete payroll', 'path' => '/api/payrolls/{id}', 'method' => 'DELETE'],//92
+             ['name' => 'update payroll status', 'path' => '/api/payrolls/status/{id}', 'method' => 'PATCH'],//93
+                        
+             ['name' => 'show salary-adjustments', 'path' => '/api/salary-adjustments', 'method' => 'GET'],//94
+             ['name' => 'show salary-adjustment details', 'path' => '/api/salary-adjustments/{id}', 'method' => 'GET'],//95
+             ['name' => 'add salary-adjustment', 'path' => '/api/salary-adjustments/{user_id}', 'method' => 'POST'],//96
+             ['name' => 'update salary-adjustment', 'path' => '/api/salary-adjustments/{id}', 'method' => 'PUT'],//97
+             ['name' => 'delete salary-adjustment', 'path' => '/api/salary-adjustments/{id}', 'method' => 'DELETE'],//98
+             
+             ['name' => 'show expenses', 'path' => '/api/expenses', 'method' => 'GET'],//99
+             ['name' => 'show expense details', 'path' => '/api/expenses/{id}', 'method' => 'GET'],//100
+             ['name' => 'add expense', 'path' => '/api/expenses', 'method' => 'POST'],//101
+             ['name' => 'update expense', 'path' => '/api/expenses/{id}', 'method' => 'PUT'],//102
+             ['name' => 'delete expense', 'path' => '/api/expenses/{id}', 'method' => 'DELETE'],//103
+
                         
 
         ];

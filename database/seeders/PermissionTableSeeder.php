@@ -116,8 +116,25 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'show_selected_archived_issue', 'app_route_id' => 82],
             ['name' => 'show_amount_and_precentage_for_lawyer_in_issue', 'app_route_id' => 83],
             ['name' => 'show_all_roles', 'app_route_id' => 84],
-            ['name' => 'DELETE_ROLE', 'app_route_id' => 85],
-            ['name' => 'SHOW_ROLE', 'app_route_id' => 86],
+            ['name' => 'delete_role', 'app_route_id' => 85],
+            ['name' => 'show_role', 'app_route_id' => 86],
+            ['name' => 'show_payrolls', 'app_route_id' => 87],
+            ['name' => 'show_payroll_details', 'app_route_id' => 88],
+            ['name' => 'get_Monthly_Costs', 'app_route_id' => 89],
+            ['name' => 'add_payroll', 'app_route_id' => 90],
+            ['name' => 'update_payroll', 'app_route_id' => 91],
+            ['name' => 'delete_payroll', 'app_route_id' => 92],
+            ['name' => 'update_payroll_status', 'app_route_id' => 93],
+            ['name' => 'show_salary-adjustments', 'app_route_id' => 94],
+            ['name' => 'show_salary-adjustment_details', 'app_route_id' => 95],
+            ['name' => 'add salary-adjustment', 'app_route_id' => 96],
+            ['name' => 'update_salary-adjustment', 'app_route_id' => 97],
+            ['name' => 'delete_salary-adjustment', 'app_route_id' => 98],
+            ['name' => 'show_expenses', 'app_route_id' => 99],
+            ['name' => 'show_expense_details', 'app_route_id' => 100],
+            ['name' => 'add_expense', 'app_route_id' => 101],
+            ['name' => 'update_expense', 'app_route_id' => 102],
+            ['name' => 'delete_expense', 'app_route_id' => 103],
      
         ];
 
@@ -199,9 +216,26 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 82],
             ['permission_id' => 83],
             ['permission_id' => 84],
-            ['permission_id' => 84],
             ['permission_id' => 85],
             ['permission_id' => 86],
+            
+            ['permission_id' => 87],
+            ['permission_id' => 88],
+            ['permission_id' => 89],
+            ['permission_id' => 90],
+            ['permission_id' => 91],
+            ['permission_id' => 92],
+            ['permission_id' => 93],
+            ['permission_id' => 94],
+            ['permission_id' => 95],
+            ['permission_id' => 96],
+            ['permission_id' => 97],
+            ['permission_id' => 98],
+            ['permission_id' => 99],
+            ['permission_id' => 100],
+            ['permission_id' => 101],
+            ['permission_id' => 102],
+            ['permission_id' => 103],
 
 
         ];
@@ -263,11 +297,39 @@ class PermissionTableSeeder extends Seeder
 
         ];
 
+        $accountant_permissions =[
+             ['permission_id' => 87],
+            ['permission_id' => 88],
+            ['permission_id' => 89],
+            ['permission_id' => 90],
+            ['permission_id' => 91],
+            ['permission_id' => 92],
+            ['permission_id' => 93],
+            ['permission_id' => 94],
+            ['permission_id' => 95],
+            ['permission_id' => 96],
+            ['permission_id' => 97],
+            ['permission_id' => 98],
+            ['permission_id' => 99],
+            ['permission_id' => 100],
+            ['permission_id' => 101],
+            ['permission_id' => 102],
+            ['permission_id' => 103],
+        ];
+
         foreach ($admin_permissions as $admin_permission) {
 
             DB::table('role_permissions')->insert([
                 'role_id'=> 1,
                 'permission_id'=> $admin_permission['permission_id'] ,
+                ]);
+        }
+
+        foreach ($accountant_permissions as $accountant_permission) {
+
+            DB::table('role_permissions')->insert([
+                'role_id'=> 4,
+                'permission_id'=> $accountant_permission['permission_id'] ,
                 ]);
         }
         foreach ($hr_permissions as $hr_permission) {

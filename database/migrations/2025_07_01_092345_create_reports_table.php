@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['financial', 'legal', 'hr', 'other'])->default('financial'); // نوع التقرير
-            $table->string('file_path'); // مسار الـ PDF
-            $table->decimal('total_amount', 12, 2)->default(0); // مجموع المبلغ
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade'); // الموظف الذي أنشأ التقرير
-            $table->date('report_date'); // تاريخ التقرير
-            $table->text('notes')->nullable(); // ملاحظات اختيارية
-            $table->timestamps(); // created_at, updated_at
+            $table->enum('type', ['financial', 'legal', 'hr', 'other'])->default('financial');
+            $table->string('file_path');
+            $table->decimal('total_amount', 12, 2)->default(0);
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade'); 
+            $table->date('report_date');
+            $table->text('notes')->nullable();
+            $table->timestamps();
         });
     }
 

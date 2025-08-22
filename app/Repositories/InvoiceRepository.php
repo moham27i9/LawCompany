@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Invoice;
 use App\Models\Issue;
+use Carbon\Carbon;
 
 class InvoiceRepository
 {
@@ -67,5 +68,21 @@ class InvoiceRepository
     {
         $invoice = Invoice::findOrFail($id);
         return $invoice->delete();
+    }
+
+       public function monthlyRevenues()
+    {
+        return Invoice::selectRaw('MONTH(created_at) as month, SUM(amount) as total_revenue')
+            ->where('status', 'paid') // نأخذ الإيرادات المؤكدة فقط
+            ->whereYear('created_at', now()->year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'month' => Carbon::create()->month($row->month)->format('M'),
+                    'total_revenue' => $row->total_revenue,
+                ];
+            });
     }
 }

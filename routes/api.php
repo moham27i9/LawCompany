@@ -188,7 +188,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{id}', [DelegationRequestController::class, 'destroy']);
         });
 
-         
+         Route::get('/invoices/reports/monthly-revenues', [InvoiceController::class, 'monthlyRevenues']);
+
 //---------------------------------------------------------------------------------
     Route::middleware(['check.permission'])->group(function () {
         Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);

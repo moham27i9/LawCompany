@@ -43,7 +43,7 @@ class PayrollController extends Controller
       
           return $this->successResponse($payroll, 'تم إضافة الدفعة بنجاح ');
 
-        return response()->json($payroll);
+        return $this->errorResponse('المستخدم ليس موظفاً');
     }
 
     public function update(Request $request, $id)

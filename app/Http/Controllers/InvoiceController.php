@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateInvoiceRequest;
+use App\Http\Requests\UpdateInvoiceRequest;
 use App\Services\InvoiceService;
 use App\Traits\ApiResponseTrait;
 
@@ -43,7 +44,7 @@ class InvoiceController extends Controller
         return $this->successResponse($invoice, 'تفاصيل الفاتورة');
     }
 
-    public function update(CreateInvoiceRequest $request, $id)
+    public function update(UpdateInvoiceRequest $request, $id)
     {
         $invoice = $this->service->update($id, $request->validated());
         return $this->successResponse($invoice, 'تم تعديل الفاتورة');
@@ -53,5 +54,11 @@ class InvoiceController extends Controller
     {
         $this->service->delete($id);
         return $this->successResponse(null, 'تم حذف الفاتورة');
+    }
+
+    
+    public function monthlyRevenues()
+    {
+      return $this->successResponse( $this->service->monthlyRevenues(),'تم إرجاع الإيرادات الشهرية بنجاح');
     }
 }

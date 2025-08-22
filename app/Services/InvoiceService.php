@@ -41,5 +41,9 @@ class InvoiceService
     {
         return $this->repo->delete($id);
     }
+      public function monthlyRevenues()
+    {
+        return $this->repo->monthlyRevenues();
+    }
 }
 

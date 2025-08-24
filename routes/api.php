@@ -57,7 +57,7 @@ Route::post('/refresh', [AuthController::class, 'refreshToken']);
 Route::middleware('auth:sanctum')->group(function () {
 
 
-  Route::post('/messages', [ChatController::class, 'send']);
+    Route::post('/messages', [ChatController::class, 'send']);
     Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
 
     Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);

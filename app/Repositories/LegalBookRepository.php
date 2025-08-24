@@ -4,12 +4,15 @@ namespace App\Repositories;
 
 use App\Models\LegalBook;
 use App\Models\SavedLegalBook;
+use Cache;
 
 class LegalBookRepository
 {
     public function getAll()
     {
+        return Cache::remember('legalBook_all', now()->addMinutes(15), function () {
         return LegalBook::all();
+    });
     }
 
     public function findById($id)
@@ -19,17 +22,20 @@ class LegalBookRepository
 
     public function create(array $data)
     {
+        Cache::forget('legalBook_all');
         return LegalBook::create($data);
     }
 
     public function update(LegalBook $book, array $data)
     {
         $book->update($data);
+        Cache::forget('legalBook_all');
         return $book;
     }
 
     public function delete(LegalBook $book)
     {
+        Cache::forget('legalBook_all');
         return $book->delete();
     }
 

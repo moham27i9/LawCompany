@@ -4,12 +4,15 @@ namespace App\Repositories;
 
 use App\Models\Consultation;
 use App\Models\ConsultationRequest;
+use Cache;
 
 class ConsultationRepository
 {
     public function getAll()
     {
-        return Consultation::with('lawyer')->get();
+            return Cache::remember('consultation_all', now()->addMinutes(15), function () {
+                return Consultation::with('lawyer')->get();
+    });
     }
 
 public function create(array $data, $cons_reqId)
@@ -31,6 +34,7 @@ public function create(array $data, $cons_reqId)
         'is_locked' => false,
         'locked_by' => null,
     ]);
+    Cache::forget('consultation_all');
 
     return $consultation;
 }
@@ -54,6 +58,7 @@ public function create(array $data, $cons_reqId)
             $consultation = Consultation::findOrFail($id);
             $consultation->update($data);
             $consultation->save();
+            Cache::forget('consultation_all');
             return $consultation;
         }
          catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -64,6 +69,7 @@ public function create(array $data, $cons_reqId)
 
     public function delete($id)
     {
+        Cache::forget('consultation_all');
         return Consultation::destroy($id);
     }
 }

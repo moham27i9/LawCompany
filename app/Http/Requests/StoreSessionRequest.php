@@ -26,9 +26,6 @@ public function rules(): array
             if (!in_array($value, $lawyerIds)) {
                 $fail("This lawyer is not assigned to this issue.");
             }
-            // if (in_array($value, $session->pluck('lawyer_id')->toArray())) {
-            //     $fail("This lawyer is assigned to this session actually.");
-            // }
         }],
     ];
 }

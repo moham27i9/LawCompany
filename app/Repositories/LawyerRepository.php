@@ -6,13 +6,14 @@ use App\Models\Consultation;
 use App\Models\Issue;
 use App\Models\Lawyer;
 use App\Models\Sessionss;
+use Cache;
 
 class LawyerRepository
 {
     public function create(array $data)
     {
-           // التعامل مع ملف الشهادة
 
+        Cache::forget('lawyers_all');
         return Lawyer::create([
             'user_id' => auth()->user()->id,
             'license_number' => $data['license_number'],
@@ -21,12 +22,15 @@ class LawyerRepository
             'specialization' => $data['specialization'],
             'certificate' => $data['certificate'],
         ]);
+
     }
 
 
 public function getAll()
 {
-    return Lawyer::all();
+    return Cache::remember('lawyers_all', now()->addMinutes(60), function () {
+        return Lawyer::all();
+    });
 }
 
 public function getById($id)
@@ -86,7 +90,7 @@ public function update($id, array $data)
             'image'             => $profile->image ? asset($profile->image) : null,
         ];
     }
-
+    Cache::forget('lawyers_all');
     return $lawyerProfile;
 }
 
@@ -95,6 +99,7 @@ public function delete($id)
 {
     $lawyer = Lawyer::findOrFail($id);
     $lawyer->delete();
+     Cache::forget('lawyers_all');
     return true;
 }
 

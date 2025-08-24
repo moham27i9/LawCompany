@@ -5,12 +5,16 @@ namespace App\Repositories;
 use App\Models\LawyerPoint;
 use App\Models\Session;
 use App\Models\Sessionss;
+use Cache;
 
 class SessionRepository
 {
     public function all()
     {
+        return Cache::remember('sessions_all', now()->addMinutes(10), function () {
         return Sessionss::with(['issue', 'lawyer','sessionType'])->get();
+    });
+
 
 
     }
@@ -27,6 +31,7 @@ class SessionRepository
 
     public function create(array $data)
     {
+         Cache::forget('sessions_all');
         return Sessionss::create($data);
     }
 
@@ -36,22 +41,24 @@ class SessionRepository
         $session = Sessionss::findOrFail($id);
         $session->update($data);
         $session->save();
+        Cache::forget('sessions_all');
         return $session;
     }
 
     public function delete($id)
     {
         $session = Sessionss::findOrFail($id);
+        Cache::forget('sessions_all');
         return $session->delete();
     }
-    
+
     public function sessionsThisMonth()
     {
-      $sessionCount = Sessionss::whereMonth('created_at', now()->month)
-       ->whereYear('created_at', now()->year)
-       ->count();
-
-        return $sessionCount;
+        return Cache::remember('sessions_this_month', now()->addMinutes(30), function () {
+            return Sessionss::whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->count();
+        });
     }
 
     public function sumPointsByIssue($issueId)

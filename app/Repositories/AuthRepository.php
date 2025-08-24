@@ -3,18 +3,22 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Cache;
 
 class AuthRepository
 {
     public function createUser(array $data)
     {
+         Cache::forget('users_all');
         return User::create($data);
     }
 
-    public function getAll()
-    {
-        return User::with(['role:id,name','profile'])->get();
-    }
+public function getAll()
+{
+    return Cache::remember('users_all', now()->addMinutes(15), function () {
+        return User::with(['role:id,name', 'profile'])->get();
+    });
+}
 
     public function find($id)
     {
@@ -36,9 +40,11 @@ class AuthRepository
             return $user;
         }
 
-         public function clientCount(): int
+    public function clientCount(): int
     {
+        return Cache::remember('user_count_all', now()->addMinutes(20), function () {
         return User::where('role_id', 2)->count();
+    });
     }
 
 }

@@ -5,12 +5,15 @@ namespace App\Repositories;
 use App\Models\LegalNews;
 use App\Models\SavedLegalBook;
 use App\Models\SavedLegalNews;
+use Cache;
 
 class LegalNewsRepository
 {
     public function getAll()
     {
+        return Cache::remember('legalNews_all', now()->addMinutes(15), function () {
         return LegalNews::all();
+    });
     }
     public function get_latest()
     {
@@ -24,17 +27,20 @@ class LegalNewsRepository
 
     public function create(array $data)
     {
+        Cache::forget('legalNews_all');
         return LegalNews::create($data);
     }
 
     public function update(LegalNews $new, array $data)
     {
         $new->update($data);
+        Cache::forget('legalNews_all');
         return $new;
     }
 
     public function delete(LegalNews $new)
     {
+        Cache::forget('legalNews_all');
         return $new->delete();
     }
 

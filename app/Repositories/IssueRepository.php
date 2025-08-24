@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Issue;
 use App\Models\IssueCategory;
+use Cache;
 
 class IssueRepository
 {
@@ -30,7 +31,9 @@ class IssueRepository
     //Unarchive
     public function getAll()
     {
-        return Issue::with(['user.role:id,name','user.profile'])->where('status', '!=', 'archived')->get();
+            return Cache::remember('issues_all', now()->addMinutes(15), function () {
+                return Issue::with(['user.role:id,name','user.profile'])->where('status', '!=', 'archived')->get();
+    });
     }
 
     public function getById($id)
@@ -89,6 +92,7 @@ class IssueRepository
             'court_name'=> $data['court_name'] ?? $issue->court_name,
             'opponent_name'=> $data['opponent_name'] ?? $issue->opponent_name,
         ];
+        Cache::forget('issues_all');
         return $info;
 
     }
@@ -162,14 +166,18 @@ public function getLawyersByIssueId($caseId)
 
     public function getIssuesWithChildren($categoryId)
     {
-        $category = IssueCategory::with('children')->findOrFail($categoryId);
-        $childIds = $this->getAllChildrenIds($category);
-        $allIds = array_merge([$category->id], $childIds);
+        // مفتاح الكاش مرتبط بالـ categoryId
+        $cacheKey = "issues_with_children_{$categoryId}";
 
-        // هنا استخدمنا with('category') لتحميل التصنيف مع القضايا
-        return Issue::with(['user.role:id,name','user.profile','category'])
-                    ->whereIn('category_id', $allIds)
-                    ->get();
+        return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($categoryId) {
+            $category = IssueCategory::with('children')->findOrFail($categoryId);
+            $childIds = $this->getAllChildrenIds($category);
+            $allIds = array_merge([$category->id], $childIds);
+
+            return Issue::with(['user.role:id,name','user.profile','category'])
+                        ->whereIn('category_id', $allIds)
+                        ->get();
+        });
     }
 
 
@@ -184,31 +192,34 @@ public function getLawyersByIssueId($caseId)
         return $ids;
     }
 
-     public function getCaseTypePercentages()
+    public function getCaseTypePercentages()
     {
+        return Cache::remember('issue_types_percentages', now()->addMinutes(30), function () {
+            $total = Issue::count();
+            $catg_ids = IssueCategory::pluck('id'); // groupBy غير ضروري هنا
 
-        $total = Issue::count();
-        $catg_ids = IssueCategory::select('id')->groupBy('id')->pluck('id');
+            $result = [];
 
-        $result = [];
+            foreach ($catg_ids as $ctgId) {
+                $count = Issue::where('category_id', $ctgId)->count();
+                $type = IssueCategory::where('id', $ctgId)->value('name'); // value بدل get
+                $percentage = $total > 0 ? round(($count / $total) * 100) : 0;
 
-        foreach ($catg_ids as $ctgId) {
-            $count = Issue::where('category_id', $ctgId)->count();
-            $type = IssueCategory::select('name')->where('id',$ctgId)->get();
-            $percentage = $total > 0 ? round(($count / $total) * 100) : 0;
+                $result[] = [
+                    'type' => $type,
+                    'percentage' => $percentage
+                ];
+            }
 
-            $result[] = [
-                'type' => $type,
-                'percentage' => $percentage
-            ];
-        }
-
-        return $result;
+            return $result;
+        });
     }
 
      public function countOpenIssues(): int
     {
+        return Cache::remember('issues_count_all', now()->addMinutes(20), function () {
         return Issue::where('status', 'open')->count();
+    });
     }
 
     public function archive($id)

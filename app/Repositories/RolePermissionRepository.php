@@ -4,13 +4,16 @@ namespace App\Repositories;
 
 use App\Models\Role;
 use App\Models\Permission;
+use Cache;
 use Illuminate\Support\Facades\DB;
 
 class RolePermissionRepository
 {
       public function all()
     {
-        return Role::with(['users.role:id,name','users.profile'])->get();
+            return Cache::remember('roles_all', now()->addMinutes(120), function () {
+                return Role::with(['users.role:id,name','users.profile'])->get();
+    });
     }
 
       public function getById($id)
@@ -21,6 +24,7 @@ class RolePermissionRepository
       public function destroy($id)
     {
         $role = Role::findOrFail($id);
+        Cache::forget('roles_all');
         return $role->delete();
     }
 
@@ -28,7 +32,7 @@ class RolePermissionRepository
     {
         $permission = Permission::findOrFail($permissionId);
          return $permission->roles()->attach($roleId);
-   
+
     }
 
     public function getPermissions($roleId)
@@ -37,6 +41,7 @@ class RolePermissionRepository
     }
     public function create(array $data)
     {
+         Cache::forget('roles_all');
         return Role::create($data);
     }
 }

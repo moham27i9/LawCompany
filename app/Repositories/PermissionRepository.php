@@ -4,16 +4,20 @@ namespace App\Repositories;
 
 use App\Models\Permission;
 use App\Models\User;
+use Cache;
 
 class PermissionRepository
 {
     public function getAll()
     {
-        return Permission::all();
+            return Cache::remember('permissions_all', now()->addMinutes(60), function () {
+            return Permission::all();
+    });
     }
 
     public function create(array $data,$id)
     {
+        Cache::forget('permissions_all');
         return Permission::create([
             'name'=>$data['name'],
             'app_route_id'=>$id
@@ -22,6 +26,7 @@ class PermissionRepository
 
     public function delete($id)
     {
+        Cache::forget('permissions_all');
         return Permission::findOrFail($id)->delete();
     }
 
@@ -31,6 +36,7 @@ class PermissionRepository
         $permission = Permission::findOrFail($id);
         $permission->update($data);
         $permission->save();
+        Cache::forget('permissions_all');
         return $permission;
     }
         public function getUserPermissions($userId)

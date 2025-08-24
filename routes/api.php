@@ -33,7 +33,7 @@ use App\Http\Controllers\IssueRequestController;
 use App\Http\Controllers\LawyerPointController;
 use App\Http\Controllers\LegalAIController;
 use App\Http\Controllers\LegalBookController;
-use App\Http\Controllers\LegalnewsController;
+use App\Http\Controllers\LegalNewsController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequiredDocumentController;
@@ -104,7 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/issues/{issueId}/lawyers', [IssueController::class, 'getIssueLawyers']);
 
 
-  
+
   Route::prefix('furloughs')->group(function () {
             Route::get('/', [FurloughRequestController::class, 'index']);
             Route::get('/my/furlough', [FurloughRequestController::class, 'myFurlough']);
@@ -216,7 +216,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('roles/all', [RolePermissionController::class, 'index']);
         Route::get('roles/{role_id}', [RolePermissionController::class, 'show']);
         Route::delete('roles/delete/{role_id}', [RolePermissionController::class, 'destroy']);
-       
+
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
 
              //dashboard and statistics
@@ -232,7 +232,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/issues/{id}', [IssueController::class, 'show']);
         Route::get('/show/issue/Archived/{id}', [IssueController::class, 'showArchived']);
         Route::get('/issuesArchived', [IssueController::class, 'indexArchived']);
-        //admin  
+        //admin
         Route::post('/archive/issues/{id}', [IssueController::class, 'archive']);
         Route::post('/unarchive/issues/{id}', [IssueController::class, 'unarchive']);
         Route::post('/issues/{user_id}', [IssueController::class, 'store']);

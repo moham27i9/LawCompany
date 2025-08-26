@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
+/**
+ * @mixin IdeHelperAttendDemand
+ */
 class AttendDemand extends Model
 {
     protected $fillable = [

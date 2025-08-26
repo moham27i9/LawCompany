@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
- *
  * @property int $id
  * @property int $legalNews_id
  * @property int $user_id
@@ -22,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SavedLegalNews whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SavedLegalNews whereUserId($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperSavedLegalNews
  */
 class SavedLegalNews extends Model
 {

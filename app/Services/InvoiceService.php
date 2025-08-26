@@ -45,5 +45,9 @@ class InvoiceService
     {
         return $this->repo->monthlyRevenues();
     }
+     public function calculateTotalRevenues(): float
+    {
+        return $this->repo->getTotalRevenues();
+    }
 }
 

@@ -1,214 +1,216 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Laravel FCM Chat</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging-compat.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            direction: rtl;
+            background: #f5f5f5;
+        }
+        h3 {
+            text-align: center;
+        }
+        #chat {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #fff;
+            margin-bottom: 10px;
+        }
+        .bubble {
+            max-width: 30%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 20px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        .me {
+            background: #5da6ea;
+            color: #fff;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+        .other {
+            background: #e0e0e0;
+            color: #000;
+            margin-right: auto;
+            border-bottom-left-radius: 0;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        #message {
+            width: 70%;
+        }
+        button {
+            cursor: pointer;
+        }
+        label {
+            margin-right: 10px;
+        }
+        #token {
+            font-family: monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+<h3>دردشة FCM (تجريب)</h3>
 
-@section('content')
-<div class="chat-container">
-    <h4>الدردشة مع: {{ $receiver->name }}</h4>
-
-    <div id="chat-box">
-        @foreach($messages as $msg)
-            <div class="{{ $msg->sender_id === auth()->id() ? 'text-end' : 'text-start' }}">
-                <div class="chat-bubble">
-                    <div class="sender-name">
-                        {{ $msg->sender_id === auth()->id() ? 'أنا' : $receiver->name }}
-                    </div>
-                    <div class="text">{{ $msg->message }}</div>
-                    <div class="msg-time">{{ \Carbon\Carbon::parse($msg->created_at)->format('H:i') }}</div>
-                </div>
-            </div>
-        @endforeach
-    </div>
-
-    <form id="chat-form" class="chat-form-container">
-        @csrf
-        <input type="hidden" id="receiver_id" value="{{ $receiver->id }}">
-        <input type="text" id="message" class="form-control" placeholder="اكتب رسالتك...">
-        <button type="submit" class="btn">إرسال</button>
-    </form>
+<div>
+    <label>أنا (sender_id): <input id="sender_id" value="1"></label>
+    <label>المستلم (receiver_id): <input id="receiver_id" value="2"></label>
+    <button id="load">تحميل المحادثة</button>
 </div>
-@endsection
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-{{-- <script src="https://unpkg.com/laravel-echo/dist/echo.iife.js"></script> --}}
+<div id="chat"></div>
+
+<div>
+    <input id="message" placeholder="اكتب رسالة...">
+    <button id="send">إرسال</button>
+</div>
+
+<hr>
+<p>FCM Token: <span id="token"></span></p>
 
 <script>
-    const userId = {{ auth()->id() }};
-    const receiverId = document.getElementById('receiver_id').value;
-    const chatBox = document.getElementById('chat-box');
-    const form = document.getElementById('chat-form');
-    const messageInput = document.getElementById('message');
+    console.log("💡 الصفحة جاهزة، نبدأ تهيئة Firebase...");
 
-    function appendMessage(sender, message, isMe = false, time = null) {
-        const wrapper = document.createElement('div');
-        wrapper.className = isMe ? 'text-end' : 'text-start';
+    const firebaseConfig = {
+        apiKey: "{{ env('FIREBASE_API_KEY') }}",
+        authDomain: "{{ env('FIREBASE_AUTH_DOMAIN') }}",
+        projectId: "{{ env('FIREBASE_PROJECT_ID') }}",
+        storageBucket: "{{ env('FIREBASE_STORAGE_BUCKET') }}",
+        messagingSenderId: "{{ env('FIREBASE_MESSAGING_SENDER_ID') }}",
+        appId: "{{ env('FIREBASE_APP_ID') }}",
+    };
 
-        if (!time) {
-            const now = new Date();
-            time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+    console.log("✅ Firebase Initialized");
+
+    async function registerServiceWorker() {
+        try {
+            console.log("💡 تسجيل Service Worker...");
+            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            console.log("✅ Service Worker مسجل:", registration);
+            const swReady = await navigator.serviceWorker.ready;
+            console.log("✅ Service Worker جاهز:", swReady);
+            return swReady;
+        } catch (error) {
+            console.error("❌ خطأ عند تسجيل Service Worker:", error);
+            throw error;
         }
-
-        wrapper.innerHTML = `
-            <div class="chat-bubble">
-                <div class="sender-name">${sender}</div>
-                <div class="text">${message}</div>
-                <div class="msg-time">${time}</div>
-            </div>
-        `;
-
-        chatBox.appendChild(wrapper);
-        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const message = messageInput.value.trim();
+    async function initFcm() {
+        try {
+            console.log("💡 طلب إذن الإشعارات...");
+            const permission = await Notification.requestPermission();
+            console.log("🔔 Permission result:", permission);
+
+            if (permission !== "granted") {
+                console.warn("⚠️ المستخدم لم يمنح الإذن!");
+                return;
+            }
+
+            const swRegistration = await registerServiceWorker();
+
+            const currentToken = await messaging.getToken({
+                vapidKey: "BFdvvcgx6jQSS_yZ-Fm4CuLhiOhIgrfi7l4lnQVy7vtPF7gMwCNLK0VHI9k7INrBQNu_muZx5MQwki5TT6AzwQs",
+                serviceWorkerRegistration: swRegistration
+            });
+
+            if (currentToken) {
+                console.log("✅ تم إنشاء التوكن:", currentToken);
+                document.getElementById('token').textContent = currentToken;
+                await sendTokenToServer(currentToken);
+            } else {
+                console.warn("⚠️ لم يتم إنشاء توكن");
+            }
+        } catch (error) {
+            console.error("❌ FCM init error", error);
+        }
+    }
+const sender_id = document.getElementById('sender_id').value;
+
+    async function sendTokenToServer(token) {
+        console.log("💡 إرسال التوكن للسيرفر...");
+        try {
+            await fetch("/api/fcm/token", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ token: token,user_id: sender_id  })
+            });
+            console.log("✅ تم حفظ التوكن في السيرفر");
+        } catch (error) {
+            console.error("❌ فشل إرسال التوكن للسيرفر", error);
+        }
+    }
+
+    messaging.onMessage((payload) => {
+        console.log("📩 رسالة واردة:", payload);
+        const notificationTitle = payload.notification?.title || 'رسالة جديدة';
+        const notificationOptions = {
+            body: payload.notification?.body || '',
+            icon: payload.notification?.icon || '/icon.png'
+        };
+        new Notification(notificationTitle, notificationOptions);
+    });
+
+    initFcm();
+
+    async function loadConversation() {
+        const a = document.getElementById('sender_id').value;
+        const b = document.getElementById('receiver_id').value;
+        const res = await fetch(`/api/messages/${a}/${b}`);
+        const json = await res.json();
+
+        const box = document.getElementById('chat');
+        box.innerHTML = '';
+        json.data.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'bubble ' + (String(m.sender_id) === String(a) ? 'me' : 'other');
+            div.textContent = m.message;
+            box.appendChild(div);
+        });
+        box.scrollTop = box.scrollHeight;
+    }
+
+    document.getElementById('load').addEventListener('click', loadConversation);
+
+    document.getElementById('send').addEventListener('click', async () => {
+        const sender_id = document.getElementById('sender_id').value;
+        const receiver_id = document.getElementById('receiver_id').value;
+        const message = document.getElementById('message').value.trim();
         if (!message) return;
 
-        axios.get('/sanctum/csrf-cookie').then(() => {
-            axios.post('/api/messages', {
-                receiver_id: receiverId,
-                message: message,
-            }).then(res => {
-                const now = new Date();
-                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                appendMessage('أنا', message, true, time);
-                messageInput.value = '';
-            }).catch(err => {
-                console.error('فشل الإرسال', err);
-            });
+        await fetch('/api/messages', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content 
+            },
+            body: JSON.stringify({ sender_id, receiver_id, message })
         });
-    });
 
-
-    window.Echo.private(`chat.${userId}`)
-        .listen('NewMessage', (e) => {
-            if (e.message.sender_id == receiverId) {
-                const time = new Date(e.message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                appendMessage(`{{ $receiver->name }}`, e.message.message, false, time);
-            }
-        });
-        // window.Echo.private(`chat.${userId}`)
-        // .listen('NewMessage', (e) => {
-        //     console.log('📥 استقبلنا رسالة: ', e.message.message);
-        //     appendMessage(e.message.sender.name ?? 'مستخدم', e.message.message);
-        // });
-        axios.get('/sanctum/csrf-cookie').then(() => {
-        setInterval(() => {
-        axios.get(`/api/messages/${receiverId}`)
-            .then(res => {
-                chatBox.innerHTML = '';
-                res.data.forEach(msg => {
-                    const isMe = msg.sender_id === userId;
-                    const sender = isMe ? 'أنا' : '{{ $receiver->name }}';
-                    const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    appendMessage(sender, msg.message, isMe, time);
-                });
-            }).catch(err => console.error('فشل تحميل المحادثة', err));
-        }, 1000);
+        document.getElementById('message').value = '';
+        loadConversation();
     });
 </script>
-@endpush
-
-@push('styles')
-<style>
-    body {
-        background: #ece5dd;
-    }
-
-    .chat-container {
-        background: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        max-width: 800px;
-        margin: auto;
-        padding: 20px;
-        height: 90vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    #chat-box {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-        background: #676767;
-        border-radius: 10px;
-        margin-bottom: 10px;
-    }
-
-    .chat-bubble {
-        display: inline-block;
-        max-width: 75%;
-        padding: 10px 15px;
-        border-radius: 20px;
-        margin: 5px 0;
-        position: relative;
-        font-size: 18px;
-        line-height: 1.5;
-        word-wrap: break-word;
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .text-start .chat-bubble {
-        background: #ffffff;
-        border: 1px solid #ccc;
-        color: #333;
-        border-bottom-left-radius: 0;
-        align-self: flex-start;
-    }
-
-    .text-end .chat-bubble {
-        background: #dcf8c6;
-        color: #000;
-        border-bottom-right-radius: 0;
-        align-self: flex-end;
-    }
-
-    .sender-name {
-        font-weight: bold;
-        font-size: 13px;
-        color: #555;
-        margin-bottom: 4px;
-    }
-
-    .msg-time {
-        font-size: 11px;
-        color: #888;
-        margin-top: 6px;
-        text-align: left;
-    }
-
-    .chat-form-container {
-        display: flex;
-        gap: 10px;
-    }
-
-    .chat-form-container input.form-control {
-        border-radius: 20px;
-        padding: 10px 15px;
-        border: 1px solid #ccc;
-        outline: none;
-        flex: 1;
-    }
-
-    .chat-form-container button {
-        border-radius: 20px;
-        background-color: #128c7e;
-        border: none;
-        color: white;
-        padding: 10px 20px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
-@endpush
+</body>
+</html>

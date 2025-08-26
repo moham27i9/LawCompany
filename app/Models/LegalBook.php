@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
- *
  * @property int $id
  * @property string $bookTitle
  * @property string $book
@@ -23,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LegalBook whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LegalBook whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperLegalBook
  */
 class LegalBook extends Model
 {

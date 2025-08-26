@@ -35,19 +35,22 @@ class GeneralNotification extends Notification
         ];
     }
 
-        public function toFcm($notifiable)
-    {
-        return [
-            'token' => $notifiable->fcm_token,
-            'notification' => [
-                'title' => $this->title,
-                'body' => $this->body,
-            ],
-            'data' => [
-                 'body' => $this->body,
-                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-            ]
-        ];
-    }
-    
+public function toFcm($notifiable)
+{
+    // نفترض أن عندك علاقة في موديل User -> fcmTokens()
+    $tokens = $notifiable->fcmTokens()->pluck('token')->toArray();
+
+    return [
+        'tokens' => $tokens,
+        'notification' => [
+            'title' => $this->title,
+            'body' => $this->body,
+        ],
+        'data' => [
+            'body' => $this->body,
+            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+        ]
+    ];
+}
+
 }

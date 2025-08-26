@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 // app/Models/Message.php
+/**
+ * @mixin IdeHelperMessage
+ */
 class Message extends Model
 {
     protected $fillable = ['sender_id', 'receiver_id', 'message', 'is_read'];

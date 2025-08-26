@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperConsultation
+ */
 class Consultation extends Model
 {
      protected $table = 'consulations';

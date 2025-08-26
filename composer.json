@@ -20,8 +20,10 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
+        "beyondcode/laravel-er-diagram-generator": "^5.0",
         "fakerphp/faker": "^1.23",
         "jasonmccreary/laravel-test-assertions": "^2.8",
+        "laravel-shift/blueprint": "^2.12",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",

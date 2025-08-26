@@ -3,6 +3,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperLawyerPoint
+ */
 class LawyerPoint extends Model
 {
     protected $fillable = [

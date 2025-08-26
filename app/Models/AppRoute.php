@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperAppRoute
+ */
 class AppRoute extends Model
 {
     protected $fillable = ['name', 'path', 'method'];

@@ -23,6 +23,7 @@ use App\Http\Controllers\ConsultationRequestController;
 use App\Http\Controllers\DelegationRequestController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\FcmTokenController;
 use App\Http\Controllers\FurloughRequestController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\InvoiceController;
@@ -53,12 +54,16 @@ Route::post('/forgot-password', ForgotPasswordController::class);
 Route::post('/reset-password', ResetPasswordController::class);
 Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
+Route::post('/fcm/token', [FcmTokenController::class, 'store']);              // حفظ توكن
+Route::post('/messages',   [ChatController::class, 'send']);                  // إرسال رسالة
+Route::get('/messages/{a}/{b}', [ChatController::class, 'conversation']); 
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
 
 
-  Route::post('/messages', [ChatController::class, 'send']);
-    Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
+
+//   Route::post('/messages', [ChatController::class, 'send']);
+//     Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
 
     Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
     //  Profile & Logout
@@ -188,7 +193,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{id}', [DelegationRequestController::class, 'destroy']);
         });
 
-         Route::get('/invoices/reports/monthly-revenues', [InvoiceController::class, 'monthlyRevenues']);
+            Route::get('/invoices/reports/monthly-revenues', [InvoiceController::class, 'monthlyRevenues']);
+            Route::get('/invoices/total-revenues', [InvoiceController::class, 'totalRevenues']);
 
 //---------------------------------------------------------------------------------
     Route::middleware(['check.permission'])->group(function () {

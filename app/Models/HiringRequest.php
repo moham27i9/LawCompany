@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
- *
  * @property int $id
  * @property string $jopTitle
  * @property string $type
@@ -30,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|HiringRequest whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|HiringRequest whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperHiringRequest
  */
 class HiringRequest extends Model
 {

@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
- *
  * @property int $id
  * @property string $date
  * @property int $jobApp_id
@@ -22,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Interview whereJobAppId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Interview whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperInterview
  */
 class Interview extends Model
 {

@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
- *
  * @property int $id
  * @property string $salary
  * @property string|null $certificate
@@ -36,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Employee whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Employee whereUserId($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperEmployee
  */
 class Employee extends Model
 {

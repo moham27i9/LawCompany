@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
- *
  * @property int $id
  * @property string $title
  * @property string $description
@@ -23,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LegalNews whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LegalNews whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperLegalNews
  */
 class LegalNews extends Model
 {

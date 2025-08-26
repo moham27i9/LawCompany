@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
- *
  * @property int $id
  * @property string $report
  * @property int $pre_session_count
@@ -24,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IssueProgressReport whereSessionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IssueProgressReport whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperIssueProgressReport
  */
 class IssueProgressReport extends Model
 {

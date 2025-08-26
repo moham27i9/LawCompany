@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
- *
  * @property int $id
  * @property string $date
  * @property int $session_id
@@ -22,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SessionAppointment whereSessionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SessionAppointment whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperSessionAppointment
  */
 class SessionAppointment extends Model
 {

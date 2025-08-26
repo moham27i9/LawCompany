@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
- *
  * @property int $id
  * @property int $user_id
  * @property int $HirReq_id
@@ -26,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobApplication whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|JobApplication whereUserId($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperJobApplication
  */
 class JobApplication extends Model
 {

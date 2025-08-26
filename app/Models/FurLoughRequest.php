@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
+/**
+ * @mixin IdeHelperFurloughRequest
+ */
 class FurloughRequest extends Model
 {
     protected $table = 'fur_lough_requests';

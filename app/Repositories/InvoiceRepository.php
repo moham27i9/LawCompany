@@ -70,19 +70,32 @@ class InvoiceRepository
         return $invoice->delete();
     }
 
-       public function monthlyRevenues()
+public function monthlyRevenues()
+{
+    // أولاً نجلب الإيرادات الفعلية من قاعدة البيانات
+    $revenues = Invoice::selectRaw('MONTH(created_at) as month, SUM(amount) as total_revenue')
+        ->where('status', 'paid') // نأخذ الإيرادات المؤكدة فقط
+        ->whereYear('created_at', now()->year)
+        ->groupBy('month')
+        ->orderBy('month')
+        ->pluck('total_revenue', 'month'); // نخزنها بشكل [month => total]
+
+    // الآن ننشئ مصفوفة من 1 إلى 12
+    $data = collect(range(1, 12))->map(function ($m) use ($revenues) {
+        return [
+            'month' => Carbon::create()->month($m)->format('M'),
+            'total_revenue' => $revenues[$m] ?? 0, // إذا ما فيه بيانات → 0
+        ];
+    });
+
+    return $data;
+}
+
+
+    public function getTotalRevenues(): float
     {
-        return Invoice::selectRaw('MONTH(created_at) as month, SUM(amount) as total_revenue')
-            ->where('status', 'paid') // نأخذ الإيرادات المؤكدة فقط
-            ->whereYear('created_at', now()->year)
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get()
-            ->map(function ($row) {
-                return [
-                    'month' => Carbon::create()->month($row->month)->format('M'),
-                    'total_revenue' => $row->total_revenue,
-                ];
-            });
+        return Invoice::where('status', 'paid')->sum('amount');
     }
+
+
 }

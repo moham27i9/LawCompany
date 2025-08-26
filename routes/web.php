@@ -26,6 +26,7 @@ Route::get('/payment', function () {
 
 // Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
 
+Route::get('/uml', '\BeyondCode\LaravelUml\Http\Controllers\DiagramController@index');
 
 // عرض صفحة الدردشة
 Route::middleware(['auth:sanctum'])->get('/chat/{receiver_id}', [ChatController::class, 'index'])->name('chat.index');
@@ -36,6 +37,7 @@ Route::middleware(['web-api', 'auth:sanctum'])->group(function () {
 });
 
 
+Route::view('/chat', 'chat'); // افتحها بـ http://localhost:8000/chat
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

@@ -134,6 +134,8 @@ class RoutesTableSeeder extends Seeder
              ['name' => 'add expense', 'path' => '/api/expenses', 'method' => 'POST'],//101
              ['name' => 'update expense', 'path' => '/api/expenses/{id}', 'method' => 'PUT'],//102
              ['name' => 'delete expense', 'path' => '/api/expenses/{id}', 'method' => 'DELETE'],//103
+             ['name' => 'get total revenues', 'path' => '/api/invoices/total-revenues', 'method' => 'GET'],//104
+             ['name' => 'get Monthly revenues', 'path' => '/api/invoices/reports/monthly-revenues', 'method' => 'GET'],//105
 
                         
 

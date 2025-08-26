@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperConsultationRequest
+ */
 class ConsultationRequest extends Model
 {
     protected $fillable = ['subject', 'details', 'status', 'user_id',  'is_locked'];

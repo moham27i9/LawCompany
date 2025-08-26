@@ -46,21 +46,26 @@ class PayrollRepository
 
 public function getMonthlyCosts()
 {
-    return DB::table('expenses')
+    // نأتي بالبيانات من قاعدة البيانات
+    $costs = DB::table('expenses')
         ->select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('SUM(amount) as total_cost')
         )
         ->whereYear('created_at', now()->year)
         ->groupBy(DB::raw('MONTH(created_at)'))
-        ->orderBy(DB::raw('MONTH(created_at)'))
-        ->get()
-        ->map(function ($row) {
-            return [
-                'month' => Carbon::create()->month($row->month)->format('M'),
-                'total_cost' => $row->total_cost,
-            ];
-        });
+        ->pluck('total_cost', 'month'); // نخزنها في مصفوفة month => total_cost
+
+    // ننشئ استجابة كاملة لجميع الأشهر 1 → 12
+    $months = collect(range(1, 12))->map(function ($month) use ($costs) {
+        return [
+            'month' => Carbon::create()->month($month)->format('M'),
+            'total_cost' => $costs[$month] ?? 0, // إذا لا يوجد بيانات الشهر يرجع 0
+        ];
+    });
+
+    return $months;
 }
+
 
 }

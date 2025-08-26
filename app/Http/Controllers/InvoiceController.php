@@ -61,4 +61,12 @@ class InvoiceController extends Controller
     {
       return $this->successResponse( $this->service->monthlyRevenues(),'تم إرجاع الإيرادات الشهرية بنجاح');
     }
+
+      public function totalRevenues()
+    {
+        $total = $this->service->calculateTotalRevenues();
+
+        return $this->successResponse($total,'تم إرجاع الإيرادات الكلية ');
+    
+    }
 }

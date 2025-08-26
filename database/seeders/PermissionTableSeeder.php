@@ -135,6 +135,8 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'add_expense', 'app_route_id' => 101],
             ['name' => 'update_expense', 'app_route_id' => 102],
             ['name' => 'delete_expense', 'app_route_id' => 103],
+            ['name' => 'get_total_revenues', 'app_route_id' => 104],
+            ['name' => 'get_Monthly_revenues', 'app_route_id' => 105],
      
         ];
 
@@ -236,6 +238,8 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 101],
             ['permission_id' => 102],
             ['permission_id' => 103],
+            ['permission_id' => 104],
+            ['permission_id' => 105],
 
 
         ];

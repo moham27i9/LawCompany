@@ -9,8 +9,6 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- *
- *
  * @property int $id
  * @property string $name
  * @property string $email
@@ -56,6 +54,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRoleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperUser
  */
 class User extends Authenticatable
 {
@@ -73,7 +72,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
-        'fcm_token',
+     
     ];
 
     /**
@@ -140,7 +139,10 @@ public function addedPoints()
 {
     return $this->hasMany(LawyerPoint::class, 'admin_id');
 }
-
+  public function fcm_tokens()
+    {
+        return $this->hasMany(FcmToken::class,'user_id');
+    }
 
     protected function casts(): array
     {

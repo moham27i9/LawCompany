@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
+/**
+ * @mixin IdeHelperPayroll
+ */
 class Payroll extends Model
 {
     protected $fillable = [
@@ -13,7 +16,6 @@ class Payroll extends Model
         'status',
         'allowances',
          'deductions',
-        // 'confirm',
         'payable_id',
         'payable_type',
 

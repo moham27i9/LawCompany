@@ -55,7 +55,7 @@ Route::post('/reset-password', ResetPasswordController::class);
 Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
 Route::post('/fcm/token', [FcmTokenController::class, 'store']);              // حفظ توكن
-Route::post('/messages',   [ChatController::class, 'send']);                  // إرسال رسالة
+Route::post('/messages',   [ChatController::class, 'send'])->name('messages.store');;                  // إرسال رسالة
 Route::get('/messages/{a}/{b}', [ChatController::class, 'conversation']); 
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -193,18 +193,16 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{id}', [DelegationRequestController::class, 'destroy']);
         });
 
-            Route::get('/invoices/reports/monthly-revenues', [InvoiceController::class, 'monthlyRevenues']);
-            Route::get('/invoices/total-revenues', [InvoiceController::class, 'totalRevenues']);
+        
+        //---------------------------------------------------------------------------------
+        Route::middleware(['check.permission'])->group(function () {
+            Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
+            Route::post('/lawyers/create', [LawyerController::class, 'store']);
 
-//---------------------------------------------------------------------------------
-    Route::middleware(['check.permission'])->group(function () {
-        Route::put('/admin/issue-requests/{id}', [IssueRequestController::class, 'updateIssueRequestAdmin']);
-        Route::post('/lawyers/create', [LawyerController::class, 'store']);
-
-        //   employees managment
-        Route::get('/employees', [EmployeeController::class,'index']);
-        Route::delete('/employees/{employee}', [EmployeeController::class,'destroy']);
-        Route::get('/employees/{employee}', [EmployeeController::class,'show']);
+            //   employees managment
+            Route::get('/employees', [EmployeeController::class,'index']);
+            Route::delete('/employees/{employee}', [EmployeeController::class,'destroy']);
+            Route::get('/employees/{employee}', [EmployeeController::class,'show']);
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
 
 
@@ -222,15 +220,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('roles/all', [RolePermissionController::class, 'index']);
         Route::get('roles/{role_id}', [RolePermissionController::class, 'show']);
         Route::delete('roles/delete/{role_id}', [RolePermissionController::class, 'destroy']);
-       
+        
         Route::post('/employees/create/{id}', [EmployeeController::class, 'store']);
-
-             //dashboard and statistics
+        
+        //dashboard and statistics
         Route::get('/issues/case-type-percentages', [IssueController::class, 'caseTypePercentages']);
         Route::get('/issues/open/count', [IssueController::class, 'countOpenCases']);
         Route::get('/clients/count', [AuthController::class, 'getClientCount']);
         Route::get('/sessions/this-month', [SessionController::class, 'sessionsThisMonth']);
-
+        Route::get('/invoices/reports/monthly-revenues', [InvoiceController::class, 'monthlyRevenues']);
+        Route::get('/invoices/total-revenues', [InvoiceController::class, 'totalRevenues']);
+        
         //admin & lawyer & intern
 
         Route::get('/consult/consultRequest/{id}/show', [ConsultationController::class, 'showCousultByRequestId']);

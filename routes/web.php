@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\LegalAIController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,10 +33,14 @@ Route::get('/uml', '\BeyondCode\LaravelUml\Http\Controllers\DiagramController@in
 Route::middleware(['auth:sanctum'])->get('/chat/{receiver_id}', [ChatController::class, 'index'])->name('chat.index');
 
 Route::middleware(['web-api', 'auth:sanctum'])->group(function () {
-    Route::post('/messages', [ChatController::class, 'send']);
-    Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
+    // Route::post('/messages', [ChatController::class, 'send']);
+    // Route::get('/messages/{userId}', [ChatController::class, 'fetch']);
 });
 
+Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+Route::get('/chat-test', function () {
+    return view('chat-test');
+});
 
 Route::view('/chat', 'chat'); // افتحها بـ http://localhost:8000/chat
 

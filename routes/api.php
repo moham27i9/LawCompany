@@ -35,6 +35,8 @@ use App\Http\Controllers\LawyerPointController;
 use App\Http\Controllers\LegalAIController;
 use App\Http\Controllers\LegalBookController;
 use App\Http\Controllers\LegalNewsController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequiredDocumentController;
@@ -483,6 +485,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     });
     Route::post('/ask-ai', [LegalAIController::class, 'askAI']);
-
 
 

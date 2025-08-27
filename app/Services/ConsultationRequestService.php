@@ -42,7 +42,7 @@ class ConsultationRequestService
     }
         public function lockConsultation($id)
     {
-        $consultation = $this->repository->getById($id);     
+        $consultation = $this->repository->getById($id);
     // إذا كانت مغلقة تمامًا (تمت الإجابة)
     if ($consultation->status === 'closed') {
         throw new \Exception("Cannot lock a closed consultation.");
@@ -82,6 +82,42 @@ public function unlockConsultation($id)
     public function getByLawyer($lawyerId)
     {
         return $this->repository->getByLawyer($lawyerId);
+    }
+
+
+    public function getConsultationRequestWithLawyer($id)
+    {
+        $consultationRequest = $this->repository->findWithLockedLawyer($id);
+
+        $lawyer = $consultationRequest->lockedByLawyer;
+
+        // دمج بيانات المحامي مع بيانات اليوزر والبروفايل
+        $lawyerData = null;
+        if ($lawyer) {
+            $lawyerData = [
+                'id' => $lawyer->id,
+                'name' => $lawyer->user->name ?? null,
+                'email' => $lawyer->user->email ?? null,
+                'address' => $lawyer->user->profile->address ?? null,
+                'phone' => $lawyer->user->profile->phone ?? null,
+                'age' => $lawyer->user->profile->age ?? null,
+                'image' => $lawyer->user->profile->image ? asset($lawyer->user->profile->image) : null,
+                'license_number' => $lawyer->license_number,
+                'experience_years' => $lawyer->experience_years,
+                'type' => $lawyer->type,
+                'specialization' => $lawyer->specialization,
+                'certificate' => $lawyer->certificate ? asset($lawyer->certificate) : null,
+            ];
+        }
+
+        return [
+            'id' => $consultationRequest->id,
+            'subject' => $consultationRequest->subject,
+            'details' => $consultationRequest->details,
+            'status' => $consultationRequest->status,
+            'is_locked' => $consultationRequest->is_locked,
+            'locked_by_lawyer' => $lawyerData,
+        ];
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Consultation;
+use App\Models\FurloughRequest;
 use App\Models\Issue;
 use App\Models\Lawyer;
 use App\Models\Sessionss;
@@ -153,5 +154,7 @@ public function delete($id)
                                where('is_attend', 0 )->get();
         return $sessions;
     }
+
+
 
 }

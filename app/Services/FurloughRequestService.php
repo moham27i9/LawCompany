@@ -51,4 +51,10 @@ class FurloughRequestService
     {
         return $this->repository->delete($id);
     }
+
+    public function getFurloughsByLawyer($lawyerId)
+    {
+        return $this->repository->getByLawyerId($lawyerId);
+    }
+
 }

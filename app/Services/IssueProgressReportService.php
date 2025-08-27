@@ -71,4 +71,14 @@ public function store(array $data): IssueProgressReport
         return $report->delete();
     }
 
+
+    public function getByIssueId($issueId)
+    {
+        return IssueProgressReport::with(['session'])
+            ->whereHas('session', function ($query) use ($issueId) {
+                $query->where('issue_id', $issueId);
+            })
+            ->get();
+    }
+
 }

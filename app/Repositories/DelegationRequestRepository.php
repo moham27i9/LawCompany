@@ -13,7 +13,7 @@ class DelegationRequestRepository
         public function update($id, array $data)
     {
         $item = DelegationRequest::findOrFail($id);
-        $item->update($data); 
+        $item->update($data);
         return $item;
     }
 
@@ -49,4 +49,21 @@ class DelegationRequestRepository
     {
         return DelegationRequest::where('original_lawyer_id', $lawyerId)->get();
     }
+
+    public function getByIssueId($issueId)
+    {
+        return DelegationRequest::with(['session', 'originalLawyer', 'delegateLawyer'])
+            ->whereHas('session', function ($query) use ($issueId) {
+                $query->where('issue_id', $issueId);
+            })
+            ->get();
+    }
+
+    public function getBySessionId($sessionId)
+    {
+        return DelegationRequest::with(['session', 'originalLawyer', 'delegateLawyer'])
+            ->where('session_id', $sessionId)
+            ->get();
+    }
+
 }

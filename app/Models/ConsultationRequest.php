@@ -21,5 +21,12 @@ class ConsultationRequest extends Model
         return $this->hasOne(Consultation::class, 'consultation_req_id');
     }
 
+    public function lockedByLawyer()
+    {
+        return $this->belongsTo(Lawyer::class, 'locked_by');
+    }
+
+
+
 }
 

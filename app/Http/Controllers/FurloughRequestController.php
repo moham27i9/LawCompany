@@ -30,7 +30,7 @@ class FurloughRequestController extends Controller
 
     public function store(StoreFurloughRequest $request)
     {
-        $this->authorize('create', FurloughRequest::class); 
+        $this->authorize('create', FurloughRequest::class);
         $created = $this->service->create($request->validated());
          return $this->successResponse($created, 'furlough Request created');
     }
@@ -71,4 +71,13 @@ class FurloughRequestController extends Controller
         $deleted = $this->service->delete($id);
         return $this->successResponse($deleted, 'furlough Request deleted');
     }
+
+    public function getByLawyerId($lawyerId)
+    {
+        $requests = $this->service->getFurloughsByLawyer($lawyerId);
+        if(!$requests->isEmpty())
+            return $this->successResponse($requests);
+        return $this->errorResponse('failed!');
+    }
+
 }

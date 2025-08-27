@@ -55,7 +55,15 @@ class ConsultationRequestRepository
     if ($deleted->status !== 'pending' || $deleted->status !== 'rejected') {
         throw new \Exception('لا يمكن حذف الاستشارة بعد الموافقة عليها  .');
     }
-    
+
          $deleted->destroy();
     }
+
+    public function findWithLockedLawyer($id)
+    {
+        return ConsultationRequest::with([                       // صاحب الاستشارة
+            'lockedByLawyer.user.profile'   // المحامي القافل + اليوزر تبعه + البروفايل
+        ])->findOrFail($id);
+    }
+
 }

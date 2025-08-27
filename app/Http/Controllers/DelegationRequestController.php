@@ -59,7 +59,7 @@ class DelegationRequestController extends Controller
 
     public function index()
     {
-       
+
         $result = $this->service->getAllRequests();
           $this->authorize('approve',DelegationRequest::class);
         return $this->successResponse(DelegationRequestResource::collection($result), 'تم جلب جميع طلبات الإنابة');
@@ -75,7 +75,7 @@ class DelegationRequestController extends Controller
    $delegation = $this->service->getRequestById($id);
    $this->authorize('approve', DelegationRequest::class);
   $this->authorize('assignDelegate', [$delegation, $data['delegate_lawyer_id']]);
-  
+
     // الموافقة على الطلب
     $result = $this->service->approveRequest($id, $data);
     // جلب المحامي الأصلي
@@ -121,7 +121,7 @@ class DelegationRequestController extends Controller
             'admin_note' => 'nullable|string'
         ]);
 
-           $this->authorize('approve', DelegationRequest::class); 
+           $this->authorize('approve', DelegationRequest::class);
         $result = $this->service->rejectRequest($id, $request->admin_note);
         if($result){
 
@@ -140,4 +140,23 @@ class DelegationRequestController extends Controller
             }
               return $this->errorResponse('الطلب بحالة قبول أو رفض لا يمكن التغيير');
     }
+
+    public function getByIssueId($issueId)
+    {
+        $delegations = $this->service->getDelegationsByIssueId($issueId);
+        if(!$delegations->isEmpty())
+            return $this->successResponse($delegations);
+        return $this->errorResponse('delegations failed!');
+
+    }
+
+
+    public function getBySessionId($sessionId)
+    {
+        $delegations = $this->service->getDelegationsBySessionId($sessionId);
+        if(!$delegations->isEmpty())
+            return $this->successResponse($delegations);
+        return $this->errorResponse('delegations failed!');
+    }
+
 }

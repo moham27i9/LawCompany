@@ -109,6 +109,9 @@ public function profile()
         $sessions = $this->lawyerService->get_session_it($lawyerId);
         return $this->successResponse($sessions, 'sessions');
     }
+
+
+
 }
 
 

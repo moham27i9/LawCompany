@@ -15,7 +15,7 @@ class DelegationRequestService
 
     public function submitRequest(array $data,$session_id)
     {
-     
+
                 if (isset($data['delegation_file']) && $data['delegation_file'] instanceof \Illuminate\Http\UploadedFile) {
             $filename = 'delegations' . $session_id . '.' . $data['delegation_file']->getClientOriginalExtension();
             $filePath = $data['delegation_file']->storeAs('storage/delegations', $filename, 'public');
@@ -62,7 +62,7 @@ class DelegationRequestService
     public function rejectRequest($id, $note = null)
     {
            $delegation = $this->getRequestById($id);
-           if( $delegation->status !== 'rejected' && $delegation->status !== 'approved') 
+           if( $delegation->status !== 'rejected' && $delegation->status !== 'approved')
            {
 
                return $this->repository->updateStatus($id, [
@@ -74,4 +74,15 @@ class DelegationRequestService
             return null;
            }
     }
-}   
+
+    public function getDelegationsByIssueId($issueId)
+    {
+        return $this->repository->getByIssueId($issueId);
+    }
+
+    public function getDelegationsBySessionId($sessionId)
+    {
+        return $this->repository->getBySessionId($sessionId);
+    }
+
+}

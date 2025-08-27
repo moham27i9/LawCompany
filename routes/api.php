@@ -58,7 +58,7 @@ Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
 Route::post('/fcm/token', [FcmTokenController::class, 'store']);              // حفظ توكن
 Route::post('/messages',   [ChatController::class, 'send']);                  // إرسال رسالة
-Route::get('/messages/{a}/{b}', [ChatController::class, 'conversation']); 
+Route::get('/messages/{a}/{b}', [ChatController::class, 'conversation']);
 //  Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -483,6 +483,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
+        Route::get('/delegations/issue/{issueId}', [DelegationRequestController::class, 'getByIssueId']);
+        Route::get('/delegations/session/{sessionId}', [DelegationRequestController::class, 'getBySessionId']);
+        Route::get('/issue-progress-reports/issue/{issueId}', [IssueProgressReportController::class, 'getByIssueId']);
+        Route::get('/consultation-requests/{id}', [ConsultationRequestController::class, 'show_lawyer_locked']);
+        Route::get('/furlough-requests/lawyer/{lawyerId}', [FurloughRequestController::class, 'getByLawyerId']);
     });
     Route::post('/ask-ai', [LegalAIController::class, 'askAI']);
 

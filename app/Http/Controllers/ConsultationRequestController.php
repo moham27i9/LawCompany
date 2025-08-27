@@ -109,4 +109,14 @@ class ConsultationRequestController extends Controller
             'Consultation requests retrieved for the lawyer successfully.'
         );
     }
+
+    public function show_lawyer_locked($id)
+    {
+        $consultationRequest = $this->service->getConsultationRequestWithLawyer($id);
+
+        if($consultationRequest)
+            return $this->successResponse($consultationRequest);
+        return $this->errorResponse('failed!');
+
+    }
 }

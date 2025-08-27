@@ -140,4 +140,9 @@ public function delete($id)
     public function get_session_it($lawyerId) {
           return $this->lawyerRepository->get_session_it($lawyerId);
       }
+
+
+
+
+
 }

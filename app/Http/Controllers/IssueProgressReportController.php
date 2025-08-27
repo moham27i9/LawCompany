@@ -49,5 +49,15 @@ class IssueProgressReportController extends Controller
         $this->service->delete($id);
         return $this->successResponse(null, 'تم حذف التقرير بنجاح');
     }
+
+    public function getByIssueId($issueId)
+    {
+        $reports = $this->service->getByIssueId($issueId);
+
+        if(!$reports->isEmpty())
+            return $this->successResponse($reports);
+        return $this->errorResponse('reports failed!');
+
+    }
 }
 

@@ -22,11 +22,12 @@ class FurloughRequestService
 {
     $user = auth()->user();
 
-    $data['covet_by_id'] = $user->id;
-
+    
     if ($user->role->name === 'lawyer') {
+        $data['covet_by_id'] = $user->lawyer->id;
         $data['covet_by_type'] = \App\Models\Lawyer::class;
     } else {
+        $data['covet_by_id'] = $user->employee->id;
         $data['covet_by_type'] = \App\Models\Employee::class;
     }
 

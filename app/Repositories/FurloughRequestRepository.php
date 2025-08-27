@@ -8,7 +8,7 @@ class FurloughRequestRepository
 {
     public function getAll()
     {
-        return FurloughRequest::all();
+        return FurloughRequest::with('covet_by.user')->get();
     }
 
     public function create(array $data)
@@ -18,12 +18,21 @@ class FurloughRequestRepository
 
     public function getById($id)
     {
-        return FurloughRequest::findOrFail($id);
+        return FurloughRequest::with('covet_by.user')->findOrFail($id);
     }
 
     public function getAllMyFurlough()
     {
-        return FurloughRequest::where('covet_by_id',auth()->user()->id)->get();
+
+    $user = auth()->user();
+
+    return FurloughRequest::with('covet_by')
+        ->get()
+        ->filter(function ($furlough) use ($user) {
+            return optional($furlough->covet_by)->user->id === $user->id;
+        });
+
+
     }
 
     public function update($id, array $data)

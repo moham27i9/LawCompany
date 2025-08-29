@@ -91,4 +91,15 @@ class RequiredDocumentController extends Controller
         return $this->successResponse($documents, 'تم استرجاع المستندات بنجاح');
     }
 
+
+    public function getByIssueId($issueId)
+    {
+        $documents = $this->service->getRequiredDocumentsByIssue($issueId);
+
+        return response()->json([
+            'success' => true,
+            'data' => $documents
+        ]);
+    }
+
 }

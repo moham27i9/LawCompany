@@ -21,9 +21,9 @@ class CreateEmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [   
+        return [
             'hire_date' => 'required|date',
-            'type' => 'required|in:HR,accountant',
+            'type' => 'required',
             'salary' => 'required|numeric',
            'certificate' => 'required|file|mimes:pdf,doc,docx,txt,png,jpg,jpeg|max:2048',
         ];

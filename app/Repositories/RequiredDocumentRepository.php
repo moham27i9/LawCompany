@@ -33,7 +33,7 @@ class RequiredDocumentRepository
 
         if (isset($data['file']) && $data['file'] instanceof \Illuminate\Http\UploadedFile) {
             $filename = time() . '_' . uniqid() . '.' . $data['file']->getClientOriginalExtension();
-            $filePath = $data['file']->storeAs('storage/documents', $filename, 'public');  
+            $filePath = $data['file']->storeAs('storage/documents', $filename, 'public');
             $data['file'] = $filePath ;
         }
 
@@ -52,7 +52,7 @@ class RequiredDocumentRepository
     $document = RequiredDocument::with('issue')->findOrFail($id);
   if (isset($file['file']) && $file['file'] instanceof \Illuminate\Http\UploadedFile) {
             $filename =  time() . '_' . uniqid() . '.' . $file['file']->getClientOriginalExtension();
-            $filePath = $file['file']->storeAs('storage/documents', $filename, 'public');  
+            $filePath = $file['file']->storeAs('storage/documents', $filename, 'public');
             $file['file'] = $filePath;
         }
         $file['user_id'] =  $userId;
@@ -72,6 +72,11 @@ class RequiredDocumentRepository
                 $query->where('user_id', $userId);
             })
             ->get();
+    }
+
+    public function getByIssueId($issueId)
+    {
+        return RequiredDocument::where('issue_id', $issueId)->get();
     }
 
 

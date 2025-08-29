@@ -78,5 +78,10 @@ public function getAll()
         return $this->repo->getByIssueAndUser($issueId, $userId);
     }
 
+    public function getRequiredDocumentsByIssue($issueId)
+    {
+        return $this->repo->getByIssueId($issueId);
+    }
+
 
 }

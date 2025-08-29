@@ -182,7 +182,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getAllMyArchive', [IssueController::class, 'getAllMyArchive']);
 
 
-    Route::put('/employees', [EmployeeController::class, 'update']);
+           Route::put('/employees', [EmployeeController::class, 'update']);
 
             Route::prefix('delegations')->group(function () {
             Route::get('/', [DelegationRequestController::class, 'index']);
@@ -489,7 +489,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/issue-progress-reports/issue/{issueId}', [IssueProgressReportController::class, 'getByIssueId']);
         Route::get('/consultation-requests/{id}', [ConsultationRequestController::class, 'show_lawyer_locked']);
         Route::get('/furlough-requests/lawyer/{lawyerId}', [FurloughRequestController::class, 'getByLawyerId']);
+
+
+        Route::get('/lawyers/{lawyerId}/issues', [LawyerController::class, 'getIssues']);
+        Route::get('/issues/{issueId}/required-documents', [RequiredDocumentController::class, 'getByIssueId']);
+
     });
-    Route::post('/ask-ai', [LegalAIController::class, 'askAI']);
+    Route::post('/ask-ai', [LegalAIController::class, 'askAI'])->name('assistant.ask');
 
 

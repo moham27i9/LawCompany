@@ -155,6 +155,11 @@ public function delete($id)
         return $sessions;
     }
 
+    public function getIssuesByLawyer($lawyerId)
+    {
+        return Lawyer::with('issues')->findOrFail($lawyerId)->issues;
+    }
+
 
 
 }

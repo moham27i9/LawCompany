@@ -249,7 +249,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/issues/{id}/priority', [IssueController::class, 'updatePriority']);
         Route::post('/issues/{issueId}/assign', [IssueController::class, 'assignIssue']);
 
-
+  Route::prefix('invoices')->group(function () {
+        Route::post('/{issueId}/{userId}', [InvoiceController::class, 'store']);
+        Route::get('/user/{userId}', [InvoiceController::class, 'indexByUser']);
+        Route::get('/issue/{issueId}', [InvoiceController::class, 'indexByIssue']);
+        Route::get('/show/{id}', [InvoiceController::class, 'show']);
+        Route::put('/{id}', [InvoiceController::class, 'update']);
+        Route::delete('/{id}', [InvoiceController::class, 'destroy']);
+         });
+         
         Route::prefix('common-consultations')->group(function () {
                 Route::post('/', [CommonConsultationController::class, 'store']);
                 Route::put('/{id}', [CommonConsultationController::class, 'update']);
@@ -431,14 +439,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/invoices-report', [ReportController::class, 'generateInvoicesReport']);
         Route::get('/hiring-report', [ReportController::class, 'generateHiringReport']);
 
-        Route::prefix('invoices')->group(function () {
-        Route::post('/{issueId}/{userId}', [InvoiceController::class, 'store']);
-        Route::get('/user/{userId}', [InvoiceController::class, 'indexByUser']);
-        Route::get('/issue/{issueId}', [InvoiceController::class, 'indexByIssue']);
-        Route::get('/show/{id}', [InvoiceController::class, 'show']);
-        Route::put('/{id}', [InvoiceController::class, 'update']);
-        Route::delete('/{id}', [InvoiceController::class, 'destroy']);
-         });
+      
 
         Route::prefix('issue-progress-reports')->group(function () {
         Route::get('/', [IssueProgressReportController::class, 'index']);

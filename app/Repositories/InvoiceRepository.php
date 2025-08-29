@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Invoice;
 use App\Models\Issue;
+use App\Notifications\GeneralNotification;
 use Carbon\Carbon;
 
 class InvoiceRepository
@@ -33,10 +34,7 @@ class InvoiceRepository
              return $invoices;
 
         }
-        else {
 
-            return response()->json(['message' => 'User not authenticated'], 401);
-        }
 
 
     }
@@ -57,12 +55,42 @@ class InvoiceRepository
         return Invoice::with('issue')->findOrFail($id);
     }
 
-    public function update($id, array $data)
-    {
-        $invoice = Invoice::with('issue')->findOrFail($id);
-        $invoice->update($data);
-        return $invoice;
+   public function update($id, array $data)
+{
+  
+    $invoice = Invoice::with('issue')->findOrFail($id);
+
+    $invoice->update($data);
+
+
+    if ($invoice->issue) {
+
+        $invoice->issue->amount_paid += $invoice->amount;
+
+              $invoice->user->notify(
+                    new GeneralNotification(
+                        'المبلغ المتبقي سداده للقضية الخاصة بك',
+                       $invoice->issue->total_cost - $invoice->issue->amount_paid,
+                        '/invoices/show/' . $id
+                        )
+                    );
+        if ($invoice->issue->amount_paid == $invoice->issue->total_cost) {
+            $invoice->issue->status = 'closed';
+                $invoice->user->notify(
+                    new GeneralNotification(
+                        'تم دفع جميع  الدفعات للقضية الخاصة بك',
+                       $invoice->issue->amount_paid,
+                        '/invoices/show/' . $id
+                        )
+                    );
+        }
+
+        $invoice->issue->save();
     }
+
+    return $invoice;
+}
+
 
     public function delete($id)
     {

@@ -137,7 +137,12 @@ class RoutesTableSeeder extends Seeder
              ['name' => 'get total revenues', 'path' => '/api/invoices/total-revenues', 'method' => 'GET'],//104
              ['name' => 'get Monthly revenues', 'path' => '/api/invoices/reports/monthly-revenues', 'method' => 'GET'],//105
 
-                        
+             ['name' => 'show invoices by user', 'path' => '/api/invoices/user/{userId}', 'method' => 'GET'],//106
+             ['name' => 'show invoice details', 'path' => '/api/invoices/show/{id}', 'method' => 'GET'],//107
+             ['name' => 'add invoice', 'path' => '/api/invoices/{issueId}/{userId}', 'method' => 'POST'],//108
+             ['name' => 'update invoices', 'path' => '/api/invoices/{id}', 'method' => 'PUT'],//109
+             ['name' => 'delete invoices', 'path' => '/api/invoices/{id}', 'method' => 'DELETE'],//110      
+             ['name' => 'show invoices by issue', 'path' => '/api/invoices/issue/{issueId}', 'method' => 'GET'],//111
 
         ];
 

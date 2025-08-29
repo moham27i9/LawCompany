@@ -137,6 +137,12 @@ class PermissionTableSeeder extends Seeder
             ['name' => 'delete_expense', 'app_route_id' => 103],
             ['name' => 'get_total_revenues', 'app_route_id' => 104],
             ['name' => 'get_Monthly_revenues', 'app_route_id' => 105],
+            ['name' => 'show_invoices_by_user', 'app_route_id' => 106],
+            ['name' => 'show_invoice_details', 'app_route_id' => 107],
+            ['name' => 'add_invoice', 'app_route_id' => 108],
+            ['name' => 'update_invoices', 'app_route_id' => 109],
+            ['name' => 'delete_invoices', 'app_route_id' => 110],
+            ['name' => 'show_invoices_by_issue', 'app_route_id' => 111],
      
         ];
 
@@ -240,6 +246,12 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 103],
             ['permission_id' => 104],
             ['permission_id' => 105],
+            ['permission_id' => 106],
+            ['permission_id' => 107],
+            ['permission_id' => 108],
+            ['permission_id' => 109],
+            ['permission_id' => 110],
+            ['permission_id' => 111],
 
 
         ];
@@ -319,6 +331,12 @@ class PermissionTableSeeder extends Seeder
             ['permission_id' => 101],
             ['permission_id' => 102],
             ['permission_id' => 103],
+            ['permission_id' => 106],
+            ['permission_id' => 107],
+            ['permission_id' => 108],
+            ['permission_id' => 109],
+            ['permission_id' => 110],
+            ['permission_id' => 111],
         ];
 
         foreach ($admin_permissions as $admin_permission) {

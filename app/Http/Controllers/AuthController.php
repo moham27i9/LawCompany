@@ -118,7 +118,7 @@ public function showLoginForm()
     ]);
 
     $user = auth()->user();
-    $user->fcm_token = $request->fcm_token;
+       $user->fcm_tokens->fcm_token = $request->fcm_token;
     $user->save();
 
     return response()->json(['message' => 'FCM token saved successfully']);

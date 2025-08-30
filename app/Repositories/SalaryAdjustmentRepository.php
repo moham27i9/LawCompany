@@ -42,4 +42,6 @@ class SalaryAdjustmentRepository
     {
         return SalaryAdjustment::destroy($id);
     }
+
+
 }

@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Issue;
 use App\Models\Lawyer;
+use App\Models\LawyerPoint;
+use App\Models\SalaryAdjustment;
 use App\Models\Sessionss;
 use App\Repositories\SessionRepository;
 
@@ -53,46 +55,6 @@ class SessionService
     }
 
 
-public function calculateSessionsPayment($issueId)
-{
-    $sessions = $this->sessionRepository->getByIssueId($issueId);
-    $totalPoints = $this->sessionRepository->sumPointsByIssue($issueId);
-
-    $issue = Issue::findOrFail($issueId);
-
-    $totalAmount = $issue->total_cost; // مثال: 5000
-    $lawyerShare = $issue->lawyer_percentage; // مثال: 40 (%)
-    $lawyerAmount = ($lawyerShare / 100) * $totalAmount;
-
-    $result = [];
-    $totalCalculatedAmount = 0;
-
-    foreach ($sessions as $session) {
-        // اجلب مجموع نقاط الجلسة من جدول lawyer_points
-        $sessionPoints = \App\Models\LawyerPoint::where('session_id', $session->id)->sum('points');
-
-        // احسب النسبة بشكل صحيح من مجموع النقاط الكلي
-        $percentage = $sessionPoints / max(1, $totalPoints); // تفادي القسمة على صفر
-        $sessionAmount = round($percentage * $lawyerAmount, 2);
-
-        $totalCalculatedAmount += $sessionAmount;
-
-        $result[] = [
-            'session_id' => $session->id,
-            'lawyer_name' => $session->lawyer->user->name,
-            'percentage' => round($percentage * 100, 2),
-            'amount' => $sessionAmount,
-            'point for this session' => $sessionPoints ,
-        ];
-    }
-
-    return [
-        'sessions' => $result,
-        'amount_total' => round($totalCalculatedAmount, 2),
-        'lawyer_total_amount' => $lawyerAmount,
-        'total_points' => $totalPoints,
-    ];
-}
 
 public function calculateLawyerShareForIssue($issueId, $lawyerId)
 {
@@ -174,5 +136,135 @@ public function markAttendance($sessionId)
 }
 
 
+public function calculateLawyerTotalPoints($lawyerId)
+{
+    // 🔹 اجلب كل الجلسات اللي شارك فيها المحامي
+    $sessions = Sessionss::whereHas('lawyers', function ($q) use ($lawyerId) {
+        $q->where('lawyer_id', $lawyerId);
+    })->get();
+
+    $result = [];
+    $grandTotalAmount = 0;
+    $grandTotalPoints = 0;
+
+    foreach ($sessions as $session) {
+        $issue = $session->issue;
+
+        // إجمالي المبلغ للقضية
+        $totalAmount = $issue->total_cost; 
+        $lawyerShare = $issue->lawyer_percentage; 
+        $lawyerAmount = ($lawyerShare / 100) * $totalAmount;
+
+        // إجمالي النقاط لكل الجلسات في القضية
+        $totalPoints = LawyerPoint::whereIn('session_id', $issue->sessions->pluck('id'))
+            ->sum('points');
+
+        // نقاط هذا المحامي في هذه الجلسة
+        $lawyerPoints = LawyerPoint::where('session_id', $session->id)
+            ->where('lawyer_id', $lawyerId)
+            ->sum('points');
+
+        // النسبة والتوزيع
+        $percentage = $lawyerPoints / max(1, $totalPoints);
+        $sessionAmount = round($percentage * $lawyerAmount, 2);
+
+        // تراكم النقاط والمبالغ
+        $grandTotalPoints += $lawyerPoints;
+        $grandTotalAmount += $sessionAmount;
+
+        $result[] = [
+            'issue_id'     => $issue->id,
+            'session_id'   => $session->id,
+            'lawyer_name'  => $session->lawyer->user->name ?? '',
+            'points'       => $lawyerPoints,
+            'percentage'   => round($percentage * 100, 2),
+            'amount'       => $sessionAmount,
+        ];
+    }
+
+    return [
+        'lawyer_id'        => $lawyerId,
+        'lawyer_name'      => Lawyer::with('user')->find($lawyerId)->user->name ?? '',
+        'sessions_details' => $result,
+        'total_points'     => $grandTotalPoints,
+        'total_amount'     => $grandTotalAmount,
+    ];
+}
+
+
+public function calculateSessionPayment($sessionId)
+{
+    $session = Sessionss::with('lawyer.user')->findOrFail($sessionId);
+
+    // ✅ تأكد إن الجلسة مغلقة
+    if ($session->out_come !== 'closed') {
+        throw new \Exception("لا يمكن حساب النقاط لجلسة غير مغلقة.");
+    }
+
+    // ✅ تحقق إذا كان تم حسابها مسبقاً
+    $exists =SalaryAdjustment::where('employable_type', Lawyer::class)
+        ->where('employable_id', $session->lawyer_id)
+        ->where('reason', 'session_'.$session->id) // معرف فريد للجلسة
+        ->exists();
+
+    if ($exists) {
+        return [
+            'message' => 'تمت معالجة هذه الجلسة مسبقاً',
+            'session_id' => $session->id,
+        ];
+    }
+
+    // ✅ جمع النقاط الخاصة بالمحامي لهذه الجلسة
+    $points = LawyerPoint::where('session_id', $session->id)
+                ->where('lawyer_id', $session->lawyer_id)
+                ->sum('points');
+
+    if ($points <= 0) {
+        return [
+            'message' => 'لا توجد نقاط مسجلة لهذه الجلسة',
+            'session_id' => $session->id,
+        ];
+    }
+
+    // ✅ قيمة النقطة (من config أو ثابت)
+    $pointValue = config('lawyers.point_value', 50); 
+    $amount = $points * $pointValue;
+
+    // ✅ إنشاء سجل في salary_adjustments
+    $adjustment = SalaryAdjustment::create([
+        'employable_id'   => $session->lawyer_id,
+        'employable_type' => Lawyer::class,
+        'type'            => 'allowance',
+        'reason'          => 'session_'.$session->id,
+        'amount'          => $amount,
+        'processed'       => true,
+        'effective_date'  => now(),
+    ]);
+
+    return [
+        'message' => 'تمت إضافة النقاط للراتب بنجاح',
+        'session_id' => $session->id,
+        'lawyer' => $session->lawyer->user->name,
+        'points' => $points,
+        'amount' => $amount,
+        'adjustment_id' => $adjustment->id
+    ];
+}
+
+
+    public function addLawyerPointsAdjustment($lawyerId, $amount, $effectiveDate = null)
+{
+    $lawyer = Lawyer::findOrFail($lawyerId);
+
+    return SalaryAdjustment::create([
+        'employable_id'   => $lawyer->id,
+        'employable_type' => Lawyer::class,
+        'type'            => 'allowance',
+        'reason'          => 'مكافأة عن النقاط المكتسبة في الجلسات',
+        'amount'          => $amount,
+        'processed'       => false,
+        'effective_date'  => $effectiveDate ?? now()->toDateString(),
+    ]);
+}
 
 }

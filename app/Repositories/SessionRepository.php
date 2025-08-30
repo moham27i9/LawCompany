@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Models\Lawyer;
 use App\Models\LawyerPoint;
+use App\Models\SalaryAdjustment;
 use App\Models\Session;
 use App\Models\Sessionss;
 use Cache;
@@ -41,6 +43,11 @@ class SessionRepository
         $session = Sessionss::findOrFail($id);
         $session->update($data);
         $session->save();
+         // ✅ إذا outcome = closed → احسب النقاط
+        if (isset($data['out_come']) && $data['out_come'] === 'closed') {
+           $payment = $this->calculateSessionPayment($session->id);
+            $this->calculateSessionPayment($session->lawyer->id,$payment['amount']);
+        }
         Cache::forget('sessions_all');
         return $session;
     }
@@ -113,6 +120,79 @@ class SessionRepository
 
         return $session;
     }
+public function calculateSessionPayment($sessionId)
+{
+    $session = Sessionss::with('lawyer.user')->findOrFail($sessionId);
+
+    // ✅ تأكد إن الجلسة مغلقة
+    if ($session->out_come !== 'closed') {
+        throw new \Exception("لا يمكن حساب النقاط لجلسة غير مغلقة.");
+    }
+
+    // ✅ تحقق إذا كان تم حسابها مسبقاً
+    $exists =SalaryAdjustment::where('employable_type', Lawyer::class)
+        ->where('employable_id', $session->lawyer_id)
+        ->where('reason', 'session_'.$session->id) // معرف فريد للجلسة
+        ->exists();
+
+    if ($exists) {
+        return [
+            'message' => 'تمت معالجة هذه الجلسة مسبقاً',
+            'session_id' => $session->id,
+        ];
+    }
+
+    // ✅ جمع النقاط الخاصة بالمحامي لهذه الجلسة
+    $points = LawyerPoint::where('session_id', $session->id)
+                ->where('lawyer_id', $session->lawyer_id)
+                ->sum('points');
+
+    if ($points <= 0) {
+        return [
+            'message' => 'لا توجد نقاط مسجلة لهذه الجلسة',
+            'session_id' => $session->id,
+        ];
+    }
+
+    // ✅ قيمة النقطة (من config أو ثابت)
+    $pointValue = config('lawyers.point_value', 50); 
+    $amount = $points * $pointValue;
+
+    // ✅ إنشاء سجل في salary_adjustments
+    $adjustment = SalaryAdjustment::create([
+        'employable_id'   => $session->lawyer_id,
+        'employable_type' => Lawyer::class,
+        'type'            => 'allowance',
+        'reason'          => 'session_'.$session->id,
+        'amount'          => $amount,
+        'processed'       => true,
+        'effective_date'  => now(),
+    ]);
+
+    return [
+        'message' => 'تمت إضافة النقاط للراتب بنجاح',
+        'session_id' => $session->id,
+        'lawyer_id' => $session->lawyer->id,
+        'points' => $points,
+        'amount' => $amount,
+        'adjustment_id' => $adjustment->id
+    ];
+}
 
 
+
+    public function addLawyerPointsAdjustment($lawyerId, $amount, $effectiveDate = null)
+{
+    $lawyer = Lawyer::findOrFail($lawyerId);
+
+    return SalaryAdjustment::create([
+        'employable_id'   => $lawyer->id,
+        'employable_type' => Lawyer::class,
+        'type'            => 'allowance',
+        'reason'          => 'مكافأة عن النقاط المكتسبة في الجلسات',
+        'amount'          => $amount,
+        'processed'       => false,
+        'effective_date'  => $effectiveDate ?? now()->toDateString(),
+    ]);
+}
 }

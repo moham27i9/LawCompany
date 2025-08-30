@@ -32,7 +32,7 @@ class FurloughRequestPolicy
      */
     public function create(User $user): bool
     {
-        if( $user->lawyer)
+        if($user->lawyer)
          return true;
        else if( $user->employee)
          return true;

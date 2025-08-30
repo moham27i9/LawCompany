@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
 use App\Http\Requests\UpdateUserRoleRequest;
+use App\Models\FcmToken;
 use App\Models\RefreshToken;
 
 class AuthController extends Controller
@@ -111,15 +112,27 @@ public function showLoginForm()
          return $this->successResponse($count, ' client count retrieved ');
     }
 
-    public function saveFcmToken(Request $request)
+public function saveFcmToken(Request $request)
 {
     $request->validate([
-        'fcm_token' => 'required|string',
+        'fcm_token'   => 'required|string|max:500',
+        'device_type' => 'nullable|string|in:web,android,ios', // للتحقق من نوع الجهاز
     ]);
 
     $user = auth()->user();
-       $user->fcm_tokens->fcm_token = $request->fcm_token;
-    $user->save();
+
+    // تأكد ما إذا كان التوكن موجود مسبقًا لنفس المستخدم
+    $existing = FcmToken::where('user_id', $user->id)
+        ->where('fcm_token', $request->fcm_token)
+        ->first();
+
+    if (!$existing) {
+        FcmToken::create([
+            'user_id'     => $user->id,
+            'fcm_token'   => $request->fcm_token,
+            'device_type' => $request->device_type,
+        ]);
+    }
 
     return response()->json(['message' => 'FCM token saved successfully']);
 }

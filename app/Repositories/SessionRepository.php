@@ -14,7 +14,9 @@ class SessionRepository
     public function all()
     {
         return Cache::remember('sessions_all', now()->addMinutes(10), function () {
-        return Sessionss::with(['issue', 'lawyer','sessionType'])->get();
+        return Sessionss::with(['issue', 'sessionType', 'lawyer' => function ($query) {
+                $query->with(['user:name']);
+            }])->get();
     });
 
 
@@ -23,12 +25,20 @@ class SessionRepository
 
     public function getById($id)
     {
-        return Sessionss::with(['issue', 'lawyer','sessionType'])->findOrFail($id);
+    return Sessionss::with([
+        'issue',
+        'sessionType',
+        'lawyer.user:id,name' // ← فقط id و name من user
+    ])->findOrFail($id);
     }
 
     public function getByIssueId($id)
     {
-        return Sessionss::with(['issue', 'lawyer','sessionType'])->where('issue_id',$id)->get();
+    return Sessionss::with([
+        'issue',
+        'sessionType',
+        'lawyer.user:id,name' // ← فقط id و name من user
+    ])->where('issue_id',$id)->get();
     }
 
     public function create(array $data)

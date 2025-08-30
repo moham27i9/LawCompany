@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             RoutesTableSeeder::class,
             PermissionTableSeeder::class,
             LawyerSeeder::class,
-            IssueSeeder::class,
              SessionTypeSeeder::class,
              IssueCategorySeeder::class,
              CommonConsultationSeeder::class,

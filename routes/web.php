@@ -57,8 +57,8 @@ Route::get('/assistant', function () {
 Route::post('/assistant/ask', [LegalAIController::class, 'askAssistant'])->name('assistant.ask');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('paypal/pay', [PayPalController::class, 'pay'])->name('paypal.pay');
 });
+Route::post('paypal/pay', [PayPalController::class, 'pay'])->name('paypal.pay');
 Route::get('paypal/success', [PayPalController::class, 'success'])->name('paypal.success');
 Route::get('paypal/cancel', [PayPalController::class, 'cancel'])->name('paypal.cancel');
 Route::get('paypal/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');

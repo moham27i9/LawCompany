@@ -143,6 +143,9 @@ public function delete($id)
 
 
 
-
+    public function getIssuesByLawyer($lawyerId)
+    {
+        return $this->lawyerRepository->getIssuesByLawyer($lawyerId);
+    }
 
 }

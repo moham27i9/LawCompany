@@ -110,6 +110,16 @@ public function profile()
         return $this->successResponse($sessions, 'sessions');
     }
 
+        public function getIssues($lawyerId)
+    {
+        $issues = $this->lawyerService->getIssuesByLawyer($lawyerId);
+
+        return response()->json([
+            'success' => true,
+            'data' => $issues
+        ]);
+    }
+
 
 
 }

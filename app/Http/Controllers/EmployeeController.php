@@ -11,8 +11,8 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    
-     use ApiResponseTrait; 
+
+     use ApiResponseTrait;
     protected $employeeService;
 
     public function __construct(EmployeeService $employeeService)
@@ -27,7 +27,6 @@ class EmployeeController extends Controller
 
     public function store(CreateEmployeeRequest $request,$id)
     {
-
         return $this->employeeService->create($id,$request->validated());
     }
 
